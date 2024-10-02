@@ -1,0 +1,46 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# baltimoreCIPutils
+
+<!-- badges: start -->
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+<!-- badges: end -->
+
+## Purpose
+
+baltimoreCIPutils is an R package with utility functions designed to support data import, tidying, and transformation using Workday and Workday Adaptive Planning data sources for the Baltimore City Capital Improvment Program (CIP) team in the Baltimore City Department of Planning. 
+
+## Installation
+
+You can install the development version of baltimoreCIPutils like so:
+
+``` r
+# pak::pkg_install("city-of-baltimore/baltimoreCIPutils")
+```
+
+## Example
+
+The package includes several reference data sets:
+
+```{r setup}
+library(baltimoreCIPutils)
+## basic example code
+```
+
+```{r}
+wd_proj_hierarchy_xwalk
+```

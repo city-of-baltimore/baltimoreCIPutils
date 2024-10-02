@@ -1,0 +1,29 @@
+Type: Package
+Package: baltimoreCIPutils
+Title: Data Wrangling Utilities for the Baltimore DOP CIP Team
+Version: 0.1.0
+Authors@R: 
+    person("Eli", "Pousson", , "eli.pousson@baltimorecity.gov", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0001-8280-1706"))
+Maintainer: Eli Pousson <eli.pousson@baltimorecity.gov>
+Description: Work with reports from Workday and Workday Adaptive Planning
+    in combination with custom reference data to support reporting for the
+    Baltimore City Capital Improvement Program.
+License: MIT + file LICENSE
+URL: https://github.com/city-of-baltimore/baltimoreCIPutils
+BugReports: https://github.com/city-of-baltimore/baltimoreCIPutils/issues
+Depends: 
+    R (>= 2.10)
+Imports: 
+    cli,
+    dplyr,
+    lubridate,
+    openxlsx2,
+    rlang,
+    stringr,
+    tidyselect,
+    vctrs
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
