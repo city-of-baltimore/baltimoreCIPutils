@@ -2,10 +2,16 @@
 % Please edit documentation in R/strings.R
 \name{str_capital}
 \alias{str_capital}
+\alias{str_extract_project_code}
+\alias{str_extract_all_project_codes}
 \alias{str_extract_contract_num}
 \alias{str_extract_cip_num}
 \title{Helper string functions for Baltimore City Capital Project data}
 \usage{
+str_extract_project_code(string)
+
+str_extract_all_project_codes(string, simplify = FALSE)
+
 str_extract_contract_num(
   string,
   pattern =
@@ -25,6 +31,12 @@ string.}
 }
 \description{
 Helper string functions for Baltimore City Capital Project data
+
+\code{\link[=str_extract_project_code]{str_extract_project_code()}} uses \code{\link[stringr:str_extract]{stringr::str_extract()}} to extract a
+Project Code.
+
+\code{\link[=str_extract_all_project_codes]{str_extract_all_project_codes()}} uses \code{\link[stringr:str_extract]{stringr::str_extract_all()}} to
+extract Project Codes.
 
 \code{\link[=str_extract_contract_num]{str_extract_contract_num()}} extract one or more Baltimore City agency
 contract numbers from a character vector. If \code{extract_all = TRUE}, the

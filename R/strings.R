@@ -2,6 +2,30 @@
 #' @name str_capital
 NULL
 
+#' [str_extract_project_code()] uses [stringr::str_extract()] to extract a
+#' Project Code.
+#' @rdname str_capital
+#' @name str_extract_project_code
+str_extract_project_code <- function(string) {
+  str_extract(
+    string,
+    "^PRJ[:digit:]{6}"
+  )
+}
+
+#' [str_extract_all_project_codes()] uses [stringr::str_extract_all()] to
+#' extract Project Codes.
+#' @rdname str_capital
+#' @name str_extract_all_project_codes
+str_extract_all_project_codes <- function(string,
+                                         simplify = FALSE) {
+  str_extract_all(
+    str_remove(toupper(string), "-"),
+    "^PRJ[:digit:]{6}",
+    simplify = simplify
+  )
+}
+
 #' [str_extract_contract_num()] extract one or more Baltimore City agency
 #' contract numbers from a character vector. If `extract_all = TRUE`, the
 #' function returns a list instead of a character vector.
@@ -18,6 +42,7 @@ str_extract_contract_num <- function(
     ...) {
   fn <- str_extract
 
+  # FIXME: Implement separate str_extract_all_contract_nums function
   if (extract_all) {
     fn <- str_extract_all
   }
