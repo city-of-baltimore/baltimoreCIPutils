@@ -107,7 +107,7 @@ wb_add_currencyfmt <- function(wb,
 #'   wb_protect_worksheet wb_add_data_table wb_freeze_pane
 #'   wb_add_data_validation wb_set_col_widths wb_set_cell_style
 #'   create_cell_style wb_set_active_sheet
-#' @importFrom dplyr filter select any_of mutate if_else case_when left_join
+#' @importFrom dplyr filter select mutate if_else case_when left_join
 #'   arrange
 #' @importFrom fs file_info
 wb_wd_proj_status <- function(project_wb,
