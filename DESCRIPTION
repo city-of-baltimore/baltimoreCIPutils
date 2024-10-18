@@ -17,6 +17,7 @@ Depends:
 Imports: 
     cli,
     dplyr,
+    lifecycle,
     lubridate,
     openxlsx2,
     rlang,
