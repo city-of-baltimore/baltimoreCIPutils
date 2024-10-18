@@ -3,7 +3,15 @@
 #' @export
 fmt_adapt_capital_program <- function(data,
                                       current_year = 2026,
-                                      timespan = c(2026:2031)) {
+                                      timespan = c(2026:2031),
+                                      drop_cols = c(
+                                        "PCode Code", "PCode Name",
+                                        "Fund, Grant, Special Purpose Code",
+                                        # TODO: Check if either of the Fund, Grant, Special Purpose Code columns
+                                        # should be retained
+                                        "Fund, Grant, Special Purpose Name",
+                                        "RObject Code", "Grant_Detail Code"
+                                      )) {
   out_years <- setdiff(timespan, current_year)
 
   data |>
@@ -19,8 +27,9 @@ fmt_adapt_capital_program <- function(data,
       "^([:digit:]|:)+"
     ) |>
     dplyr::mutate(
-      `RAccount Name` = stringr::str_remove(`RAccount Name`, "^:")
-    )
+      "RAccount Code" := stringr::str_remove(.data[["RAccount Code"]], ":$")
+    ) |>
+    dplyr::select(!any_of(drop_cols))
 }
 
 #' Format Workday Project Hierarchy columns
@@ -54,17 +63,23 @@ join_wd_proj_hierarchy_labels <- function(data) {
   )
 
   hierarchy_1_xwalk <- baltimoreCIPutils::wd_proj_hierarchy_xwalk |>
-    dplyr::filter(!is.na(`PHierarchy1 Code`)) |>
+    dplyr::filter(!is.na(.data[["PHierarchy1 Code"]])) |>
     dplyr::select(
-      `PHierarchy1 Code`,
-      `PHierarchy1 Label` = entity
+      all_of(
+        c("PHierarchy1 Code",
+          "PHierarchy1 Label" = "entity"
+        )
+      )
     )
 
   hierarchy_2_xwalk <- baltimoreCIPutils::wd_proj_hierarchy_xwalk |>
-    dplyr::filter(!is.na(`PHierarchy2 Code`)) |>
+    dplyr::filter(!is.na(.data[["PHierarchy2 Code"]])) |>
     dplyr::select(
-      `PHierarchy2 Code`,
-      `PHierarchy2 Label` = entity
+      all_of(
+        c("PHierarchy2 Code",
+          "PHierarchy2 Label" = "entity"
+        )
+      )
     )
 
   data |>
@@ -75,6 +90,12 @@ join_wd_proj_hierarchy_labels <- function(data) {
     dplyr::left_join(
       hierarchy_2_xwalk,
       by = "PHierarchy2 Code"
+    ) |>
+    dplyr::relocate(
+      all_of(
+        c("PHierarchy1 Label", "PHierarchy2 Label")
+      ),
+      .after = starts_with("PHierarchy")
     )
 }
 
@@ -92,30 +113,31 @@ fmt_adapt_capital_projects <- function(data,
                                        ),
                                        drop_cols = c(
                                          "PStatus Code", "PDescription Code",
-                                         "PPercentComplete Code"
+                                         "PPercentComplete Code",
+                                         "PCode Code", "PCode Name",
+                                         "Fund, Grant, Special Purpose Code",
+                                         # TODO: Check if either of the Fund,
+                                         # Grant, Special Purpose Code columns
+                                         # should be retained
+                                         "Fund, Grant, Special Purpose Name",
+                                         "RObject Code", "Grant_Detail Code",
+                                         # TODO: Check when/how these columns
+                                         # changed in Workday
+                                         "PManager Code", "PProjectOwner Code"
                                        )) {
   # out_years <- setdiff(timespan, current_year)
 
   data |>
     dplyr::select(
-      !tidyselect::any_of(drop_cols)
+      !any_of(drop_cols)
     ) |>
     fmt_wd_proj_worktags() |>
     fmt_wd_proj_name() |>
     fmt_wd_proj_hierarchy() |>
-    # Format project manager and owner columns
-    dplyr::select(
-      !tidyselect::any_of(
-        c(
-          # TODO: Check when/how these columns changed in Workday
-          "PManager Code", "PProjectOwner Code"
-        )
-      )
-    ) |>
     # Format date columns
     dplyr::mutate(
       dplyr::across(
-        tidyselect::all_of(date_cols),
+        all_of(date_cols),
         \(x) {
           lubridate::parse_date_time(x, "m/d/y")
         }
@@ -124,7 +146,7 @@ fmt_adapt_capital_projects <- function(data,
     # Replace invalid values with explicit NAs
     dplyr::mutate(
       dplyr::across(
-        tidyselect::all_of(
+        all_of(
           c("Year of Impact", "Related Plan")
         ),
         \(x) {
@@ -152,7 +174,7 @@ join_wd_proj_asset_id <- function(data,
                                   multiple = "nested") {
   asset_xwalk <- baltimoreCIPutils::wd_proj_asset_xwalk |>
     dplyr::select(
-      tidyselect::all_of(c(project_code_col, asset_id_col))
+      all_of(c(project_code_col, asset_id_col))
     )
 
   if (multiple == "nested") {
