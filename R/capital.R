@@ -163,12 +163,12 @@ fmt_adapt_capital_projects <- function(data,
 
 #' Join Asset ID values based on `wd_proj_asset_xwalk` reference data
 #'
-#' By default, [join_wd_proj_asset_id()] stores the asset ID values in a nested
+#' By default, [wd_proj_join_asset_id()] stores the asset ID values in a nested
 #' data frame list column to allow handling of projects with multiple matching
 #' assets.
 #'
 #' @keywords internal
-join_wd_proj_asset_id <- function(data,
+wd_proj_join_asset_id <- function(data,
                                   project_code_col = "Project Code",
                                   asset_id_col = "asset_id",
                                   multiple = "nested") {
