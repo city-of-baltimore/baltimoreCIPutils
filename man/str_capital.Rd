@@ -14,8 +14,7 @@ str_extract_all_project_codes(string, simplify = FALSE)
 
 str_extract_contract_num(
   string,
-  pattern =
-    "(TR |Tr |TR|TR-|SWC|SWC |SWC-|WC|WC-|WC |SDC|SDC |SDC-|SC |SC|SC-|ER |ER-|ER)[:digit:]+",
+  pattern = cap_patterns[["contract_num"]],
   extract_all = FALSE,
   ...
 )

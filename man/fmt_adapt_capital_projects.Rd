@@ -7,7 +7,10 @@
 fmt_adapt_capital_projects(
   data,
   date_cols = c("Date Beg", "Date End", "Design Start Date", "Construction Start Date"),
-  drop_cols = c("PStatus Code", "PDescription Code", "PPercentComplete Code")
+  drop_cols = c("PStatus Code", "PDescription Code", "PPercentComplete Code",
+    "PCode Code", "PCode Name", "Fund, Grant, Special Purpose Code",
+    "Fund, Grant, Special Purpose Name", "RObject Code", "Grant_Detail Code",
+    "PManager Code", "PProjectOwner Code")
 )
 }
 \description{

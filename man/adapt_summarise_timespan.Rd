@@ -19,6 +19,9 @@ adapt_summarise_timespan(
 \arguments{
 \item{data}{Input data frame.}
 
+\item{timespan_cols}{Required. Passed to \code{.cols} argument of
+\code{\link[dplyr:across]{dplyr::across()}}}
+
 \item{.fns}{Functions to apply to each of the selected columns.
 Possible values are:
 \itemize{
@@ -82,8 +85,6 @@ also unconditionally drops all levels of grouping).
 In addition, a message informs you of that choice, unless the result is ungrouped,
 the option "dplyr.summarise.inform" is set to \code{FALSE},
 or when \code{summarise()} is called from a function in a package.}
-
-\item{timespan}{Passed to \code{.cols} argument of \code{\link[dplyr:across]{dplyr::across()}}}
 }
 \description{
 \code{\link[=adapt_summarise_timespan]{adapt_summarise_timespan()}} uses \code{\link[dplyr:across]{dplyr::across()}} and \code{\link[dplyr:summarise]{dplyr::summarise()}}

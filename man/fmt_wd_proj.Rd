@@ -9,8 +9,10 @@ formatting code/name column pairs}
 \usage{
 fmt_wd_proj_worktags(
   data,
-  drop_cols = c("PCode Code", "PCode Name", "Fund, Grant, Special Purpose Code",
-    "Fund, Grant, Special Purpose Name", "RObject Code", "Grant_Detail Code")
+  fund_cols = c("FGSFund Code", "FGSFund Name"),
+  fund_pattern = "^[:digit:]+",
+  cost_center_cols = c("Cost Center Code", "Cost Center Name"),
+  cost_center_pattern = cap_patterns[["cost_center"]]
 )
 
 fmt_wd_proj_name(
@@ -18,6 +20,11 @@ fmt_wd_proj_name(
   project_code_col = "Project Code",
   project_name_col = "Project Name"
 )
+}
+\arguments{
+\item{fund_cols, cost_center_cols}{Fund and Cost Center column name pairs.
+Must be provided with the code column first and the name column second. One
+but not both may be set to \code{NULL}.}
 }
 \description{
 Format Capital data from Adaptive Planning by dropping select columns and

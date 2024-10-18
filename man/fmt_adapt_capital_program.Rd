@@ -4,7 +4,13 @@
 \alias{fmt_adapt_capital_program}
 \title{Format Adaptive Planing Six-Year Capital Improvement Program Data}
 \usage{
-fmt_adapt_capital_program(data, current_year = 2026, timespan = c(2026:2031))
+fmt_adapt_capital_program(
+  data,
+  current_year = 2026,
+  timespan = c(2026:2031),
+  drop_cols = c("PCode Code", "PCode Name", "Fund, Grant, Special Purpose Code",
+    "Fund, Grant, Special Purpose Name", "RObject Code", "Grant_Detail Code")
+)
 }
 \description{
 Format Adaptive Planing Six-Year Capital Improvement Program Data
