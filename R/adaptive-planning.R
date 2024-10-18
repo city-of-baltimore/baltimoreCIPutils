@@ -6,6 +6,7 @@
 #'
 #' @inheritParams openxlsx2::wb_load
 #' @inheritDotParams openxlsx2::wb_to_df -col_names -start_row
+#' @export
 adapt_read_sheet <- function(file,
                              types = NULL,
                              nm = NULL,
@@ -35,30 +36,47 @@ adapt_read_sheet <- function(file,
     )
   }
 
-  has_info <- "Information about this Sheet" %in% adapt_wb_sheets
+  info_sheet <- "Information about this Sheet"
 
-  if (has_info) {
+  if (info_sheet %in% adapt_wb_sheets) {
     adapt_sheet_info <- openxlsx2::wb_to_df(
       adapt_wb,
-      sheet = "Information about this Sheet",
+      sheet = info_sheet,
       start_row = 1,
       col_names = FALSE,
       skip_empty_rows = TRUE
     )
 
+    adapt_sheet_info <- set_names(
+      c(adapt_sheet_info[1, 1], adapt_sheet_info[2:4, 2]),
+      c("Source", adapt_sheet_info[2:4, 1])
+    )
+
+    adapt_sheet_info_msg <- set_names(
+      paste0(
+        "{.field ", names(adapt_sheet_info), "}: ",
+        "{.str ", adapt_sheet_info, "}"
+      ),
+      rep("*", 4)
+    )
+
     cli::cli_inform(
       c(
         "v" = "Reading {.path {file}}",
-        setNames(
-          c(
-            paste0(
-              "{.field ", c("Source", adapt_sheet_info[2:4, 1]), "}: ",
-              "{.str ", c(adapt_sheet_info[1, 1], adapt_sheet_info[2:4, 2]), "}"
-            )
-          ),
-          rep("*", 4)
-        )
+        adapt_sheet_info_msg
       )
+    )
+
+    attributes(adapt_sheet_data)[["adapt_sheet_info"]] <- c(
+      c(
+        "filename" = fs::path_file(file),
+        "path" = file
+      ),
+      adapt_sheet_info
+    )
+  } else {
+    cli::cli_alert_warning(
+      "Expected sheet {.field {info_sheet}} can't be found in {.file {file}}"
     )
   }
 
@@ -92,9 +110,11 @@ adapt_read_sheet <- function(file,
 #' to combine fiscal year amount columns grouped by some other variables.
 #'
 #' @param data Input data frame.
-#' @param timespan Passed to `.cols` argument of [dplyr::across()]
+#' @param timespan_cols Required. Passed to `.cols` argument of
+#'   [dplyr::across()]
 #' @inheritParams dplyr::across
 #' @inheritParams dplyr::summarise
+#' @export
 adapt_summarise_timespan <- function(
     data,
     timespan_cols,
