@@ -33,42 +33,48 @@ NULL
 
 #' [fmt_wd_proj_worktags()] drops duplicative columns then formats the Fund
 #' and Cost Center columns.
+#'
+#' @param fund_cols,cost_center_cols Fund and Cost Center column name pairs.
+#'   Must be provided with the code column first and the name column second. One
+#'   but not both may be set to `NULL`.
 #' @rdname fmt_wd_proj
 #' @export
 fmt_wd_proj_worktags <- function(
     data,
-    drop_cols = c(
-      "PCode Code", "PCode Name",
-      "Fund, Grant, Special Purpose Code",
-      # TODO: Check if either of the Fund, Grant, Special Purpose Code columns
-      # should be retained
-      "Fund, Grant, Special Purpose Name",
-      "RObject Code", "Grant_Detail Code"
-    )) {
-  nm <- c(
-    "FGSFund Code",
-    "FGSFund Name",
-    "Cost Center Code",
-    "Cost Center Name"
-  )
-
-  stopifnot(
-    all(has_name(data, nm))
-  )
-
-  data |>
-    # FIXME: Consider removing this drop_cols argument from this function
-    dplyr::select(!tidyselect::any_of(drop_cols)) |>
-    fmt_wd_code_name(
+    fund_cols = c(
       "FGSFund Code",
-      "FGSFund Name",
-      "^[:digit:]+"
-    ) |>
-    fmt_wd_code_name(
+      "FGSFund Name"
+    ),
+    fund_pattern = "^[:digit:]+",
+    cost_center_cols = c(
       "Cost Center Code",
-      "Cost Center Name",
-      "^(CAP|RES|zzDNU_CAP|DNU_CAP)[:digit:]+"
-    )
+      "Cost Center Name"
+    ),
+    cost_center_pattern = cap_patterns[["cost_center"]]) {
+  stopifnot(
+    is.character(c(fund_cols, cost_center_cols)),
+    any(has_name(data, c(fund_cols, cost_center_cols)))
+  )
+
+  if (!is.null(fund_cols)) {
+    data <- data |>
+      fmt_wd_code_name(
+        fund_cols[[1]],
+        fund_cols[[2]],
+        fund_pattern
+      )
+  }
+
+  if (!is.null(cost_center_cols)) {
+    data <- data |>
+      fmt_wd_code_name(
+        cost_center_cols[[1]],
+        cost_center_cols[[2]],
+        cost_center_pattern
+      )
+  }
+
+  data
 }
 
 #' [fmt_wd_proj_name()] creates a new column named "Project Name Short" that
