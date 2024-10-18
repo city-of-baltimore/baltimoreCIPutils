@@ -85,3 +85,22 @@ cap_patterns <- list(
 )
 
 usethis::use_data(cap_patterns, overwrite = TRUE)
+
+project_details <- googlesheets4::read_sheet(
+  "https://docs.google.com/spreadsheets/d/1LFjKUq_OgrrvZeXC5rZ9jgqZtqltnG8NLG9NDplvMtg/edit?usp=sharing",
+  sheet = "project_detail_updates"
+)
+
+wd_proj_detail_updates <- project_details |>
+  filter(!is.na(project_name_updated) | !is.na(project_desc_updated)) |>
+  select(
+    project_code, project_name_updated, name_justification,
+    project_desc_updated, desc_justification
+  ) |>
+  set_names(
+    \(x) {
+      stringr::str_to_title(stringr::str_replace_all(x, "_", " "))
+    }
+  )
+
+usethis::use_data(wd_proj_detail_updates, overwrite = TRUE)

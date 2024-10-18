@@ -61,3 +61,18 @@
 #' @format A length 2 list.
 #' @details DETAILS
 "cap_patterns"
+
+#' Updated Names and Descriptions for Workday Projects
+#'
+#' `wd_proj_detail_updates`
+#'
+#' @format A data frame with 462 rows and 5 variables:
+#' \describe{
+#'   \item{`Project Code`}{Workday Project Code}
+#'   \item{`Project Name Updated`}{Updated project name}
+#'   \item{`Name Justification`}{Justification for name update}
+#'   \item{`Project Desc Updated`}{Updated project description}
+#'   \item{`Desc Justification`}{Justification for description update}
+#'}
+#' @details <https://docs.google.com/spreadsheets/d/1LFjKUq_OgrrvZeXC5rZ9jgqZtqltnG8NLG9NDplvMtg/edit?usp=sharing>
+"wd_proj_detail_updates"
