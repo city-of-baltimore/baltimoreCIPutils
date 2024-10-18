@@ -77,3 +77,11 @@ load_wd_proj_related_plan_xwalk <- function(
 wd_proj_related_plan_xwalk <- load_wd_proj_related_plan_xwalk()
 
 usethis::use_data(wd_proj_related_plan_xwalk, overwrite = TRUE)
+
+cap_patterns <- list(
+  "contract_num" = "(TR |Tr |TR|TR-|SWC|SWC |SWC-|WC|WC-|WC |SDC|SDC |SDC-|SC |SC|SC-|ER |ER-|ER)[:digit:]+",
+  "cost_center" = "^(CAP|RES|zzDNU_CAP|DNU_CAP)[:digit:]+",
+  "cip_num" = "[:digit:]{3}\\-[:digit:]{3}"
+)
+
+usethis::use_data(cap_patterns, overwrite = TRUE)
