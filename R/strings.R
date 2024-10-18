@@ -7,7 +7,7 @@ NULL
 #' @rdname str_capital
 #' @name str_extract_project_code
 str_extract_project_code <- function(string) {
-  str_extract(
+  stringr::str_extract(
     string,
     "^PRJ[:digit:]{6}"
   )
@@ -18,9 +18,9 @@ str_extract_project_code <- function(string) {
 #' @rdname str_capital
 #' @name str_extract_all_project_codes
 str_extract_all_project_codes <- function(string,
-                                         simplify = FALSE) {
-  str_extract_all(
-    str_remove(toupper(string), "-"),
+                                          simplify = FALSE) {
+  stringr::str_extract_all(
+    stringr::str_remove(toupper(string), "-"),
     "^PRJ[:digit:]{6}",
     simplify = simplify
   )
@@ -37,14 +37,14 @@ str_extract_all_project_codes <- function(string,
 #' @importFrom stringr str_extract str_extract_all
 str_extract_contract_num <- function(
     string,
-    pattern = "(TR |Tr |TR|TR-|SWC|SWC |SWC-|WC|WC-|WC |SDC|SDC |SDC-|SC |SC|SC-|ER |ER-|ER)[:digit:]+",
+    pattern = cap_patterns[["contract_num"]],
     extract_all = FALSE,
     ...) {
-  fn <- str_extract
+  fn <- stringr::str_extract
 
   # FIXME: Implement separate str_extract_all_contract_nums function
   if (extract_all) {
-    fn <- str_extract_all
+    fn <- stringr::str_extract_all
   }
 
   string <- fn(
@@ -56,14 +56,14 @@ str_extract_contract_num <- function(
   remove_pattern <- "[:space:]|[:punct:]"
 
   if (!is.list(string)) {
-    string <- str_remove_all(toupper(string), pattern = remove_pattern)
+    string <- stringr::str_remove_all(toupper(string), pattern = remove_pattern)
     return(string)
   }
 
   lapply(
     string,
     \(x) {
-      str_remove_all(toupper(x), pattern = remove_pattern)
+      stringr::str_remove_all(toupper(x), pattern = remove_pattern)
     }
   )
 }
@@ -73,8 +73,8 @@ str_extract_contract_num <- function(
 #' @rdname str_capital
 #' @name str_extract_cip_num
 str_extract_cip_num <- function(string) {
-  str_extract(
+  stringr::str_extract(
     string,
-    "[:digit:]{3}\\-[:digit:]{3}"
+    cap_patterns[["cip_num"]]
   )
 }

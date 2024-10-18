@@ -53,3 +53,11 @@
 #' }
 #' @details <https://docs.google.com/spreadsheets/d/1jEgFt1-8a96IxzSyUU2J_tqoII5qL4utWiK6v4OBIBw/edit?usp=sharing>
 "wd_proj_related_plan_xwalk"
+
+#' String patterns for capital projects
+#'
+#' A named list of string patterns for use with this package.
+#'
+#' @format A length 2 list.
+#' @details DETAILS
+"cap_patterns"
