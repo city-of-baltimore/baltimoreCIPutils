@@ -17,6 +17,7 @@ Depends:
 Imports: 
     cli,
     dplyr,
+    fs,
     lifecycle,
     lubridate,
     openxlsx2,
@@ -24,7 +25,10 @@ Imports:
     stringr,
     tidyselect,
     vctrs
+Suggests: 
+    gt
 Encoding: UTF-8
+Language: en-US
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
