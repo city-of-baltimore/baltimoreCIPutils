@@ -70,7 +70,8 @@ adapt_read_sheet <- function(file,
     attributes(adapt_sheet_data)[["adapt_sheet_info"]] <- c(
       c(
         "filename" = fs::path_file(file),
-        "path" = file
+        "path" = file,
+        "birth_time" = fs::file_info(file)[["birth_time"]]
       ),
       adapt_sheet_info
     )
@@ -92,8 +93,8 @@ adapt_read_sheet <- function(file,
     return(adapt_sheet_data)
   }
 
-  adapt_index <- adapt_sheet_data[, 1]
-  value_rows <- !dplyr::cumany(adapt_index == "Total")
+  # adapt_index <- adapt_sheet_data[, 1]
+  value_rows <- !dplyr::cumany(adapt_sheet_data[, 1] == "Total")
 
   # TODO: Consider if there is value in pulling the export date from the footer
   # footer_rows <- !is.na(adapt_index) &
@@ -106,18 +107,18 @@ adapt_read_sheet <- function(file,
 
 #' Summarise a data frame by timespan columns
 #'
-#' [adapt_summarise_timespan()] uses [dplyr::across()] and [dplyr::summarise()]
+#' [summarise_timespan()] uses [dplyr::across()] and [dplyr::summarise()]
 #' to combine fiscal year amount columns grouped by some other variables.
 #'
 #' @param data Input data frame.
-#' @param timespan_cols Required. Passed to `.cols` argument of
-#'   [dplyr::across()]
+#' @param timespan_cols Required. Defaults to `curr_yr_span()`. Passed to `.cols`
+#'   argument of [dplyr::across()]
 #' @inheritParams dplyr::across
 #' @inheritParams dplyr::summarise
 #' @export
-adapt_summarise_timespan <- function(
+summarise_timespan <- function(
     data,
-    timespan_cols,
+    timespan_cols = curr_yr_span(),
     .fns = \(x) {
       sum(x, na.rm = TRUE)
     },
