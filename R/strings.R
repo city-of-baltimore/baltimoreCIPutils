@@ -37,7 +37,7 @@ str_extract_all_project_codes <- function(string,
 #' @importFrom stringr str_extract str_extract_all
 str_extract_contract_num <- function(
     string,
-    pattern = cap_patterns[["contract_num"]],
+    pattern = baltimoreCIPutils::cap_patterns[["contract_num"]],
     extract_all = FALSE,
     ...) {
   fn <- stringr::str_extract
@@ -75,6 +75,6 @@ str_extract_contract_num <- function(
 str_extract_cip_num <- function(string) {
   stringr::str_extract(
     string,
-    cap_patterns[["cip_num"]]
+    baltimoreCIPutils::cap_patterns[["cip_num"]]
   )
 }
