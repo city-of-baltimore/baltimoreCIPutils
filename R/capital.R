@@ -1,24 +1,107 @@
+#' Format Adaptive Planning Capital Projects data
+#'
+#' [fmt_adapt_proj_details()] supports formatting for the Project Details
+#' Sheet from Adaptive Planning and can be adapted for use with Capital Projects
+#' data reports from Workday.
+#'
+#' @param date_cols Names of date columns to parse with
+#'   [lubridate::parse_date_time()].
+#' @param drop_cols Columns to drop from input data frame. By default these are
+#'   all duplicative of retained columns or fully empty.
+#' @export
+fmt_adapt_proj_details <- function(data,
+                                   date_cols = c(
+                                     "Date Beg",
+                                     "Date End",
+                                     "Design Start Date",
+                                     "Construction Start Date"
+                                   ),
+                                   drop_cols = c(
+                                     "PStatus Code", "PDescription Code",
+                                     "PPercentComplete Code",
+                                     "PCode Code", "PCode Name",
+                                     "Fund, Grant, Special Purpose Code",
+                                     # TODO: Check if either of the Fund,
+                                     # Grant, Special Purpose Code columns
+                                     # should be retained
+                                     "Fund, Grant, Special Purpose Name",
+                                     "RObject Code", "Grant_Detail Code",
+                                     # TODO: Check when/how these columns
+                                     # changed in Workday
+                                     "PManager Code", "PProjectOwner Code"
+                                   )) {
+  data |>
+    dplyr::select(
+      !any_of(drop_cols)
+    ) |>
+    fmt_wd_proj_worktags() |>
+    fmt_wd_proj_name() |>
+    fmt_wd_proj_hierarchy() |>
+    # Format date columns
+    dplyr::mutate(
+      dplyr::across(
+        all_of(date_cols),
+        \(x) {
+          lubridate::parse_date_time(x, "m/d/y")
+        }
+      )
+    ) |>
+    # Replace invalid values with explicit NAs
+    dplyr::mutate(
+      dplyr::across(
+        all_of(
+          c("Year of Impact", "Related Plan")
+        ),
+        \(x) {
+          dplyr::if_else(
+            x %in% c("N/A", "NA", "None", "TBD"),
+            NA_character_,
+            x
+          )
+        }
+      )
+    )
+  # TODO: Add leveled formatting for leveled columns
+}
+
 #' Format Adaptive Planing Six-Year Capital Improvement Program Data
 #'
 #' @export
-fmt_adapt_capital_program <- function(data,
-                                      current_year = 2026,
-                                      timespan = c(2026:2031),
-                                      drop_cols = c(
-                                        "PCode Code", "PCode Name",
-                                        "Fund, Grant, Special Purpose Code",
-                                        # TODO: Check if either of the Fund, Grant, Special Purpose Code columns
-                                        # should be retained
-                                        "Fund, Grant, Special Purpose Name",
-                                        "RObject Code", "Grant_Detail Code"
-                                      )) {
-  out_years <- setdiff(timespan, current_year)
+fmt_adapt_6yr_program <- function(data,
+                                  timespan_cols = curr_yr_span(),
+                                  # current_year = getOption("baltimoreCIP.current_year", 2026),
+                                  drop_cols = c(
+                                    "PCode Code", "PCode Name",
+                                    "Fund, Grant, Special Purpose Code",
+                                    # TODO: Check if either of the Fund,
+                                    # Grant, Special Purpose Code columns
+                                    # should be retained
+                                    "Fund, Grant, Special Purpose Name",
+                                    "RObject Code", "Grant_Detail Code"
+                                  ),
+                                  fund_cols = c(
+                                    "FGSFund Code",
+                                    "FGSFund Name"
+                                  ),
+                                  cost_center_cols = c(
+                                    "Cost Center Code",
+                                    "Cost Center Name"
+                                  ),
+                                  revenue_category_cols = c(
+                                    "Revenue Category Code",
+                                    "Revenue Category Name"
+                                  )) {
+  # timespan <- timespan %||% seq(current_year, current_year + 5)
+  # out_years <- setdiff(timespan, current_year)
 
   data |>
-    fmt_wd_proj_worktags() |>
+    fmt_wd_proj_worktags(
+      fund_cols = fund_cols,
+      cost_center_cols = cost_center_cols
+    ) |>
     fmt_wd_code_name(
-      "Revenue Category Code",
-      "Revenue Category Name",
+      revenue_category_cols[[1]], # "Revenue Category Code",
+      revenue_category_cols[[2]],
       "^RC[:digit:]+"
     ) |>
     fmt_wd_code_name(
@@ -29,7 +112,11 @@ fmt_adapt_capital_program <- function(data,
     dplyr::mutate(
       "RAccount Code" := stringr::str_remove(.data[["RAccount Code"]], ":$")
     ) |>
-    dplyr::select(!any_of(drop_cols))
+    dplyr::select(!any_of(drop_cols)) |>
+    set_excel_style_class(
+      cols = timespan_cols,
+      style_class = "accounting"
+    )
 }
 
 #' Format Workday Project Hierarchy columns
@@ -37,16 +124,33 @@ fmt_adapt_capital_program <- function(data,
 #' [fmt_wd_proj_hierarchy()] formats the PHierarchy1 Code and Name and
 #' PHierarchy2 Code and Name columns and then joins related labels from the
 #' `wd_proj_hierarchy_xwalk` reference data.
+#'
+#' @keywords enrichment
 fmt_wd_proj_hierarchy <- function(data) {
+  phierarhcy1_cols <- c(
+    "PHierarchy1 Code",
+    "PHierarchy1 Name"
+  )
+
+  phierarhcy2_cols <- c(
+    "PHierarchy2 Code",
+    "PHierarchy2 Name"
+  )
+
+  stopifnot(
+    all(has_name(data, c(phierarhcy1_cols, phierarhcy2_cols)))
+  )
+
   data |>
     fmt_wd_code_name(
-      "PHierarchy1 Code",
+      phierarhcy1_cols[[1]],
+      phierarhcy1_cols[[2]],
       "PHierarchy1 Name",
       "^PJH[:digit:]+"
     ) |>
     fmt_wd_code_name(
-      "PHierarchy2 Code",
-      "PHierarchy2 Name",
+      phierarhcy2_cols[[1]],
+      phierarhcy2_cols[[2]],
       "^(PJH|CIP|PJHCIP)[:digit:]+"
     ) |>
     join_wd_proj_hierarchy_labels()
@@ -56,7 +160,13 @@ fmt_wd_proj_hierarchy <- function(data) {
 #' Join PHierarchy1 Label and PHierarchy2 Label columns based on
 #' `wd_proj_hierarchy_xwalk` reference data
 #'
-#' @keywords internal
+#' [join_wd_proj_hierarchy_labels()] joins the internal
+#' [baltimoreCIPutils::wd_proj_hierarchy_xwalk] data to the input data frame
+#' using "PHierarchy1 Code" and "PHierarchy2 Code" as join columns.
+#'
+#' @returns A data frame with added columns "PHierarchy1 Label" and "PHierarchy2
+#'   Label"
+#' @keywords enrichment
 join_wd_proj_hierarchy_labels <- function(data) {
   stopifnot(
     all(has_name(data, c("PHierarchy1 Code", "PHierarchy2 Code")))
@@ -99,102 +209,6 @@ join_wd_proj_hierarchy_labels <- function(data) {
     )
 }
 
-#' Format Adaptive Planning Capital Projects data
-#'
-#' @export
-fmt_adapt_capital_projects <- function(data,
-                                       # current_year,
-                                       # timespan,
-                                       date_cols = c(
-                                         "Date Beg",
-                                         "Date End",
-                                         "Design Start Date",
-                                         "Construction Start Date"
-                                       ),
-                                       drop_cols = c(
-                                         "PStatus Code", "PDescription Code",
-                                         "PPercentComplete Code",
-                                         "PCode Code", "PCode Name",
-                                         "Fund, Grant, Special Purpose Code",
-                                         # TODO: Check if either of the Fund,
-                                         # Grant, Special Purpose Code columns
-                                         # should be retained
-                                         "Fund, Grant, Special Purpose Name",
-                                         "RObject Code", "Grant_Detail Code",
-                                         # TODO: Check when/how these columns
-                                         # changed in Workday
-                                         "PManager Code", "PProjectOwner Code"
-                                       )) {
-  # out_years <- setdiff(timespan, current_year)
-
-  data |>
-    dplyr::select(
-      !any_of(drop_cols)
-    ) |>
-    fmt_wd_proj_worktags() |>
-    fmt_wd_proj_name() |>
-    fmt_wd_proj_hierarchy() |>
-    # Format date columns
-    dplyr::mutate(
-      dplyr::across(
-        all_of(date_cols),
-        \(x) {
-          lubridate::parse_date_time(x, "m/d/y")
-        }
-      )
-    ) |>
-    # Replace invalid values with explicit NAs
-    dplyr::mutate(
-      dplyr::across(
-        all_of(
-          c("Year of Impact", "Related Plan")
-        ),
-        \(x) {
-          dplyr::if_else(
-            x %in% c("N/A", "NA", "None", "TBD"),
-            NA_character_,
-            x
-          )
-        }
-      )
-    )
-  # TODO: Add leveled formatting for leveled columns
-}
-
-#' Join Asset ID values based on `wd_proj_asset_xwalk` reference data
-#'
-#' By default, [wd_proj_join_asset_id()] stores the asset ID values in a nested
-#' data frame list column to allow handling of projects with multiple matching
-#' assets.
-#'
-#' @keywords internal
-wd_proj_join_asset_id <- function(data,
-                                  project_code_col = "Project Code",
-                                  asset_id_col = "asset_id",
-                                  multiple = "nested") {
-  asset_xwalk <- baltimoreCIPutils::wd_proj_asset_xwalk |>
-    dplyr::select(
-      all_of(c(project_code_col, asset_id_col))
-    )
-
-  if (multiple == "nested") {
-    asset_xwalk <- asset_xwalk |>
-      dplyr::group_by(.data[[project_code_col]]) |>
-      dplyr::nest_by(
-        .key = asset_id_col,
-        .keep = TRUE
-      )
-
-    multiple <- "any"
-  }
-
-  data |>
-    dplyr::left_join(
-      asset_xwalk,
-      multiple = multiple,
-      by = project_code_col
-    )
-}
 
 # TODO: Add a function to join related plan data
 # join_wd_proj_related_plan <- function(data) {
