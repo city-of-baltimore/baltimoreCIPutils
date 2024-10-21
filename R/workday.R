@@ -6,6 +6,11 @@
 #' the two, optionally creating a new name or code column (leaving the original
 #' value unchanged).
 #'
+#' @param code_col,name_col Names for paired code and name columns.
+#' @param code_pattern Passed to pattern argument for [stringr::str_extract()].
+#' @param new_code_col,new_name_col New name for code and name columns (default
+#'   to same as existing code and name columns).
+#' @keywords internal
 #' @export
 fmt_wd_code_name <- function(data,
                              code_col,
@@ -50,10 +55,12 @@ fmt_wd_proj_worktags <- function(
       "Cost Center Code",
       "Cost Center Name"
     ),
-    cost_center_pattern = cap_patterns[["cost_center"]]) {
+    cost_center_pattern = baltimoreCIPutils::cap_patterns[["cost_center"]]) {
   stopifnot(
+    # fund_cols or cost_center_cols must be supplied
     is.character(c(fund_cols, cost_center_cols)),
-    any(has_name(data, c(fund_cols, cost_center_cols)))
+    # data must have supplied names
+    all(has_name(data, c(fund_cols, cost_center_cols)))
   )
 
   if (!is.null(fund_cols)) {
