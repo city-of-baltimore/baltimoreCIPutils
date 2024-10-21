@@ -12,7 +12,7 @@ fmt_wd_proj_worktags(
   fund_cols = c("FGSFund Code", "FGSFund Name"),
   fund_pattern = "^[:digit:]+",
   cost_center_cols = c("Cost Center Code", "Cost Center Name"),
-  cost_center_pattern = cap_patterns[["cost_center"]]
+  cost_center_pattern = baltimoreCIPutils::cap_patterns[["cost_center"]]
 )
 
 fmt_wd_proj_name(

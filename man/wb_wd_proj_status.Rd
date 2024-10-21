@@ -12,7 +12,6 @@ wb_wd_proj_status(
   status_wb = NULL,
   status_table_style = "TableStyleLight1",
   proj_table_style = "TableStyleLight2",
-  include_pivots = TRUE,
   na.strings = getOption("openxlsx2.na.strings", ""),
   ...
 )

@@ -11,3 +11,4 @@ fmt_wd_proj_hierarchy(data)
 PHierarchy2 Code and Name columns and then joins related labels from the
 \code{wd_proj_hierarchy_xwalk} reference data.
 }
+\keyword{enrichment}

@@ -7,8 +7,13 @@
 \usage{
 join_wd_proj_hierarchy_labels(data)
 }
-\description{
-Join PHierarchy1 Label and PHierarchy2 Label columns based on
-\code{wd_proj_hierarchy_xwalk} reference data
+\value{
+A data frame with added columns "PHierarchy1 Label" and "PHierarchy2
+Label"
 }
-\keyword{internal}
+\description{
+\code{\link[=join_wd_proj_hierarchy_labels]{join_wd_proj_hierarchy_labels()}} joins the internal
+\link{wd_proj_hierarchy_xwalk} data to the input data frame
+using "PHierarchy1 Code" and "PHierarchy2 Code" as join columns.
+}
+\keyword{enrichment}

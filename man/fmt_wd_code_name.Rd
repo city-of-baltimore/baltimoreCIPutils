@@ -14,9 +14,18 @@ fmt_wd_code_name(
   new_name_col = name_col
 )
 }
+\arguments{
+\item{code_col, name_col}{Names for paired code and name columns.}
+
+\item{code_pattern}{Passed to pattern argument for \code{\link[stringr:str_extract]{stringr::str_extract()}}.}
+
+\item{new_code_col, new_name_col}{New name for code and name columns (default
+to same as existing code and name columns).}
+}
 \description{
 \code{\link[=fmt_wd_code_name]{fmt_wd_code_name()}} is a helper for handling a common pattern where the code
 value is included as a prefix in a name value column. This function separates
 the two, optionally creating a new name or code column (leaving the original
 value unchanged).
 }
+\keyword{internal}

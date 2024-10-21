@@ -14,7 +14,7 @@ str_extract_all_project_codes(string, simplify = FALSE)
 
 str_extract_contract_num(
   string,
-  pattern = cap_patterns[["contract_num"]],
+  pattern = baltimoreCIPutils::cap_patterns[["contract_num"]],
   extract_all = FALSE,
   ...
 )
