@@ -113,9 +113,9 @@ fmt_adapt_6yr_program <- function(data,
       "RAccount Code" := stringr::str_remove(.data[["RAccount Code"]], ":$")
     ) |>
     dplyr::select(!any_of(drop_cols)) |>
-    set_excel_style_class(
+    set_excel_fmt_class(
       cols = timespan_cols,
-      style_class = "accounting"
+      fmt_class = "accounting"
     )
 }
 
