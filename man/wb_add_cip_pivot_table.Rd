@@ -15,6 +15,19 @@ wb_add_cip_pivot_table(
   ...
 )
 }
+\arguments{
+\item{wb}{A Workbook object containing a #' worksheet.}
+
+\item{sheet}{A worksheet containing a #'}
+
+\item{dims}{The worksheet cell where the pivot table is placed}
+
+\item{rows}{Defaults to c("Cost Center Name", "Project Name", "Revenue Category Name")}
+
+\item{data}{Defaults to curr_yr_span().}
+
+\item{params}{A list of parameters to modify pivot table creation. See \strong{Details} for available options.}
+}
 \description{
 Add a pivot table using data from the Six-Year CIP Sheet
 }

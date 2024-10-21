@@ -6,6 +6,9 @@
 \usage{
 vec_as_str_list_value(x)
 }
+\arguments{
+\item{x}{A vector to collapse into a single strng separated with commas ",".}
+}
 \description{
 Convert vector to value argument for openxlsx2 package functions
 }

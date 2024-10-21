@@ -13,6 +13,8 @@ set_excel_fmt_class(data, cols, fmt_class = "currency", multiple = TRUE)
 \item{fmt_class}{Excel style class, one of: c("currency", "accounting",
 "hyperlink", "percentage", "scientific", "formula").
 \url{https://janmarvin.github.io/openxlsx2/articles/openxlsx2_style_manual.html#numfmts2}}
+
+\item{multiple}{Whether \code{arg} may contain zero or several values.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}

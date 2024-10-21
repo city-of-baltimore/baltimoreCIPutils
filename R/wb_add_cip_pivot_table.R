@@ -1,5 +1,8 @@
 #' Add a pivot table using data from the Six-Year CIP Sheet
 #'
+#' @param rows Defaults to c("Cost Center Name", "Project Name", "Revenue Category Name")
+#' @param data Defaults to curr_yr_span().
+#' @inheritParams openxlsx2::wb_add_pivot_table
 wb_add_cip_pivot_table <- function(wb,
                                    sheet = current_sheet(),
                                    dims = "A1",

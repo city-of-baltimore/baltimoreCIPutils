@@ -1,10 +1,16 @@
 #' Filter Workday Projects by Cost Center or Hierarchy
+#'
+#' @param data A data frame to filter. Expected to have columns named
+#'   "PHierarchy1 Code" and "PHierarchy2 Code" (if `hierarchy` is supplied) or
+#'   "Cost Center Code" (if `cost_center` is supplied).
+#' @param hierarchy,cost_center Optional, PHierarchy1 Code. PHierarchy2 Code, or
+#'   Cost Center Code to filter by. Default: `NULL`
 wd_proj_filter <- function(data,
                            cost_center = NULL,
                            hierarchy = NULL) {
   stopifnot(
     is.null(hierarchy) || all(stringr::str_detect(hierarchy, "^PJH")),
-    is.null(cost_center) || all(stringr::str_detect(cost_center, cap_patterns[["cost_center"]]))
+    is.null(cost_center) || all(stringr::str_detect(cost_center, baltimoreCIPutils::cap_patterns[["cost_center"]]))
   )
 
   if (!is.null(hierarchy)) {
@@ -50,6 +56,8 @@ as_proj_status <- function(x, ordered = TRUE) {
 }
 
 #' Convert vector to value argument for openxlsx2 package functions
+#'
+#' @param x A vector to collapse into a single strng separated with commas ",".
 vec_as_str_list_value <- function(x) {
   stopifnot(rlang::is_vector(x))
   paste0('"', paste0(x, collapse = ","), '"')
@@ -149,8 +157,7 @@ wb_save_ext <- function(wb,
 #' an Excel file for use in reporting capital project status information.
 #'
 #' @param project_wb Passed to [openxlsx2::read_xlsx()]
-#' @param hierarchy,cost_center Optional, PHierarchy1 Code. PHierarchy2 Code, or
-#'   Cost Center Code to filter by. Default: `NULL`
+#' @inheritParams wd_proj_filter
 #' @param status_wb Optional, If not supplied, project_wb is assumed to be an
 #'   Adaptive Planning Project Details Sheet export with columns including
 #'   "Milestone Name" and "Milestone Explanation".  Default:  `NULL`
@@ -441,6 +448,7 @@ wb_wd_proj_status <- function(project_wb,
 #' @param fmt_class Excel style class, one of: c("currency", "accounting",
 #'   "hyperlink", "percentage", "scientific", "formula").
 #' <https://janmarvin.github.io/openxlsx2/articles/openxlsx2_style_manual.html#numfmts2>
+#' @inheritParams rlang::arg_match
 set_excel_fmt_class <- function(data,
                                 cols,
                                 fmt_class = "currency",

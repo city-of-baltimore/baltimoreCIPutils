@@ -66,10 +66,16 @@ fmt_adapt_proj_details <- function(data,
 
 #' Format Adaptive Planing Six-Year Capital Improvement Program Data
 #'
+#' [fmt_adapt_6yr_program()] formats data from the Six-Year Sheet exported from
+#' Adaptive Planning.
+#'
+#' @inheritParams fmt_wd_proj_worktags
+#' @param timespan_cols Timespan columns to format using default "accounting"
+#'   formatting. Passed to cols argument of [set_excel_fmt_class()]. Defaults to
+#'   [curr_yr_span()].
 #' @export
 fmt_adapt_6yr_program <- function(data,
                                   timespan_cols = curr_yr_span(),
-                                  # current_year = getOption("baltimoreCIP.current_year", 2026),
                                   drop_cols = c(
                                     "PCode Code", "PCode Name",
                                     "Fund, Grant, Special Purpose Code",
@@ -100,7 +106,7 @@ fmt_adapt_6yr_program <- function(data,
       cost_center_cols = cost_center_cols
     ) |>
     fmt_wd_code_name(
-      revenue_category_cols[[1]], # "Revenue Category Code",
+      revenue_category_cols[[1]],
       revenue_category_cols[[2]],
       "^RC[:digit:]+"
     ) |>

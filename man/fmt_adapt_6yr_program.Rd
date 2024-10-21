@@ -14,6 +14,16 @@ fmt_adapt_6yr_program(
   revenue_category_cols = c("Revenue Category Code", "Revenue Category Name")
 )
 }
+\arguments{
+\item{timespan_cols}{Timespan columns to format using default "accounting"
+formatting. Passed to cols argument of \code{\link[=set_excel_fmt_class]{set_excel_fmt_class()}}. Defaults to
+\code{\link[=curr_yr_span]{curr_yr_span()}}.}
+
+\item{fund_cols, cost_center_cols}{Fund and Cost Center column name pairs.
+Must be provided with the code column first and the name column second. One
+but not both may be set to \code{NULL}.}
+}
 \description{
-Format Adaptive Planing Six-Year Capital Improvement Program Data
+\code{\link[=fmt_adapt_6yr_program]{fmt_adapt_6yr_program()}} formats data from the Six-Year Sheet exported from
+Adaptive Planning.
 }

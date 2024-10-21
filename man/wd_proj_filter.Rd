@@ -6,6 +6,14 @@
 \usage{
 wd_proj_filter(data, cost_center = NULL, hierarchy = NULL)
 }
+\arguments{
+\item{data}{A data frame to filter. Expected to have columns named
+"PHierarchy1 Code" and "PHierarchy2 Code" (if \code{hierarchy} is supplied) or
+"Cost Center Code" (if \code{cost_center} is supplied).}
+
+\item{hierarchy, cost_center}{Optional, PHierarchy1 Code. PHierarchy2 Code, or
+Cost Center Code to filter by. Default: \code{NULL}}
+}
 \description{
 Filter Workday Projects by Cost Center or Hierarchy
 }
