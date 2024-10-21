@@ -1,8 +1,47 @@
+#' Filter Workday Projects by Cost Center or Hierarchy
+wd_proj_filter <- function(data,
+                           cost_center = NULL,
+                           hierarchy = NULL) {
+  stopifnot(
+    is.null(hierarchy) || all(stringr::str_detect(hierarchy, "^PJH")),
+    is.null(cost_center) || all(stringr::str_detect(cost_center, cap_patterns[["cost_center"]]))
+  )
+
+  if (!is.null(hierarchy)) {
+    data <- data |>
+      dplyr::filter(
+        .data[["PHierarchy1 Code"]] %in% hierarchy | .data[["PHierarchy2 Code"]] %in% hierarchy
+      )
+  }
+
+  if (!is.null(cost_center)) {
+    data <- data |>
+      dplyr::filter(
+        .data[["Cost Center Code"]] %in% cost_center
+      )
+  }
+
+  data
+}
+
 #' Vector of project status levels (also known as milestones)
 proj_status_levels <- c(
   "Project Initiation", "Design", "Construction",
   "Warranty", "Close Out", "Maintenance", "On Hold"
 )
+
+wb_add_proj_status_validation <- function(wb, x, cols) {
+  openxlsx2::wb_add_data_validation(
+    wb,
+    type = "list",
+    dims = wb_dims(
+      x = x,
+      cols = cols,
+      select = "data"
+    ),
+    value = vec_as_str_list_value(proj_status_levels)
+  )
+}
 
 #' Convert vector to factor with project status levels
 #' @inheritParams base::factor
@@ -11,10 +50,8 @@ as_proj_status <- function(x, ordered = TRUE) {
 }
 
 #' Convert vector to value argument for openxlsx2 package functions
-vec_as_ox2_list_value <- function(x) {
-  stopifnot(
-    rlang::is_vector(x)
-  )
+vec_as_str_list_value <- function(x) {
+  stopifnot(rlang::is_vector(x))
   paste0('"', paste0(x, collapse = ","), '"')
 }
 
@@ -75,6 +112,35 @@ wb_add_currencyfmt <- function(wb,
   )
 }
 
+#' Save a workboook object to file while filling file name from assigned
+#' workbook title
+#'
+#' `r lifecycle::badge("experimental")`
+#'
+#' [wb_save_ext()] is a helper function that fills in the file name when saving
+#' based on the XSLX title. This function is not stable and may change in the
+#' future.
+#'
+#' @keywords internal
+wb_save_ext <- function(wb,
+                        file = NULL,
+                        ...) {
+  if (is.null(file)) {
+    core_props <- wb |>
+      openxlsx2::wb_get_properties()
+
+    file <- fs::path_ext_set(
+      core_props[["title"]],
+      "xlsx"
+    )
+  }
+
+  openxlsx2::wb_save(
+    wb = wb,
+    file = file,
+    ...
+  )
+}
 
 #' Create a project status reporting workbook based on an existing project
 #' workbook
@@ -118,7 +184,6 @@ wb_wd_proj_status <- function(project_wb,
                               # as arguments
                               status_table_style = "TableStyleLight1",
                               proj_table_style = "TableStyleLight2",
-                              include_pivots = TRUE,
                               na.strings = getOption("openxlsx2.na.strings", ""),
                               ...) {
   # Load project data ----
@@ -127,20 +192,28 @@ wb_wd_proj_status <- function(project_wb,
     fmt_wd_proj_name() |>
     fmt_wd_proj_hierarchy()
 
-  # Optionally filter by Project Hierarchy and/or Cost Center ----
-  if (!is.null(hierarchy)) {
-    wd_proj_data <- wd_proj_data |>
-      dplyr::filter(
-        .data[["PHierarchy1 Code"]] %in% hierarchy | .data[["PHierarchy2 Code"]] %in% hierarchy
-      )
+  wb_filename <- project_wb
+
+  if (inherits(project_wb, "wbWorkbook")) {
+    wb_filename <- fs::path_file(wb_filename[["path"]])
   }
 
-  if (!is.null(cost_center)) {
-    wd_proj_data <- wd_proj_data |>
-      dplyr::filter(
-        .data[["Cost Center Code"]] %in% cost_center
-      )
-  }
+  hierarchy_label <- hierarchy %||% "all Project Hierarchies"
+  cost_center_label <- cost_center %||% "all Cost Centers"
+
+  about_this_wb <- epoxy::epoxy(
+    "This workbook was created on {.date Sys.Date()}",
+    "using project data from {.dquote wb_filename}.",
+    "Data includes {.bold hierarchy_label} and {.bold cost_center_label}.",
+    .collapse = " "
+  )
+
+  # Optionally filter by Project Hierarchy and/or Cost Center ----
+  wd_proj_data <- wd_proj_filter(
+    wd_proj_data,
+    hierarchy = hierarchy,
+    cost_center = cost_center
+  )
 
   currency_cols <- c("Budgets", "Actuals", "Commitments", "Obligations")
 
@@ -151,10 +224,15 @@ wb_wd_proj_status <- function(project_wb,
       all_of(currency_cols),
       starts_with(c("Project", "PHierarchy"))
     ) |>
+    # TODO: Consider adding these cols to drop_cols in `fmt_adapt_proj_details()`
     dplyr::select(
       !any_of(
         c("Project Type Code", "Project or Program Code")
       )
+    ) |>
+    # Sort by Project Code
+    dplyr::arrange(
+      dplyr::desc(.data[["Project Code"]])
     )
 
   file_date <- as.Date(fs::file_info(project_wb$path)[["modification_time"]])
@@ -233,11 +311,15 @@ wb_wd_proj_status <- function(project_wb,
 
   proj_status_value_cols <- c("Last Reported Status", "Status")
 
-  # Create workbook
+  # Create workbook with a title based on the input hierarchy and cost center
   openxlsx2::wb_workbook(
     title = paste0(
-      "Capital Project Status Updates -",
-      stringr::str_sub(Sys.Date(), end = 7)
+      c(
+        "Capital Project Status Updates",
+        hierarchy, cost_center,
+        stringr::str_sub(Sys.Date(), end = 7)
+      ),
+      collapse = " - "
     ),
     company = "City of Baltimore",
     category = "CIP",
@@ -245,12 +327,21 @@ wb_wd_proj_status <- function(project_wb,
   ) |>
     # Instructions Sheet ----
 
+    # TODO: Restore instructions tab when formatting can be figured out
     # Create sheet for instructions
-    openxlsx2::wb_add_worksheet(
-      "Instructions",
-      tab_color = wb_color("orange")
-    ) |>
-    openxlsx2::wb_protect_worksheet("Instructions") |>
+    # openxlsx2::wb_add_worksheet(
+    #   "Instructions",
+    #   tab_color = wb_color("orange")
+    # ) |>
+    # openxlsx2::wb_add_data(
+    #   x = c(
+    #     "About" = about_this_wb
+    #   )
+    # ) |>
+    # openxlsx2::wb_add_cell_style(
+    #   wrap_text = TRUE
+    # ) |>
+    # openxlsx2::wb_protect_worksheet("Instructions") |>
     # Current Status Sheet ----
 
     # Create sheet for data entry
@@ -269,14 +360,9 @@ wb_wd_proj_status <- function(project_wb,
     openxlsx2::wb_freeze_pane(
       first_col = TRUE
     ) |>
-    openxlsx2::wb_add_data_validation(
-      type = "list",
-      dims = wb_dims(
-        x = curr_proj_status_sheet,
-        cols = proj_status_value_cols,
-        select = "data"
-      ),
-      value = vec_as_ox2_list_value(proj_status_levels)
+    wb_add_proj_status_validation(
+      x = curr_proj_status_sheet,
+      cols = proj_status_value_cols
     ) |>
     # FIXME: wb_add_form_control works with only one cell at a time
     openxlsx2::wb_add_data_validation(
@@ -286,7 +372,7 @@ wb_wd_proj_status <- function(project_wb,
         cols = "No Change",
         select = "data"
       ),
-      value = vec_as_ox2_list_value(c("Y", "N"))
+      value = vec_as_str_list_value(c("Y", "N"))
     ) |>
     # Protect cost center, project code, and last reported status columns
     openxlsx2::wb_set_col_widths(
@@ -343,31 +429,35 @@ wb_wd_proj_status <- function(project_wb,
 }
 
 
-
 #' Prepare a data frame with Excel style class values for formatting by
 #' openxlsx2
 #'
 #' `r lifecycle::badge("experimental")`
 #'
-#' [fmt_xlsx_sty()] applies a style to each specified column.
+#' [set_excel_fmt_class()] applies a style to each specified column.
 #'
-#' @param sty Excel style class, one of: c("currency", "accounting",
-#'   "hyperlink", "percentage", "scientific").
+#' @param cols description
+#' @param fmt_class Excel style class, one of: c("currency", "accounting",
+#'   "hyperlink", "percentage", "scientific", "formula").
 #' <https://janmarvin.github.io/openxlsx2/articles/openxlsx2_style_manual.html#numfmts2>
-fmt_xlsx_sty <- function(data,
-                         cols,
-                         sty) {
-  sty <- arg_match(
-    sty,
-    c("currency", "accounting", "hyperlink", "percentage", "scientific"),
-    multiple = TRUE
+set_excel_fmt_class <- function(data,
+                                cols,
+                                fmt_class = "currency",
+                                multiple = TRUE) {
+  fmt_class <- arg_match(
+    fmt_class,
+    c(
+      "currency", "accounting", "hyperlink",
+      "percentage", "scientific", "formula"
+    ),
+    multiple = multiple
   )
 
-  sty <- vctrs::vec_recycle(sty, size = length(cols))
+  fmt_class <- vctrs::vec_recycle(fmt_class, size = length(cols))
 
   for (i in seq_along(cols)) {
     col <- cols[[i]]
-    class(data[[col]]) <- c(class(data[[col]]), sty[[i]])
+    class(data[[col]]) <- c(fmt_class[[i]], class(data[[col]]))
   }
 
   data
