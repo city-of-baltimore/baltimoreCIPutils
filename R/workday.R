@@ -12,6 +12,8 @@
 #'   to same as existing code and name columns).
 #' @keywords internal
 #' @export
+#' @importFrom dplyr mutate
+#' @importFrom stringr str_extract str_trim str_remove
 fmt_wd_code_name <- function(data,
                              code_col,
                              name_col,
@@ -90,6 +92,8 @@ fmt_wd_proj_worktags <- function(
 #' number.
 #' @rdname fmt_wd_proj
 #' @export
+#' @importFrom dplyr filter mutate
+#' @importFrom stringr str_remove
 fmt_wd_proj_name <- function(data,
                              project_code_col = "Project Code",
                              project_name_col = "Project Name") {

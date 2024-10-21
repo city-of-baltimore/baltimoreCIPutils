@@ -169,13 +169,14 @@ wb_save_ext <- function(wb,
 #' }
 #' @rdname wb_wd_proj_status
 #' @export
-#' @importFrom openxlsx2 wb_workbook read_xlsx wb_add_worksheet
-#'   wb_protect_worksheet wb_add_data_table wb_freeze_pane
-#'   wb_add_data_validation wb_set_col_widths wb_set_cell_style
-#'   create_cell_style wb_set_active_sheet
-#' @importFrom dplyr filter select mutate if_else case_when left_join
-#'   arrange
-#' @importFrom fs file_info
+#' @importFrom openxlsx2 read_xlsx wb_workbook wb_add_worksheet
+#'   wb_add_data_table wb_freeze_pane wb_add_data_validation wb_set_col_widths
+#'   wb_set_cell_style create_cell_style wb_protect_worksheet
+#'   wb_set_active_sheet
+#' @importFrom fs path_file file_info
+#' @importFrom epoxy epoxy
+#' @importFrom dplyr select arrange desc mutate if_else case_when left_join pick
+#' @importFrom stringr str_sub
 wb_wd_proj_status <- function(project_wb,
                               hierarchy = NULL,
                               cost_center = NULL,
