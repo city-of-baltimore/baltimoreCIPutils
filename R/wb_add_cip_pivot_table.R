@@ -1,8 +1,14 @@
 #' Add a pivot table using data from the Six-Year CIP Sheet
 #'
+#' [wb_add_cip_pivot_table()] uses [openxlsx2::wb_add_pivot_table()] to add a
+#' pivot table based on the Cost Center, Project, and Revenue Category for
+#' Capital Improvement Program data exported from Adaptive Planning.
+#'
 #' @param rows Defaults to c("Cost Center Name", "Project Name", "Revenue Category Name")
 #' @param data Defaults to curr_yr_span().
 #' @inheritParams openxlsx2::wb_add_pivot_table
+#' @keywords internal
+#' @export
 wb_add_cip_pivot_table <- function(wb,
                                    sheet = current_sheet(),
                                    dims = "A1",
@@ -15,8 +21,7 @@ wb_add_cip_pivot_table <- function(wb,
                                      with_filter = TRUE,
                                      banded_rows = TRUE # ,
                                      # numfmt = c(formatCode = rep("##0.0", 6))
-                                   ),
-                                   ...) {
+                                   )) {
   # FIXME: This doesn't work - which requires that the input data be prepared
   # using a similar approach
   # x <- set_excel_fmt_class(
