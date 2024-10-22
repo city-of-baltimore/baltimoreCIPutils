@@ -1,15 +1,25 @@
 #' Read Adaptive Planning Sheet from exported Excel file
 #'
 #' [adapt_read_sheet()] reads an exported sheet from an exported Excel file,
-#' optionally removing summary data and footer rows, or subsetting to child and
+#' optionally removing summary data and footer rows, or sub-setting to child and
 #' parent rows if sheet allows row splitting.
 #'
 #' @inheritParams openxlsx2::wb_load
+#' @param col_names Names to use for returned data frame.
 #' @inheritDotParams openxlsx2::wb_to_df -col_names -start_row
+#' @param keep Values from input file to keep. "values" keeps all values.
+#'   "child" and "parent" are used if the input data uses row-splitting and are
+#'   not yet supported. "all" retains any trailing "Total" row.
+#' @param name_repair Passed to repair argument of [vctrs::vec_as_names()].
 #' @export
+#' @importFrom openxlsx2 wb_load wb_get_sheet_names wb_to_df
+#' @importFrom cli cli_inform cli_alert_warning
+#' @importFrom fs path_file file_info
+#' @importFrom vctrs vec_as_names
+#' @importFrom dplyr cumany
 adapt_read_sheet <- function(file,
                              types = NULL,
-                             nm = NULL,
+                             col_names = NULL,
                              ...,
                              keep = c("values", "child", "parent", "all"),
                              name_repair = "minimal") {
@@ -81,11 +91,11 @@ adapt_read_sheet <- function(file,
     )
   }
 
-  nm <- nm %||% names(adapt_sheet_data)
+  col_names <- col_names %||% names(adapt_sheet_data)
 
   adapt_sheet_data <- set_names(
     adapt_sheet_data,
-    vctrs::vec_as_names(nm, repair = name_repair)
+    vctrs::vec_as_names(col_names, repair = name_repair)
   )
 
   # TODO: Add handling for "children" and "parent" options
