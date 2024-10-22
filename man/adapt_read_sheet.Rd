@@ -7,7 +7,7 @@
 adapt_read_sheet(
   file,
   types = NULL,
-  nm = NULL,
+  col_names = NULL,
   ...,
   keep = c("values", "child", "parent", "all"),
   name_repair = "minimal"
@@ -15,6 +15,8 @@ adapt_read_sheet(
 }
 \arguments{
 \item{file}{A path to an existing .xlsx, .xlsm or .xlsb file}
+
+\item{col_names}{Names to use for returned data frame.}
 
 \item{...}{
   Arguments passed on to \code{\link[openxlsx2:wb_to_df]{openxlsx2::wb_to_df}}
@@ -47,9 +49,15 @@ If no sheet is selected, the first appearance will be selected. See \code{\link[
 (These are used internally to define a cell type.)}
     \item{\code{check_names}}{If \code{TRUE} then the names of the variables in the data frame are checked to ensure that they are syntactically valid variable names.}
   }}
+
+\item{keep}{Values from input file to keep. "values" keeps all values.
+"child" and "parent" are used if the input data uses row-splitting and are
+not yet supported. "all" retains any trailing "Total" row.}
+
+\item{name_repair}{Passed to repair argument of \code{\link[vctrs:vec_as_names]{vctrs::vec_as_names()}}.}
 }
 \description{
 \code{\link[=adapt_read_sheet]{adapt_read_sheet()}} reads an exported sheet from an exported Excel file,
-optionally removing summary data and footer rows, or subsetting to child and
+optionally removing summary data and footer rows, or sub-setting to child and
 parent rows if sheet allows row splitting.
 }

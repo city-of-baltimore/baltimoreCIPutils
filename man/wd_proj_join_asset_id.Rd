@@ -11,9 +11,19 @@ wd_proj_join_asset_id(
   multiple = "nested"
 )
 }
-\description{
-By default, \code{\link[=wd_proj_join_asset_id]{wd_proj_join_asset_id()}} stores the asset ID values in a nested
-data frame list column to allow handling of projects with multiple matching
-assets.
+\arguments{
+\item{data}{A data frame with column name matching value in
+\code{project_code_col}.}
+
+\item{project_code_col}{Project code column name in data.}
+
+\item{asset_id_col}{Asset ID column name.}
+
+\item{multiple}{Defaults to "nested" which nests the data by project code
+column and then sets \code{multiple = "any"}. Passed to \code{\link[dplyr:mutate-joins]{dplyr::left_join()}}}
 }
-\keyword{internal}
+\description{
+By default, \code{\link[=wd_proj_join_asset_id]{wd_proj_join_asset_id()}} uses \code{multiple = "nested"} to store the
+asset ID values in a nested data frame list column to allow handling of
+projects with multiple matching assets.
+}

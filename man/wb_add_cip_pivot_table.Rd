@@ -11,8 +11,7 @@ wb_add_cip_pivot_table(
   rows = c("Cost Center Name", "Project Name", "Revenue Category Name"),
   data = curr_yr_span(),
   params = list(table_style = "TableStyleLight16", apply_number_formats = TRUE,
-    first_column = TRUE, with_filter = TRUE, banded_rows = TRUE),
-  ...
+    first_column = TRUE, with_filter = TRUE, banded_rows = TRUE)
 )
 }
 \arguments{
@@ -29,5 +28,8 @@ wb_add_cip_pivot_table(
 \item{params}{A list of parameters to modify pivot table creation. See \strong{Details} for available options.}
 }
 \description{
-Add a pivot table using data from the Six-Year CIP Sheet
+\code{\link[=wb_add_cip_pivot_table]{wb_add_cip_pivot_table()}} uses \code{\link[openxlsx2:wb_add_pivot_table]{openxlsx2::wb_add_pivot_table()}} to add a
+pivot table based on the Cost Center, Project, and Revenue Category for
+Capital Improvement Program data exported from Adaptive Planning.
 }
+\keyword{internal}

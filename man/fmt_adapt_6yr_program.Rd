@@ -15,7 +15,7 @@ fmt_adapt_6yr_program(
 )
 }
 \arguments{
-\item{timespan_cols}{Timespan columns to format using default "accounting"
+\item{timespan_cols}{Time span columns to format using default "accounting"
 formatting. Passed to cols argument of \code{\link[=set_excel_fmt_class]{set_excel_fmt_class()}}. Defaults to
 \code{\link[=curr_yr_span]{curr_yr_span()}}.}
 

@@ -20,7 +20,7 @@ wb_wd_proj_status(
 \item{project_wb}{Passed to \code{\link[openxlsx2:wb_to_df]{openxlsx2::read_xlsx()}}}
 
 \item{hierarchy, cost_center}{Optional, PHierarchy1 Code. PHierarchy2 Code, or
-Cost Center Code to filter by. Default: \code{NULL}}
+Cost Center Code values to filter by. Default: \code{NULL}}
 
 \item{status_wb}{Optional, If not supplied, project_wb is assumed to be an
 Adaptive Planning Project Details Sheet export with columns including

@@ -12,8 +12,10 @@ wd_proj_filter(data, cost_center = NULL, hierarchy = NULL)
 "Cost Center Code" (if \code{cost_center} is supplied).}
 
 \item{hierarchy, cost_center}{Optional, PHierarchy1 Code. PHierarchy2 Code, or
-Cost Center Code to filter by. Default: \code{NULL}}
+Cost Center Code values to filter by. Default: \code{NULL}}
 }
 \description{
-Filter Workday Projects by Cost Center or Hierarchy
+\code{\link[=wd_proj_filter]{wd_proj_filter()}} is a convenience function for filtering project data by
+Cost Center Code and/or PHierarchy1 Code and PHierarchy2 Code.
 }
+\keyword{internal}
