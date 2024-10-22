@@ -73,6 +73,6 @@
 #'   \item{`Name Justification`}{Justification for name update}
 #'   \item{`Project Desc Updated`}{Updated project description}
 #'   \item{`Desc Justification`}{Justification for description update}
-#'}
+#' }
 #' @details <https://docs.google.com/spreadsheets/d/1LFjKUq_OgrrvZeXC5rZ9jgqZtqltnG8NLG9NDplvMtg/edit?usp=sharing>
 "wd_proj_detail_updates"
