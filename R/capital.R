@@ -70,7 +70,7 @@ fmt_adapt_proj_details <- function(data,
 #' Adaptive Planning.
 #'
 #' @inheritParams fmt_wd_proj_worktags
-#' @param timespan_cols Timespan columns to format using default "accounting"
+#' @param timespan_cols Time span columns to format using default "accounting"
 #'   formatting. Passed to cols argument of [set_excel_fmt_class()]. Defaults to
 #'   [curr_yr_span()].
 #' @export
@@ -159,21 +159,23 @@ fmt_wd_proj_hierarchy <- function(data) {
       phierarhcy2_cols[[2]],
       "^(PJH|CIP|PJHCIP)[:digit:]+"
     ) |>
-    join_wd_proj_hierarchy_labels()
+    wd_proj_join_hierarchy_labels()
 }
 
 
 #' Join PHierarchy1 Label and PHierarchy2 Label columns based on
 #' `wd_proj_hierarchy_xwalk` reference data
 #'
-#' [join_wd_proj_hierarchy_labels()] joins the internal
+#' [wd_proj_join_hierarchy_labels()] joins the internal
 #' [baltimoreCIPutils::wd_proj_hierarchy_xwalk] data to the input data frame
 #' using "PHierarchy1 Code" and "PHierarchy2 Code" as join columns.
 #'
+#' @param data A data frame with "PHierarchy1 Code" and "PHierarchy2 Code"
+#'   columns.
 #' @returns A data frame with added columns "PHierarchy1 Label" and "PHierarchy2
 #'   Label"
-#' @keywords enrichment
-join_wd_proj_hierarchy_labels <- function(data) {
+#' @export
+wd_proj_join_hierarchy_labels <- function(data) {
   stopifnot(
     all(has_name(data, c("PHierarchy1 Code", "PHierarchy2 Code")))
   )
