@@ -104,3 +104,24 @@ wd_proj_detail_updates <- project_details |>
   )
 
 usethis::use_data(wd_proj_detail_updates, overwrite = TRUE)
+
+# TODO: Complete implementation of a reference function for the revenue category
+# crosswalk
+
+load_revenue_category_xwalk <- function(cip_data, ...) {
+  revenue_categories <- cip_data |>
+    select(contains("Revenue")) |>
+    distinct()
+
+  revenue_category_xwalk <- googlesheets4::read_sheet(
+    "https://docs.google.com/spreadsheets/d/1LFjKUq_OgrrvZeXC5rZ9jgqZtqltnG8NLG9NDplvMtg/edit?usp=sharing",
+    sheet = "revenue_category_name_xwalk"
+  )
+
+  revenue_categories |>
+    right_join(
+      revenue_category_xwalk,
+      by = c("Revenue Category Code" = "revenue_category_code")
+    ) |>
+    filter(!is.na(`Revenue Category Code`))
+}
