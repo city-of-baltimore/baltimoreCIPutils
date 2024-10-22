@@ -34,13 +34,14 @@ You can install the development version of baltimoreCIPutils like so:
 
 ## Example
 
-The package includes several reference data sets:
-
 ```{r setup}
 library(baltimoreCIPutils)
 ## basic example code
 ```
 
+The package includes several reference data sets including labels for project hierarchy worktags:
+
 ```{r}
-wd_proj_hierarchy_xwalk
+head(wd_proj_hierarchy_xwalk, 10)
 ```
+
