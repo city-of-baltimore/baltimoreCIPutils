@@ -5,42 +5,67 @@
 \alias{str_extract_project_code}
 \alias{str_extract_all_project_codes}
 \alias{str_extract_contract_num}
+\alias{str_extract_all_contract_num}
 \alias{str_extract_cip_num}
-\title{Helper string functions for Baltimore City Capital Project data}
+\title{Extract matching identifiers for Baltimore City Capital Project data}
 \usage{
-str_extract_project_code(string)
+str_extract_project_code(
+  string,
+  pattern = "^PRJ[:digit:]{6}",
+  remove_pattern = "-",
+  simplify = FALSE
+)
 
-str_extract_all_project_codes(string, simplify = FALSE)
+str_extract_all_project_codes(
+  string,
+  pattern = "PRJ[:digit:]{6}",
+  remove_pattern = "-",
+  simplify = FALSE
+)
 
 str_extract_contract_num(
   string,
   pattern = baltimoreCIPutils::cap_patterns[["contract_num"]],
   extract_all = FALSE,
+  remove_pattern = "[:space:]|[:punct:]",
+  ...
+)
+
+str_extract_all_contract_num(
+  string,
+  pattern = baltimoreCIPutils::cap_patterns[["contract_num"]],
+  remove_pattern = "[:space:]|[:punct:]",
   ...
 )
 
 str_extract_cip_num(string)
 }
 \arguments{
-\item{pattern}{Pattern used to extract}
+\item{pattern}{Pattern used to extract.}
 
-\item{extract_all}{If \code{TRUE}, use \code{\link[stringr:str_extract]{stringr::str_extract_all()}} and return a
-list of extracted identifiers. This supports multiple identifiers per
-string.}
+\item{remove_pattern}{Pattern of character to remove from returned strings.
+Defaults to \code{"-"} (dashes that occasionally appear between "PRJ" and
+following numbers) or \code{"[:space:]|[:punct:]"} (all spaces and punctuation).}
+
+\item{extract_all}{Deprecated as of 2024-10-23. If \code{TRUE}, use
+\code{\link[stringr:str_extract]{stringr::str_extract_all()}} and return a list of extracted identifiers.
+This supports multiple identifiers per string.}
 }
 \description{
-Helper string functions for Baltimore City Capital Project data
+A collection of helper functions using \code{\link[stringr:str_extract]{stringr::str_extract()}} and
+\code{\link[stringr:str_extract]{stringr::str_extract_all()}} to extract identifiers from Workday Project
+names or other text. Project codes and contract numbers are always converted
+to upper case. When using these functions with unstructured text, the results
+should be reviewed and validated to flag problems.
+}
+\examples{
 
-\code{\link[=str_extract_project_code]{str_extract_project_code()}} uses \code{\link[stringr:str_extract]{stringr::str_extract()}} to extract a
-Project Code.
+str_extract_project_code("PRJ001145 908093 SWC 7764 Race St Box Culvert")
 
-\code{\link[=str_extract_all_project_codes]{str_extract_all_project_codes()}} uses \code{\link[stringr:str_extract]{stringr::str_extract_all()}} to
-extract Project Codes.
+str_extract_all_project_codes(c("PRJ002404 PRJ002550", "PRJ001599 913117 Shake and Bake Recreation Center"))
 
-\code{\link[=str_extract_contract_num]{str_extract_contract_num()}} extract one or more Baltimore City agency
-contract numbers from a character vector. If \code{extract_all = TRUE}, the
-function returns a list instead of a character vector.
+str_extract_cip_num("PRJ002550 943004 504-004 ADA Infrastructure Upgrades-111")
 
-\code{\link[=str_extract_cip_num]{str_extract_cip_num()}} uses \code{\link[stringr:str_extract]{stringr::str_extract()}} to extract a legacy CIP
-number.
+str_extract_contract_num("PRJ001145 908093 SWC 7764 Race St Box Culvert")
+
 }
