@@ -72,7 +72,7 @@ fmt_wd_proj_worktags <- function(
       fmt_wd_code_name(
         fund_cols[[1]],
         fund_cols[[2]],
-        fund_pattern
+        code_pattern = fund_pattern
       )
   }
 
@@ -81,7 +81,7 @@ fmt_wd_proj_worktags <- function(
       fmt_wd_code_name(
         cost_center_cols[[1]],
         cost_center_cols[[2]],
-        cost_center_pattern
+        code_pattern = cost_center_pattern
       )
   }
 
@@ -106,7 +106,7 @@ fmt_wd_proj_name <- function(data,
     fmt_wd_code_name(
       project_code_col,
       project_name_col,
-      "^PRJ[:digit:]+",
+      code_pattern = "^PRJ[:digit:]+",
       new_name_col = new_project_name_col
     ) |>
     dplyr::mutate(

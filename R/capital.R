@@ -151,13 +151,12 @@ fmt_wd_proj_hierarchy <- function(data) {
     fmt_wd_code_name(
       phierarhcy1_cols[[1]],
       phierarhcy1_cols[[2]],
-      "PHierarchy1 Name",
-      "^PJH[:digit:]+"
+      code_pattern = "^PJH[:digit:]+"
     ) |>
     fmt_wd_code_name(
       phierarhcy2_cols[[1]],
       phierarhcy2_cols[[2]],
-      "^(PJH|CIP|PJHCIP)[:digit:]+"
+      code_pattern = "^(PJH|CIP|PJHCIP)[:digit:]+"
     ) |>
     wd_proj_join_hierarchy_labels()
 }
