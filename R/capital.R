@@ -174,42 +174,53 @@ fmt_wd_proj_hierarchy <- function(data) {
 #' @returns A data frame with added columns "PHierarchy1 Label" and "PHierarchy2
 #'   Label"
 #' @export
-wd_proj_join_hierarchy_labels <- function(data) {
+wd_proj_join_hierarchy_labels <- function(data,
+                                          hierarchy1_col = "PHierarchy1 Code",
+                                          hierarchy2_col = "PHierarchy2 Code") {
   stopifnot(
-    all(has_name(data, c("PHierarchy1 Code", "PHierarchy2 Code")))
+    has_name(data, hierarchy1_col) || is.null(hierarchy1_col),
+    has_name(data, hierarchy2_col) || is.null(hierarchy2_col)
   )
 
-  hierarchy_1_xwalk <- baltimoreCIPutils::wd_proj_hierarchy_xwalk |>
-    dplyr::filter(!is.na(.data[["PHierarchy1 Code"]])) |>
-    dplyr::select(
-      all_of(
-        c("PHierarchy1 Code",
-          "PHierarchy1 Label" = "entity"
+  if (!is.null(hierarchy1_col)) {
+    hierarchy_1_xwalk <- baltimoreCIPutils::wd_proj_hierarchy_xwalk |>
+      dplyr::filter(!is.na(.data[["PHierarchy1 Code"]])) |>
+      dplyr::select(
+        all_of(
+          c("PHierarchy1 Code",
+            "PHierarchy1 Label" = "entity"
+          )
         )
       )
-    )
 
-  hierarchy_2_xwalk <- baltimoreCIPutils::wd_proj_hierarchy_xwalk |>
-    dplyr::filter(!is.na(.data[["PHierarchy2 Code"]])) |>
-    dplyr::select(
-      all_of(
-        c("PHierarchy2 Code",
-          "PHierarchy2 Label" = "entity"
+    data <- data |>
+      dplyr::left_join(
+        hierarchy_1_xwalk,
+        by = hierarchy1_col
+      )
+  }
+
+  if (!is.null(hierarchy2_col)) {
+    hierarchy_2_xwalk <- baltimoreCIPutils::wd_proj_hierarchy_xwalk |>
+      dplyr::filter(!is.na(.data[["PHierarchy2 Code"]])) |>
+      dplyr::select(
+        all_of(
+          c("PHierarchy2 Code",
+            "PHierarchy2 Label" = "entity"
+          )
         )
       )
-    )
+
+    data <- data |>
+      dplyr::left_join(
+        hierarchy_2_xwalk,
+        by = hierarchy2_col
+      )
+  }
 
   data |>
-    dplyr::left_join(
-      hierarchy_1_xwalk,
-      by = "PHierarchy1 Code"
-    ) |>
-    dplyr::left_join(
-      hierarchy_2_xwalk,
-      by = "PHierarchy2 Code"
-    ) |>
     dplyr::relocate(
-      all_of(
+      any_of(
         c("PHierarchy1 Label", "PHierarchy2 Label")
       ),
       .after = starts_with("PHierarchy")
