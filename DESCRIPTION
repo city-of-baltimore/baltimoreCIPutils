@@ -27,7 +27,9 @@ Imports:
     tidyselect,
     vctrs
 Suggests: 
-    gt
+    gt,
+    readr,
+    tidyr
 Encoding: UTF-8
 Language: en-US
 LazyData: true
