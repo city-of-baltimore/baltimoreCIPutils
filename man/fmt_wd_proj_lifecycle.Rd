@@ -6,7 +6,8 @@
 \usage{
 fmt_wd_proj_lifecycle(
   data,
-  status_cols = c(Status = "Milestone Name", `Status Explanation` = "Milestone Name")
+  status_cols = c(Status = "Milestone Name", `Status Explanation` =
+    "Milestone Explanation")
 )
 }
 \arguments{

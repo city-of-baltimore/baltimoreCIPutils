@@ -15,7 +15,7 @@
 fmt_wd_proj_lifecycle <- function(data,
                                   status_cols = c(
                                     "Status" = "Milestone Name",
-                                    "Status Explanation" = "Milestone Name"
+                                    "Status Explanation" = "Milestone Explanation"
                                   )) {
   check_installed("tidyr")
 
