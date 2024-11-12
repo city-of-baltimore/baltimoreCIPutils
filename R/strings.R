@@ -11,6 +11,7 @@
 #' @param remove_pattern Pattern of character to remove from returned strings.
 #'   Defaults to `"-"` (dashes that occasionally appear between "PRJ" and
 #'   following numbers) or `"[:space:]|[:punct:]"` (all spaces and punctuation).
+#' @inheritParams stringr::str_extract_all
 #' @examples
 #'
 #' str_extract_project_code("PRJ001145 908093 SWC 7764 Race St Box Culvert")
@@ -33,8 +34,7 @@ str_extract_project_code <- function(string,
                                      simplify = FALSE) {
   stringr::str_extract(
     stringr::str_remove(toupper(string), remove_pattern),
-    pattern,
-    simplify = simplify
+    pattern
   )
 }
 
@@ -119,6 +119,7 @@ str_extract_all_contract_num <- function(string,
 #' [str_extract_cip_num()] extract a legacy CIP number.
 #' @rdname str_capital
 #' @name str_extract_cip_num
+#' @export
 str_extract_cip_num <- function(string) {
   stringr::str_extract(
     string,
