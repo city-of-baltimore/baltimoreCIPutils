@@ -12,6 +12,7 @@ wd_read_report <- function(file, start_row = 4, ...,  name_repair = "unique") {
   fileext <- fs::path_ext(file)
 
   if (fileext == "csv") {
+    check_installed("readr")
     data <- readr::read_csv(file, ..., skip = (start_row - 1), name_repair = name_repair)
   } else {
     data <- openxlsx2::read_xlsx(file, start_row = start_row, ...)
@@ -47,10 +48,10 @@ wd_read_report <- function(file, start_row = 4, ...,  name_repair = "unique") {
 #'
 #' @inheritParams wd_read_report
 #' @name wd_read_report_proj
-#' @export
 NULL
 
 #' @rdname wd_read_report_proj
+#' @export
 wd_read_report_proj_plan <- function(file, start_row = 4, ...) {
   if (!grepl("^Capital_Projects_With_Plan_Info", file)) {
     cli::cli_alert_warning(
@@ -66,6 +67,7 @@ wd_read_report_proj_plan <- function(file, start_row = 4, ...) {
 }
 
 #' @rdname wd_read_report_proj
+#' @export
 wd_read_report_proj_ltd <- function(file, start_row = 2, ...) {
   if (!grepl("^COB_Extract_Projects_With_LTD_Balances", file)) {
     cli::cli_alert_warning(
@@ -81,6 +83,7 @@ wd_read_report_proj_ltd <- function(file, start_row = 2, ...) {
 }
 
 #' @rdname wd_read_report_proj
+#' @export
 wd_read_report_extract_proj <- function(file, start_row = 8, ...) {
   wd_read_report(
     file = file,
