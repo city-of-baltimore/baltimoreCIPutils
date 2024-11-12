@@ -9,6 +9,7 @@ adapt_read_sheet(
   types = NULL,
   col_names = NULL,
   ...,
+  start_row = 4,
   keep = c("values", "child", "parent", "all"),
   name_repair = "minimal"
 )

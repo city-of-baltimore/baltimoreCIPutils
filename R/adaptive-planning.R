@@ -21,6 +21,7 @@ adapt_read_sheet <- function(file,
                              types = NULL,
                              col_names = NULL,
                              ...,
+                             start_row = 4,
                              keep = c("values", "child", "parent", "all"),
                              name_repair = "minimal") {
   adapt_wb <- openxlsx2::wb_load(file)
@@ -31,7 +32,7 @@ adapt_read_sheet <- function(file,
     adapt_sheet_data <- openxlsx2::wb_to_df(
       adapt_wb,
       sheet = adapt_wb_sheets[[1]],
-      start_row = 4,
+      start_row = start_row,
       types = types,
       col_names = TRUE,
       ...
@@ -40,7 +41,7 @@ adapt_read_sheet <- function(file,
     adapt_sheet_data <- openxlsx2::wb_to_df(
       adapt_wb,
       sheet = adapt_wb_sheets[[1]],
-      start_row = 4,
+      start_row = start_row,
       col_names = TRUE,
       ...
     )
@@ -58,8 +59,8 @@ adapt_read_sheet <- function(file,
     )
 
     adapt_sheet_info <- set_names(
-      c(adapt_sheet_info[1, 1], adapt_sheet_info[2:4, 2]),
-      c("Source", adapt_sheet_info[2:4, 1])
+      c(adapt_sheet_info[1, 1], adapt_sheet_info[2:start_row, 2]),
+      c("Source", adapt_sheet_info[2:start_row, 1])
     )
 
     adapt_sheet_info_msg <- set_names(
