@@ -2,8 +2,7 @@
 % Please edit documentation in R/wd_proj_status.R
 \name{fmt_wd_proj_lifecycle}
 \alias{fmt_wd_proj_lifecycle}
-\title{\code{\link[=fmt_wd_proj_lifecycle]{fmt_wd_proj_lifecycle()}} takes project status information and creates a
-crosswalk of projects based on planned transfers or consolidations.}
+\title{Format project status information as a project status crosswalk}
 \usage{
 fmt_wd_proj_lifecycle(
   data,
@@ -18,6 +17,8 @@ named "Milestone Name" and "Milestone Name".}
 status value and explanation.}
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 \code{\link[=fmt_wd_proj_lifecycle]{fmt_wd_proj_lifecycle()}} takes project status information and creates a
 crosswalk of projects based on planned transfers or consolidations.
 }

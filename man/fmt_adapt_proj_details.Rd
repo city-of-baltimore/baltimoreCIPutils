@@ -14,6 +14,9 @@ fmt_adapt_proj_details(
 )
 }
 \arguments{
+\item{data}{A data frame with columns matching \code{date_cols} and additional
+columns ("Year of Impact" and "Related Plan").}
+
 \item{date_cols}{Names of date columns to parse with
 \code{\link[lubridate:parse_date_time]{lubridate::parse_date_time()}}.}
 
