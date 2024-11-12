@@ -4,6 +4,8 @@
 #' Sheet from Adaptive Planning and can be adapted for use with Capital Projects
 #' data reports from Workday.
 #'
+#' @param data A data frame with columns matching `date_cols` and additional
+#'   columns ("Year of Impact" and "Related Plan").
 #' @param date_cols Names of date columns to parse with
 #'   [lubridate::parse_date_time()].
 #' @param drop_cols Columns to drop from input data frame. By default these are
@@ -169,8 +171,10 @@ fmt_wd_proj_hierarchy <- function(data) {
 #' [baltimoreCIPutils::wd_proj_hierarchy_xwalk] data to the input data frame
 #' using "PHierarchy1 Code" and "PHierarchy2 Code" as join columns.
 #'
-#' @param data A data frame with "PHierarchy1 Code" and "PHierarchy2 Code"
-#'   columns.
+#' @param data A data frame with columns matching `hierarchy1_col` and
+#'   `hierarchy2_col` arguments.
+#' @param hierarchy1_col,hierarchy2_col Column names to join values from
+#'   `baltimoreCIPutils::wd_proj_hierarchy_xwalk`
 #' @returns A data frame with added columns "PHierarchy1 Label" and "PHierarchy2
 #'   Label"
 #' @export
