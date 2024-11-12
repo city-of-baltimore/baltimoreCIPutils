@@ -41,11 +41,20 @@ str_extract_all_contract_num(
 str_extract_cip_num(string)
 }
 \arguments{
+\item{string}{Input vector. Either a character vector, or something
+coercible to one.}
+
 \item{pattern}{Pattern used to extract.}
 
 \item{remove_pattern}{Pattern of character to remove from returned strings.
 Defaults to \code{"-"} (dashes that occasionally appear between "PRJ" and
 following numbers) or \code{"[:space:]|[:punct:]"} (all spaces and punctuation).}
+
+\item{simplify}{A boolean.
+\itemize{
+\item \code{FALSE} (the default): returns a list of character vectors.
+\item \code{TRUE}: returns a character matrix.
+}}
 
 \item{extract_all}{Deprecated as of 2024-10-23. If \code{TRUE}, use
 \code{\link[stringr:str_extract]{stringr::str_extract_all()}} and return a list of extracted identifiers.

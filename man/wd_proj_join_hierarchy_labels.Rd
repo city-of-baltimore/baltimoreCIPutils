@@ -5,11 +5,18 @@
 \title{Join PHierarchy1 Label and PHierarchy2 Label columns based on
 \code{wd_proj_hierarchy_xwalk} reference data}
 \usage{
-wd_proj_join_hierarchy_labels(data)
+wd_proj_join_hierarchy_labels(
+  data,
+  hierarchy1_col = "PHierarchy1 Code",
+  hierarchy2_col = "PHierarchy2 Code"
+)
 }
 \arguments{
-\item{data}{A data frame with "PHierarchy1 Code" and "PHierarchy2 Code"
-columns.}
+\item{data}{A data frame with columns matching \code{hierarchy1_col} and
+\code{hierarchy2_col} arguments.}
+
+\item{hierarchy1_col, hierarchy2_col}{Column names to join values from
+\code{baltimoreCIPutils::wd_proj_hierarchy_xwalk}}
 }
 \value{
 A data frame with added columns "PHierarchy1 Label" and "PHierarchy2

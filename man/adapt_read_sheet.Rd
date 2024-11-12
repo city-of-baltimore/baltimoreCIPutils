@@ -48,6 +48,7 @@ If no sheet is selected, the first appearance will be selected. See \code{\link[
     \item{\code{keep_attributes}}{If \code{TRUE} additional attributes are returned.
 (These are used internally to define a cell type.)}
     \item{\code{check_names}}{If \code{TRUE} then the names of the variables in the data frame are checked to ensure that they are syntactically valid variable names.}
+    \item{\code{show_hyperlinks}}{If \code{TRUE} instead of the displayed text, hyperlink targets are shown.}
   }}
 
 \item{keep}{Values from input file to keep. "values" keeps all values.
