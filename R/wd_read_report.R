@@ -8,7 +8,7 @@
 #' @inheritParams openxlsx2::read_xlsx
 #' @inheritParams readr::read_csv
 #' @export
-wd_read_report <- function(file, start_row = 4, ...,  name_repair = "unique") {
+wd_read_report <- function(file, start_row = 4, ..., name_repair = "unique") {
   fileext <- fs::path_ext(file)
 
   if (fileext == "csv") {
@@ -89,5 +89,13 @@ wd_read_report_extract_proj <- function(file, start_row = 8, ...) {
     file = file,
     start_row = start_row,
     ...
-  )
+  ) |>
+    fmt_wd_proj_name(
+      project_code_col = "Project ID",
+      project_name_col = "Project"
+    ) |>
+    fmt_wd_proj_importance() |>
+    fmt_wd_proj_risk() |>
+    fmt_wd_proj_priority()
+  # TODO: Add formatting for "Cost Center" column
 }
