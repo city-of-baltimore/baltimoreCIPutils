@@ -29,7 +29,7 @@ NULL
 #' @name str_extract_project_code
 #' @export
 str_extract_project_code <- function(string,
-                                     pattern =  "^PRJ[:digit:]{6}",
+                                     pattern = "^PRJ[:digit:]{6}",
                                      remove_pattern = "-",
                                      simplify = FALSE) {
   stringr::str_extract(

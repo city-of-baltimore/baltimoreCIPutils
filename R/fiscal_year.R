@@ -23,8 +23,10 @@
 #'
 #' @export
 fiscal_year <- function(x,
-                        type = c("year", "year_prefix", "year_prefix_abb",
-                                 "date_first", "date_last"),
+                        type = c(
+                          "year", "year_prefix", "year_prefix_abb",
+                          "date_first", "date_last"
+                        ),
                         before = "FY",
                         ...) {
   type <- rlang::arg_match(type)

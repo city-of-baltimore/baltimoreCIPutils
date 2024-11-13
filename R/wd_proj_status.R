@@ -33,16 +33,20 @@ fmt_wd_proj_lifecycle <- function(data,
       Relationship = case_when(
         str_detect(
           `Status Explanation`,
-          "Project canceled|Transfer to|Transferring to|MOVE BALANCE|Move Balance|Transferring fund to|TRANSFER RESERVE AMOUNT|Transferring Funds to") ~ "Transfer balance to another project",
+          "Project canceled|Transfer to|Transferring to|MOVE BALANCE|Move Balance|Transferring fund to|TRANSFER RESERVE AMOUNT|Transferring Funds to"
+        ) ~ "Transfer balance to another project",
         str_detect(
           `Status Explanation`,
-          "Waiting transfers|MAKE PRIMARY ACCOUNT|INTO THIS ACCOUNT") ~ "Transfer balance from other projects",
+          "Waiting transfers|MAKE PRIMARY ACCOUNT|INTO THIS ACCOUNT"
+        ) ~ "Transfer balance from other projects",
         str_detect(
           `Status Explanation`,
-          "Reserve for|Reserve project for") ~ "Hold in reserve for another project",
+          "Reserve for|Reserve project for"
+        ) ~ "Hold in reserve for another project",
         str_detect(
           `Status Explanation`,
-          "Refer to") ~ "Superseded by another project"
+          "Refer to"
+        ) ~ "Superseded by another project"
       )
     ) |>
     tidyr::unnest_longer(
@@ -79,4 +83,3 @@ fmt_wd_proj_lifecycle <- function(data,
       related_project_data
     )
 }
-

@@ -16,4 +16,3 @@ fmt_wd_proj_dates <- function(data,
       `Project End FY` = fiscal_year(.data[[end_date_col]])
     )
 }
-
