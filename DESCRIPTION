@@ -27,6 +27,7 @@ Imports:
     tidyselect,
     vctrs
 Suggests: 
+    forcats,
     gt,
     readr,
     tidyr
