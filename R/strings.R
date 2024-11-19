@@ -22,6 +22,9 @@
 #'
 #' str_extract_contract_num("PRJ001145 908093 SWC 7764 Race St Box Culvert")
 #'
+#' # str_extract_dgs_asset_id only works w/ values enclosed in parentheses
+#' str_extract_dgs_asset_id("1 West Pratt St. (B06033)")
+#'
 NULL
 
 #' [str_extract_project_code()] extracts a Workday Project Code at the start of a string.
@@ -29,12 +32,14 @@ NULL
 #' @name str_extract_project_code
 #' @export
 str_extract_project_code <- function(string,
-                                     pattern = "^PRJ[:digit:]{6}",
+                                     pattern = baltimoreCIPutils::cap_patterns[["project_code"]],
                                      remove_pattern = "-",
-                                     simplify = FALSE) {
+                                     simplify = FALSE,
+                                     ...) {
   stringr::str_extract(
     stringr::str_remove(toupper(string), remove_pattern),
-    pattern
+    pattern = pattern,
+    ...
   )
 }
 
@@ -43,13 +48,15 @@ str_extract_project_code <- function(string,
 #' @name str_extract_all_project_codes
 #' @export
 str_extract_all_project_codes <- function(string,
-                                          pattern = "PRJ[:digit:]{6}",
+                                          pattern = baltimoreCIPutils::cap_patterns[["project_code"]],
                                           remove_pattern = "-",
-                                          simplify = FALSE) {
+                                          simplify = FALSE,
+                                          ...) {
   stringr::str_extract_all(
     stringr::str_remove(toupper(string), remove_pattern),
     pattern,
-    simplify = simplify
+    simplify = simplify,
+    ...
   )
 }
 
@@ -120,9 +127,28 @@ str_extract_all_contract_num <- function(string,
 #' @rdname str_capital
 #' @name str_extract_cip_num
 #' @export
-str_extract_cip_num <- function(string) {
+str_extract_cip_num <- function(string,
+                                pattern = baltimoreCIPutils::cap_patterns[["cip_num"]],
+                                ...) {
   stringr::str_extract(
     string,
-    baltimoreCIPutils::cap_patterns[["cip_num"]]
+    pattern = pattern,
+    ...
   )
 }
+
+#' [str_extract_dgs_asset_id()] extract a DGS "B Number" or asset ID.
+#' @rdname str_capital
+#' @name str_extract_dgs_asset_id
+#' @export
+str_extract_dgs_asset_id <- function(string,
+                                     pattern = baltimoreCIPutils::cap_patterns[["dgs_asset_id"]],
+                                     ...) {
+  stringr::str_extract(
+    string,
+    pattern = pattern,
+    ...
+  )
+}
+
+

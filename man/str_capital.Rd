@@ -7,20 +7,23 @@
 \alias{str_extract_contract_num}
 \alias{str_extract_all_contract_num}
 \alias{str_extract_cip_num}
+\alias{str_extract_dgs_asset_id}
 \title{Extract matching identifiers for Baltimore City Capital Project data}
 \usage{
 str_extract_project_code(
   string,
-  pattern = "^PRJ[:digit:]{6}",
+  pattern = baltimoreCIPutils::cap_patterns[["project_code"]],
   remove_pattern = "-",
-  simplify = FALSE
+  simplify = FALSE,
+  ...
 )
 
 str_extract_all_project_codes(
   string,
-  pattern = "PRJ[:digit:]{6}",
+  pattern = baltimoreCIPutils::cap_patterns[["project_code"]],
   remove_pattern = "-",
-  simplify = FALSE
+  simplify = FALSE,
+  ...
 )
 
 str_extract_contract_num(
@@ -38,7 +41,17 @@ str_extract_all_contract_num(
   ...
 )
 
-str_extract_cip_num(string)
+str_extract_cip_num(
+  string,
+  pattern = baltimoreCIPutils::cap_patterns[["cip_num"]],
+  ...
+)
+
+str_extract_dgs_asset_id(
+  string,
+  pattern = baltimoreCIPutils::cap_patterns[["dgs_asset_id"]],
+  ...
+)
 }
 \arguments{
 \item{string}{Input vector. Either a character vector, or something
@@ -76,5 +89,8 @@ str_extract_all_project_codes(c("PRJ002404 PRJ002550", "PRJ001599 913117 Shake a
 str_extract_cip_num("PRJ002550 943004 504-004 ADA Infrastructure Upgrades-111")
 
 str_extract_contract_num("PRJ001145 908093 SWC 7764 Race St Box Culvert")
+
+# str_extract_dgs_asset_id only works w/ values enclosed in parentheses
+str_extract_dgs_asset_id("1 West Pratt St. (B06033)")
 
 }
