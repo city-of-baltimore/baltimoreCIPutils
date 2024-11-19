@@ -6,7 +6,7 @@
 \usage{
 summarise_timespan(
   data,
-  timespan_cols = curr_yr_span(),
+  timespan_cols = curr_fy_span(),
   .fns = function(x) {
      sum(x, na.rm = TRUE)
  },
@@ -19,7 +19,7 @@ summarise_timespan(
 \arguments{
 \item{data}{Input data frame.}
 
-\item{timespan_cols}{Required. Defaults to \code{curr_yr_span()}. Passed to \code{.cols}
+\item{timespan_cols}{Required. Defaults to \code{\link[=curr_fy_span]{curr_fy_span()}}. Passed to \code{.cols}
 argument of \code{\link[dplyr:across]{dplyr::across()}}}
 
 \item{.fns}{Functions to apply to each of the selected columns.

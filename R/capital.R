@@ -74,10 +74,10 @@ fmt_adapt_proj_details <- function(data,
 #' @inheritParams fmt_wd_proj_worktags
 #' @param timespan_cols Time span columns to format using default "accounting"
 #'   formatting. Passed to cols argument of [set_excel_fmt_class()]. Defaults to
-#'   [curr_yr_span()].
+#'   [curr_fy_span()].
 #' @export
 fmt_adapt_6yr_program <- function(data,
-                                  timespan_cols = curr_yr_span(),
+                                  timespan_cols = curr_fy_span(),
                                   drop_cols = c(
                                     "PCode Code", "PCode Name",
                                     "Fund, Grant, Special Purpose Code",

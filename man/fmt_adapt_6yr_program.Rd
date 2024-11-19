@@ -6,7 +6,7 @@
 \usage{
 fmt_adapt_6yr_program(
   data,
-  timespan_cols = curr_yr_span(),
+  timespan_cols = curr_fy_span(),
   drop_cols = c("PCode Code", "PCode Name", "Fund, Grant, Special Purpose Code",
     "Fund, Grant, Special Purpose Name", "RObject Code", "Grant_Detail Code"),
   fund_cols = c("FGSFund Code", "FGSFund Name"),
@@ -17,7 +17,7 @@ fmt_adapt_6yr_program(
 \arguments{
 \item{timespan_cols}{Time span columns to format using default "accounting"
 formatting. Passed to cols argument of \code{\link[=set_excel_fmt_class]{set_excel_fmt_class()}}. Defaults to
-\code{\link[=curr_yr_span]{curr_yr_span()}}.}
+\code{\link[=curr_fy_span]{curr_fy_span()}}.}
 
 \item{fund_cols, cost_center_cols}{Fund and Cost Center column name pairs.
 Must be provided with the code column first and the name column second. One

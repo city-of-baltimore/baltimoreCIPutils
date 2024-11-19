@@ -5,7 +5,7 @@
 #' Capital Improvement Program data exported from Adaptive Planning.
 #'
 #' @param rows Defaults to c("Cost Center Name", "Project Name", "Revenue Category Name")
-#' @param data Defaults to curr_yr_span().
+#' @param data Defaults to curr_fy_span().
 #' @inheritParams openxlsx2::wb_add_pivot_table
 #' @keywords internal
 #' @export
@@ -13,7 +13,7 @@ wb_add_cip_pivot_table <- function(wb,
                                    sheet = current_sheet(),
                                    dims = "A1",
                                    rows = c("Cost Center Name", "Project Name", "Revenue Category Name"),
-                                   data = curr_yr_span(),
+                                   data = curr_fy_span(),
                                    params = list(
                                      table_style = "TableStyleLight16",
                                      apply_number_formats = TRUE,

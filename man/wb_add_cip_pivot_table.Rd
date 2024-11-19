@@ -9,7 +9,7 @@ wb_add_cip_pivot_table(
   sheet = current_sheet(),
   dims = "A1",
   rows = c("Cost Center Name", "Project Name", "Revenue Category Name"),
-  data = curr_yr_span(),
+  data = curr_fy_span(),
   params = list(table_style = "TableStyleLight16", apply_number_formats = TRUE,
     first_column = TRUE, with_filter = TRUE, banded_rows = TRUE)
 )
@@ -23,7 +23,7 @@ wb_add_cip_pivot_table(
 
 \item{rows}{Defaults to c("Cost Center Name", "Project Name", "Revenue Category Name")}
 
-\item{data}{Defaults to curr_yr_span().}
+\item{data}{Defaults to curr_fy_span().}
 
 \item{params}{A list of parameters to modify pivot table creation. See \strong{Details} for available options.}
 }

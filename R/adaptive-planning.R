@@ -122,14 +122,14 @@ adapt_read_sheet <- function(file,
 #' to combine fiscal year amount columns grouped by some other variables.
 #'
 #' @param data Input data frame.
-#' @param timespan_cols Required. Defaults to `curr_yr_span()`. Passed to `.cols`
+#' @param timespan_cols Required. Defaults to [curr_fy_span()]. Passed to `.cols`
 #'   argument of [dplyr::across()]
 #' @inheritParams dplyr::across
 #' @inheritParams dplyr::summarise
 #' @export
 summarise_timespan <- function(
     data,
-    timespan_cols = curr_yr_span(),
+    timespan_cols = curr_fy_span(),
     .fns = \(x) {
       sum(x, na.rm = TRUE)
     },
