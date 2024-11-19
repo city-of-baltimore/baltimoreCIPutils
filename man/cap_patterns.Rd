@@ -5,15 +5,14 @@
 \alias{cap_patterns}
 \title{String patterns for capital projects}
 \format{
-A length 2 list.
+A length 5 list with named patterns:
+contract_num, cost_center, cip_num, dgs_asset_id, and project_code
 }
 \usage{
 cap_patterns
 }
 \description{
-A named list of string patterns for use with this package.
-}
-\details{
-DETAILS
+A named list of string patterns for use with this package. Used for string
+extraction functions.
 }
 \keyword{datasets}

@@ -56,10 +56,11 @@
 
 #' String patterns for capital projects
 #'
-#' A named list of string patterns for use with this package.
+#' A named list of string patterns for use with this package. Used for string
+#' extraction functions.
 #'
-#' @format A length 2 list.
-#' @details DETAILS
+#' @format A length `r length(cap_patterns)` list with named patterns:
+#' `r knitr::combine_words(names(cap_patterns))`
 "cap_patterns"
 
 #' Updated Names and Descriptions for Workday Projects

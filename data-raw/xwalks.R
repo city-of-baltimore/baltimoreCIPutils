@@ -82,8 +82,13 @@ cap_patterns <- list(
   # FIXME: Add missing Contract numbers
   "contract_num" = "(TR |Tr |TR|TR-|SWC|SWC |SWC-|WC|WC-|WC |SDC|SDC |SDC-|SC |SC|SC-|ER |ER-|ER)[:digit:]+",
   # NOTE: CCA is used as the Cost Center for a single capital project - possibly an error
-  "cost_center" = "^(CAP|RES|CCA|zzDNU_CAP|DNU_CAP)[:digit:]+",
-  "cip_num" = "[:digit:]{3}\\-[:digit:]{3}"
+  # FIXME: Check if CIP is ever used by a Cost Center
+  "cost_center" = "^(CIP|CAP|RES|CCA|zzDNU_CAP|DNU_CAP)[:digit:]+",
+  "cip_num" = "[:digit:]{3}\\-[:digit:]{3}",
+  # NOTE: Matches DGS Asset ID values enclosed in parentheses only
+  "dgs_asset_id" = "(?<=\\()(B|C|L|M|P|A|T|Z)[:digit:]+(?=\\))",
+  # NOTE: Matches valid, upper-case project codes only
+  "project_code" = "^PRJ[:digit:]{6}"
 )
 
 usethis::use_data(cap_patterns, overwrite = TRUE)
