@@ -79,8 +79,10 @@ wd_proj_related_plan_xwalk <- load_wd_proj_related_plan_xwalk()
 usethis::use_data(wd_proj_related_plan_xwalk, overwrite = TRUE)
 
 cap_patterns <- list(
+  # FIXME: Add missing Contract numbers
   "contract_num" = "(TR |Tr |TR|TR-|SWC|SWC |SWC-|WC|WC-|WC |SDC|SDC |SDC-|SC |SC|SC-|ER |ER-|ER)[:digit:]+",
-  "cost_center" = "^(CAP|RES|zzDNU_CAP|DNU_CAP)[:digit:]+",
+  # NOTE: CCA is used as the Cost Center for a single capital project - possibly an error
+  "cost_center" = "^(CAP|RES|CCA|zzDNU_CAP|DNU_CAP)[:digit:]+",
   "cip_num" = "[:digit:]{3}\\-[:digit:]{3}"
 )
 
