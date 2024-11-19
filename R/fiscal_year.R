@@ -91,6 +91,7 @@ fy_span <- function(year, before = "FY", n = 1, type = "year_prefix") {
 #' `"baltimoreCIP.curr_yr"` option.
 #'
 #' @rdname fy_span
+#' @export
 curr_fy_span <- function(year = getOption("baltimoreCIP.curr_year", 2026),
                          before = "FY",
                          n = 6,
@@ -102,6 +103,7 @@ curr_fy_span <- function(year = getOption("baltimoreCIP.curr_year", 2026),
 #' `"baltimoreCIP.prior_yr"` option.
 #'
 #' @rdname fy_span
+#' @export
 prior_fy_span <- function(year = getOption("baltimoreCIP.prior_year", 2025),
                           before = "FY",
                           n = 6,
