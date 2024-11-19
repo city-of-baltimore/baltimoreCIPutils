@@ -4,7 +4,9 @@
 #' based on any input vector coercible to dates.
 #'
 #' @param type One of "year", "year_prefix", "year_prefix_abb", "date_first", or
-#'   "date_last"
+#'   "date_last". Defaults to "year".
+#' @param before Text to use as prefix if type is "year_prefix"
+#'   or "year_prefix_abb". Ignored for other types. Defaults to "FY".
 #' @inheritDotParams lubridate::as_date
 #' @returns An integer (if type = "year"), character, or date (if type is
 #'   "date_first" or "date_last").
@@ -19,7 +21,7 @@
 #'
 #' fiscal_year("2021-01-01", "date_first")
 #'
-#' fiscal_year("2021-01-01", "date_ldate")
+#' fiscal_year("2021-01-01", "date_last")
 #'
 #' @export
 fiscal_year <- function(x,
@@ -31,7 +33,7 @@ fiscal_year <- function(x,
                         ...) {
   type <- rlang::arg_match(type)
 
-  if (!inherits(x, "Date")) {
+  if (!all(inherits(x, "Date"))) {
     x <- lubridate::as_date(x, ...)
   }
 

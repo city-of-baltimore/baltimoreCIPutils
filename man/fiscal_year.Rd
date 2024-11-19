@@ -13,7 +13,10 @@ fiscal_year(
 }
 \arguments{
 \item{type}{One of "year", "year_prefix", "year_prefix_abb", "date_first", or
-"date_last"}
+"date_last". Defaults to "year".}
+
+\item{before}{Text to use as prefix if type is "year_prefix"
+or "year_prefix_abb". Ignored for other types. Defaults to "FY".}
 
 \item{...}{
   Arguments passed on to \code{\link[lubridate:as_date]{lubridate::as_date}}
@@ -40,6 +43,6 @@ fiscal_year("2021-01-01", "year_prefix_abb")
 
 fiscal_year("2021-01-01", "date_first")
 
-fiscal_year("2021-01-01", "date_ldate")
+fiscal_year("2021-01-01", "date_last")
 
 }
