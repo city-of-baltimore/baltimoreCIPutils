@@ -51,3 +51,61 @@ fiscal_year <- function(x,
     date_last = lubridate::as_date(paste0(fy, "-06-30"))
   )
 }
+
+
+#' Create a fiscal year vector of specified length from a start year
+#'
+#' [fy_span()] is a helper function for returning a vector of specified length.
+#'
+#' @param year Start year in span. Character or numeric coercible to integer.
+#'   Required.
+#' @inheritParams fiscal_year
+#' @param n Number of years in span. Defaults to `NULL` (equivalent to `n = 1`)
+#'   for [fy_span()] or 6 for [curr_fy_span()] and [prior_fy_span()].
+#' @examples
+#'
+#' fy_span(2023, type = "year_prefix_abb")
+#'
+#' fy_span(2025, n = 2)
+#'
+#' curr_fy_span()
+#'
+#' prior_fy_span()
+#'
+#' @export
+fy_span <- function(year, before = "FY", n = 1, type = "year_prefix") {
+  stopifnot(
+    has_length(year, 1),
+    nchar(year) == 4,
+    !is.na(as.integer(year))
+  )
+
+  year <- as.integer(year)
+
+  range <- seq(year, year + n - 1)
+
+  fiscal_year(paste0(range, "-01-01"), before = before, type = type)
+}
+
+#' [curr_yr_span()] defaults to using the start year set by the
+#' `"baltimoreCIP.curr_yr"` option.
+#'
+#' @rdname fy_span
+curr_fy_span <- function(year = getOption("baltimoreCIP.curr_year", 2026),
+                         before = "FY",
+                         n = 6,
+                         type = "year_prefix") {
+  fy_span(year, before, n, type)
+}
+
+#' [prior_yr_span()] defaults to using the start year set by the
+#' `"baltimoreCIP.prior_yr"` option.
+#'
+#' @rdname fy_span
+prior_fy_span <- function(year = getOption("baltimoreCIP.prior_year", 2025),
+                          before = "FY",
+                          n = 6,
+                          type = "year_prefix") {
+  fy_span(year, before, n, type)
+}
+
