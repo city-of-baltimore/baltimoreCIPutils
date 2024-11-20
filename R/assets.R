@@ -14,6 +14,7 @@
 wd_proj_join_asset_id <- function(data,
                                   project_code_col = "Project Code",
                                   asset_id_col = "asset_id",
+                                  .key = asset_id_col,
                                   multiple = "nested") {
   asset_xwalk_cols <- set_names(
     c("Project Code", asset_id_col),
@@ -27,7 +28,7 @@ wd_proj_join_asset_id <- function(data,
     asset_xwalk <- asset_xwalk |>
       dplyr::group_by(.data[[project_code_col]]) |>
       dplyr::nest_by(
-        .key = asset_id_col,
+        .key = .key,
         .keep = TRUE
       )
 

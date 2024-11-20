@@ -8,6 +8,7 @@ wd_proj_join_asset_id(
   data,
   project_code_col = "Project Code",
   asset_id_col = "asset_id",
+  .key = asset_id_col,
   multiple = "nested"
 )
 }
