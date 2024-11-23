@@ -112,18 +112,26 @@ wd_proj_detail_updates <- project_details |>
 
 usethis::use_data(wd_proj_detail_updates, overwrite = TRUE)
 
+wd_proj_cip_num_xwalk <- googlesheets4::read_sheet(
+  "https://docs.google.com/spreadsheets/d/1hZY-O_jO9VXvTQ_mol0VXwF4EUQJjZijHpVAZssuNLk/edit?usp=sharing"
+)
+
+usethis::use_data(wd_proj_cip_num_xwalk, overwrite = TRUE)
+
 # TODO: Complete implementation of a reference function for the revenue category
 # crosswalk
 
-load_revenue_category_xwalk <- function(cip_data, ...) {
-  revenue_categories <- cip_data |>
-    select(contains("Revenue")) |>
-    distinct()
-
+load_revenue_category_xwalk <- function(cip_data = NULL, ...) {
   revenue_category_xwalk <- googlesheets4::read_sheet(
     "https://docs.google.com/spreadsheets/d/1LFjKUq_OgrrvZeXC5rZ9jgqZtqltnG8NLG9NDplvMtg/edit?usp=sharing",
     sheet = "revenue_category_name_xwalk"
   )
+
+  return(revenue_category_xwalk)
+
+  revenue_categories <- cip_data |>
+    select(contains("Revenue")) |>
+    distinct()
 
   revenue_categories |>
     right_join(
@@ -132,3 +140,6 @@ load_revenue_category_xwalk <- function(cip_data, ...) {
     ) |>
     filter(!is.na(`Revenue Category Code`))
 }
+
+
+revenue_category_xwalk <- load_revenue_category_xwalk()

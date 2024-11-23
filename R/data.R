@@ -78,3 +78,20 @@
 #' }
 #' @details <https://docs.google.com/spreadsheets/d/1LFjKUq_OgrrvZeXC5rZ9jgqZtqltnG8NLG9NDplvMtg/edit?usp=sharing>
 "wd_proj_detail_updates"
+
+#' CIP Number to Workday Project Crosswalk
+#'
+#' `wd_proj_cip_num_xwalk` is a cross-reference to support the integration of
+#' legacy data on projects referenced by CIP Number with new data using Workday
+#' Project Codes. The data may include inaccurate cross-references. Last updated
+#' 2024-11-23.
+#'
+#' @format A data frame with 640 rows and 4 variables:
+#' \describe{
+#'   \item{`cip_number`}{CIP Number}
+#'   \item{`project_code`}{Project Codes}
+#'   \item{`accuracy_notes`}{Notes on match accuracy}
+#'   \item{`source_notes`}{Notes on match source}
+#'}
+#' @details <https://docs.google.com/spreadsheets/d/1hZY-O_jO9VXvTQ_mol0VXwF4EUQJjZijHpVAZssuNLk/edit?usp=sharing>
+"wd_proj_cip_num_xwalk"
