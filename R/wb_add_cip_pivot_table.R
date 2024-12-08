@@ -18,9 +18,8 @@ wb_add_cip_pivot_table <- function(wb,
                                      table_style = "TableStyleLight16",
                                      apply_number_formats = TRUE,
                                      first_column = TRUE,
-                                     with_filter = TRUE,
-                                     banded_rows = TRUE # ,
-                                     # numfmt = c(formatCode = rep("##0.0", 6))
+                                     row_grand_totals = FALSE,
+                                     col_grand_totals = FALSE
                                    )) {
   # FIXME: This doesn't work - which requires that the input data be prepared
   # using a similar approach
