@@ -11,7 +11,7 @@ wb_add_cip_pivot_table(
   rows = c("Cost Center Name", "Project Name", "Revenue Category Name"),
   data = curr_fy_span(),
   params = list(table_style = "TableStyleLight16", apply_number_formats = TRUE,
-    first_column = TRUE, with_filter = TRUE, banded_rows = TRUE)
+    first_column = TRUE, row_grand_totals = FALSE, col_grand_totals = FALSE)
 )
 }
 \arguments{
