@@ -149,3 +149,30 @@ summarise_timespan <- function(
       .groups = .groups
     )
 }
+
+#' Replace  `NA` values in numeric timespan columns with replacement value
+#'
+#' [replace_na_timespan()] replaces all `NA` values in timespan_cols with a
+#' replacement value (0 by default).
+#'
+#' @seealso [summarise_timespan()]
+#' @param timespan_cols Required. Defaults to [curr_fy_span()]. Passed to `.cols`
+#'   argument of [dplyr::across()] (wrapped by [tidyselect::any_of()]).
+#' @export
+replace_na_timespan <- function(data,
+                                timespan_cols = curr_fy_span(),
+                                replacement = 0) {
+  dplyr::mutate(
+    .data,
+    dplyr::across(
+      .cols = tidyselect::any_of(timespan_cols),
+      .fns = \(x) {
+        dplyr::if_else(
+          is.na(x),
+          replacement,
+          as.numeric(x)
+        )
+      }
+    )
+  )
+}
