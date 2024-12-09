@@ -4,7 +4,7 @@
 \alias{replace_na_timespan}
 \title{Replace  \code{NA} values in numeric timespan columns with replacement value}
 \usage{
-replace_na_timespan(data, timespan_cols = curr_fy_span(), replacement = 0)
+replace_na_timespan(.data, timespan_cols = curr_fy_span(), replacement = 0)
 }
 \arguments{
 \item{timespan_cols}{Required. Defaults to \code{\link[=curr_fy_span]{curr_fy_span()}}. Passed to \code{.cols}

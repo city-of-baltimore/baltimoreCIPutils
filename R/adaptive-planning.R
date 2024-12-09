@@ -128,7 +128,7 @@ adapt_read_sheet <- function(file,
 #' @inheritParams dplyr::summarise
 #' @export
 summarise_timespan <- function(
-    data,
+    .data,
     timespan_cols = curr_fy_span(),
     .fns = \(x) {
       sum(x, na.rm = TRUE)
@@ -137,17 +137,17 @@ summarise_timespan <- function(
     .names = NULL,
     .unpack = FALSE,
     .groups = NULL) {
-  data |>
-    dplyr::summarise(
-      dplyr::across(
-        .cols = timespan_cols,
-        .fns = .fns,
-        .names = .names,
-        .unpack = .unpack
-      ),
-      .by = .by,
-      .groups = .groups
-    )
+  dplyr::summarise(
+    .data,
+    dplyr::across(
+      .cols = timespan_cols,
+      .fns = .fns,
+      .names = .names,
+      .unpack = .unpack
+    ),
+    .by = .by,
+    .groups = .groups
+  )
 }
 
 #' Replace  `NA` values in numeric timespan columns with replacement value
@@ -159,7 +159,7 @@ summarise_timespan <- function(
 #' @param timespan_cols Required. Defaults to [curr_fy_span()]. Passed to `.cols`
 #'   argument of [dplyr::across()] (wrapped by [tidyselect::any_of()]).
 #' @export
-replace_na_timespan <- function(data,
+replace_na_timespan <- function(.data,
                                 timespan_cols = curr_fy_span(),
                                 replacement = 0) {
   dplyr::mutate(

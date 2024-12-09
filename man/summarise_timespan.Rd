@@ -5,7 +5,7 @@
 \title{Summarise a data frame by timespan columns}
 \usage{
 summarise_timespan(
-  data,
+  .data,
   timespan_cols = curr_fy_span(),
   .fns = function(x) {
      sum(x, na.rm = TRUE)
@@ -17,7 +17,9 @@ summarise_timespan(
 )
 }
 \arguments{
-\item{data}{Input data frame.}
+\item{.data}{A data frame, data frame extension (e.g. a tibble), or a
+lazy data frame (e.g. from dbplyr or dtplyr). See \emph{Methods}, below, for
+more details.}
 
 \item{timespan_cols}{Required. Defaults to \code{\link[=curr_fy_span]{curr_fy_span()}}. Passed to \code{.cols}
 argument of \code{\link[dplyr:across]{dplyr::across()}}}
@@ -85,6 +87,8 @@ also unconditionally drops all levels of grouping).
 In addition, a message informs you of that choice, unless the result is ungrouped,
 the option "dplyr.summarise.inform" is set to \code{FALSE},
 or when \code{summarise()} is called from a function in a package.}
+
+\item{data}{Input data frame.}
 }
 \description{
 \code{\link[=summarise_timespan]{summarise_timespan()}} uses \code{\link[dplyr:across]{dplyr::across()}} and \code{\link[dplyr:summarise]{dplyr::summarise()}}
