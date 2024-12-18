@@ -23,6 +23,11 @@ load_wd_proj_hierarchy_xwalk <- function(
         stringr::str_detect(source, "2"),
         id,
         NA_character_
+      ),
+      `Cost Center Code` = dplyr::if_else(
+        stringr::str_detect(source, "Cost"),
+        id,
+        NA_character_
       )
     )
 }

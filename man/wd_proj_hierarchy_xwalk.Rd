@@ -5,7 +5,7 @@
 \alias{wd_proj_hierarchy_xwalk}
 \title{Workday Project to Project Hierarchy 1 and 2 Crosswalk}
 \format{
-A data frame with 128 rows and 9 variables:
+A data frame with 128 rows and 10 variables:
 \describe{
 \item{\code{source}}{Source description}
 \item{\code{id}}{Source ID value}
@@ -16,6 +16,7 @@ A data frame with 128 rows and 9 variables:
 \item{\code{createdTime}}{Created date/time for record}
 \item{\verb{PHierarchy1 Code}}{Join key for formatted "PHierarchy1 Code" column}
 \item{\verb{PHierarchy2 Code}}{Join key for formatted "PHierarchy2 Code" column}
+\item{\verb{Cost Center Code}}{Join key for formatted "Cost Center Code" column}
 }
 }
 \usage{
@@ -23,8 +24,8 @@ wd_proj_hierarchy_xwalk
 }
 \description{
 Reference data to join standard agency, bureau, division, or other entity
-names to Workday capital project data based on "PHierarchy1 Code" and
-"PHierarchy2 Code" columns. Last updated 2024-12-18
+names to Workday capital project data based on "PHierarchy1 Code",
+"PHierarchy2 Code", or "Cost Center Code" columns. Last updated 2024-12-18.
 }
 \details{
 \url{https://airtable.com/app1lcJCwi0mpQGqZ/tbl81zsVzjBxVZePB/viwlrhbxPrDasYqzp?blocks=hide}
