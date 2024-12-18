@@ -2,9 +2,9 @@
 #'
 #' Reference data to join standard agency, bureau, division, or other entity
 #' names to Workday capital project data based on "PHierarchy1 Code" and
-#' "PHierarchy2 Code" columns. Last updated 2024-10-16.
+#' "PHierarchy2 Code" columns. Last updated 2024-12-18
 #'
-#' @format A data frame with 58 rows and 9 variables:
+#' @format A data frame with 128 rows and 9 variables:
 #' \describe{
 #'   \item{`source`}{Source description}
 #'   \item{`id`}{Source ID value}
@@ -92,6 +92,6 @@
 #'   \item{`project_code`}{Project Codes}
 #'   \item{`accuracy_notes`}{Notes on match accuracy}
 #'   \item{`source_notes`}{Notes on match source}
-#'}
+#' }
 #' @details <https://docs.google.com/spreadsheets/d/1hZY-O_jO9VXvTQ_mol0VXwF4EUQJjZijHpVAZssuNLk/edit?usp=sharing>
 "wd_proj_cip_num_xwalk"
