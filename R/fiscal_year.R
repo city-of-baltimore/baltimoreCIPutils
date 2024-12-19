@@ -110,4 +110,3 @@ prior_fy_span <- function(year = getOption("baltimoreCIP.prior_year", 2025),
                           type = "year_prefix") {
   fy_span(year, before, n, type)
 }
-

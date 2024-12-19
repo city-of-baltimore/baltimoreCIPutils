@@ -31,8 +31,7 @@ create_sparkline_group <- function(
     display_empty_cells_as = "zero",
     type = "column",
     first = TRUE,
-    ...
-) {
+    ...) {
   data <- wb_data(wb, sheet = sheet)
 
   sheet <- sheet %||% openxlsx2::wb_get_active_sheet(wb)

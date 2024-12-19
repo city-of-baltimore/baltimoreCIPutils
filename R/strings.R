@@ -150,5 +150,3 @@ str_extract_dgs_asset_id <- function(string,
     ...
   )
 }
-
-
