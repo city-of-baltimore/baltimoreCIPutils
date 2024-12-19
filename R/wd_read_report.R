@@ -35,6 +35,10 @@ wd_read_report <- function(file, start_row = 4, ..., name_repair = "unique") {
   }
 
   attr(data, "filename") <- basename(file)
+  # TODO: Add in more attributes similar to adapt_sheet_info attributes created
+  # by `adapt_read_sheet()`
+  # attr(data, "birth_time") <- fs::file_info(file)[["birth_time"]]
+
   data
 }
 
@@ -53,7 +57,7 @@ NULL
 #' @rdname wd_read_report_proj
 #' @export
 wd_read_report_proj_plan <- function(file, start_row = 4, ...) {
-  if (!grepl("^Capital_Projects_With_Plan_Info", file)) {
+  if (!grepl("Capital_Projects_With_Plan_Info", file)) {
     cli::cli_alert_warning(
       "{.f wd_read_report_proj_plan} is designed for use with the {.str Capital Projects With Plan Info} report."
     )
@@ -69,7 +73,7 @@ wd_read_report_proj_plan <- function(file, start_row = 4, ...) {
 #' @rdname wd_read_report_proj
 #' @export
 wd_read_report_proj_ltd <- function(file, start_row = 2, ...) {
-  if (!grepl("^COB_Extract_Projects_With_LTD_Balances", file)) {
+  if (!grepl("COB_Extract_Projects_With_LTD_Balances", file)) {
     cli::cli_alert_warning(
       "{.f wd_read_report_proj_ltd} is designed for use with the {.str COB_Extract_Projects_With_LTD_Balances} report."
     )
@@ -83,9 +87,28 @@ wd_read_report_proj_ltd <- function(file, start_row = 2, ...) {
 }
 
 #' @rdname wd_read_report_proj
+#' @param drop_cols Character vector with names of columns from report to drop.
+#' @param drop_role_name As of Dec. 19, 2024, the COB Project Extract report
+#'   includes a "Role Name" column that results in duplicate project entries in
+#'   the data. If `TRUE`, exclude this column and then use [dplyr::distinct()]
+#'   to get unique values.
 #' @export
-wd_read_report_extract_proj <- function(file, start_row = 8, ...) {
-  wd_read_report(
+wd_read_report_extract_proj <- function(file,
+                                        start_row = 8,
+                                        ...,
+                                        drop_cols = c(
+                                          "Include Project ID in Name",
+                                          "Inactive - Current",
+                                          "Billable",
+                                          "Project Currency",
+                                          "Customer",
+                                          "Time Cost - Approved (Project Currency)",
+                                          "Total Task Estimated Hours",
+                                          "Total Hours Worked",
+                                          "Total Task Hours Remaining"
+                                        ),
+                                        drop_role_name = TRUE) {
+  data <- wd_read_report(
     file = file,
     start_row = start_row,
     ...
@@ -96,6 +119,22 @@ wd_read_report_extract_proj <- function(file, start_row = 8, ...) {
     ) |>
     fmt_wd_proj_importance() |>
     fmt_wd_proj_risk() |>
-    fmt_wd_proj_priority()
-  # TODO: Add formatting for "Cost Center" column
+    fmt_wd_proj_priority() |>
+    dplyr::mutate(
+      `Project Code` = `Project ID`
+    ) |>
+    dplyr::select(
+      !tidyselect::any_of(drop_cols)
+    )
+
+  if (!drop_role_name) {
+    return(data)
+  }
+
+  data |>
+    dplyr::select(
+      # NOTE: Role name should be removed from the project extract report
+      !tidyselect::any_of("Role Name")
+    ) |>
+    dplyr::distinct()
 }

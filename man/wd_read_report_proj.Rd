@@ -11,7 +11,15 @@ wd_read_report_proj_plan(file, start_row = 4, ...)
 
 wd_read_report_proj_ltd(file, start_row = 2, ...)
 
-wd_read_report_extract_proj(file, start_row = 8, ...)
+wd_read_report_extract_proj(
+  file,
+  start_row = 8,
+  ...,
+  drop_cols = c("Include Project ID in Name", "Inactive - Current", "Billable",
+    "Project Currency", "Customer", "Time Cost - Approved (Project Currency)",
+    "Total Task Estimated Hours", "Total Hours Worked", "Total Task Hours Remaining"),
+  drop_role_name = TRUE
+)
 }
 \arguments{
 \item{file}{An xlsx file, \link[openxlsx2]{wbWorkbook} object or URL to xlsx file.}
@@ -19,6 +27,13 @@ wd_read_report_extract_proj(file, start_row = 8, ...)
 \item{start_row}{first row to begin looking for data.}
 
 \item{...}{additional arguments}
+
+\item{drop_cols}{Character vector with names of columns from report to drop.}
+
+\item{drop_role_name}{As of Dec. 19, 2024, the COB Project Extract report
+includes a "Role Name" column that results in duplicate project entries in
+the data. If \code{TRUE}, exclude this column and then use \code{\link[dplyr:distinct]{dplyr::distinct()}}
+to get unique values.}
 }
 \description{
 Workday reports use different column names and may be structured differently
