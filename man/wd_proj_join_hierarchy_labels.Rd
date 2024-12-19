@@ -2,6 +2,7 @@
 % Please edit documentation in R/capital.R
 \name{wd_proj_join_hierarchy_labels}
 \alias{wd_proj_join_hierarchy_labels}
+\alias{wd_proj_join_cost_center_labels}
 \title{Join PHierarchy1 Label and PHierarchy2 Label columns based on
 \code{wd_proj_hierarchy_xwalk} reference data}
 \usage{
@@ -10,6 +11,8 @@ wd_proj_join_hierarchy_labels(
   hierarchy1_col = "PHierarchy1 Code",
   hierarchy2_col = "PHierarchy2 Code"
 )
+
+wd_proj_join_cost_center_labels(data, cost_center_col = "Cost Center Code")
 }
 \arguments{
 \item{data}{A data frame with columns matching \code{hierarchy1_col} and
@@ -17,6 +20,8 @@ wd_proj_join_hierarchy_labels(
 
 \item{hierarchy1_col, hierarchy2_col}{Column names to join values from
 \code{baltimoreCIPutils::wd_proj_hierarchy_xwalk}}
+
+\item{cost_center_col}{Cost Center Code column to join on.}
 }
 \value{
 A data frame with added columns "PHierarchy1 Label" and "PHierarchy2
@@ -26,4 +31,6 @@ Label"
 \code{\link[=wd_proj_join_hierarchy_labels]{wd_proj_join_hierarchy_labels()}} joins the internal
 \link{wd_proj_hierarchy_xwalk} data to the input data frame
 using "PHierarchy1 Code" and "PHierarchy2 Code" as join columns.
+\code{\link[=wd_proj_join_cost_center_labels]{wd_proj_join_cost_center_labels()}} is a variant that joins the "Cost Center
+Agency Label" column based on the "Cost Center Code" join column.
 }

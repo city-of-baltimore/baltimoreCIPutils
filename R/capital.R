@@ -11,27 +11,28 @@
 #' @param drop_cols Columns to drop from input data frame. By default these are
 #'   all duplicative of retained columns or fully empty.
 #' @export
-fmt_adapt_proj_details <- function(data,
-                                   date_cols = c(
-                                     "Date Beg",
-                                     "Date End",
-                                     "Design Start Date",
-                                     "Construction Start Date"
-                                   ),
-                                   drop_cols = c(
-                                     "PStatus Code", "PDescription Code",
-                                     "PPercentComplete Code",
-                                     "PCode Code", "PCode Name",
-                                     "Fund, Grant, Special Purpose Code",
-                                     # TODO: Check if either of the Fund,
-                                     # Grant, Special Purpose Code columns
-                                     # should be retained
-                                     "Fund, Grant, Special Purpose Name",
-                                     "RObject Code", "Grant_Detail Code",
-                                     # TODO: Check when/how these columns
-                                     # changed in Workday
-                                     "PManager Code", "PProjectOwner Code"
-                                   )) {
+fmt_adapt_proj_details <- function(
+    data,
+    date_cols = c(
+      "Date Beg",
+      "Date End",
+      "Design Start Date",
+      "Construction Start Date"
+    ),
+    drop_cols = c(
+      "PStatus Code", "PDescription Code",
+      "PPercentComplete Code",
+      "PCode Code", "PCode Name",
+      "Fund, Grant, Special Purpose Code",
+      # TODO: Check if either of the Fund,
+      # Grant, Special Purpose Code columns
+      # should be retained
+      "Fund, Grant, Special Purpose Name",
+      "RObject Code", "Grant_Detail Code",
+      # TODO: Check when/how these columns
+      # changed in Workday
+      "PManager Code", "PProjectOwner Code"
+    )) {
   data |>
     dplyr::select(
       !any_of(drop_cols)
@@ -75,34 +76,42 @@ fmt_adapt_proj_details <- function(data,
 #' @param timespan_cols Time span columns to format using default "accounting"
 #'   formatting. Passed to cols argument of [set_excel_fmt_class()]. Defaults to
 #'   [curr_fy_span()].
+#' @param phase_col Name of column with phase name.
+#' @param phase_levels Ordered character vector of phases.
 #' @export
-fmt_adapt_6yr_program <- function(data,
-                                  timespan_cols = curr_fy_span(),
-                                  drop_cols = c(
-                                    "PCode Code", "PCode Name",
-                                    "Fund, Grant, Special Purpose Code",
-                                    # TODO: Check if either of the Fund,
-                                    # Grant, Special Purpose Code columns
-                                    # should be retained
-                                    "Fund, Grant, Special Purpose Name",
-                                    "RObject Code", "Grant_Detail Code"
-                                  ),
-                                  fund_cols = c(
-                                    "FGSFund Code",
-                                    "FGSFund Name"
-                                  ),
-                                  cost_center_cols = c(
-                                    "Cost Center Code",
-                                    "Cost Center Name"
-                                  ),
-                                  revenue_category_cols = c(
-                                    "Revenue Category Code",
-                                    "Revenue Category Name"
-                                  )) {
+fmt_adapt_6yr_program <- function(
+    data,
+    timespan_cols = curr_fy_span(),
+    drop_cols = c(
+      "PCode Code", "PCode Name",
+      "Fund, Grant, Special Purpose Code",
+      # TODO: Check if either of the Fund,
+      # Grant, Special Purpose Code columns
+      # should be retained
+      "Fund, Grant, Special Purpose Name",
+      "RObject Code", "Grant_Detail Code"
+    ),
+    fund_cols = c(
+      "FGSFund Code",
+      "FGSFund Name"
+    ),
+    cost_center_cols = c(
+      "Cost Center Code",
+      "Cost Center Name"
+    ),
+    revenue_category_cols = c(
+      "Revenue Category Code",
+      "Revenue Category Name"
+    ),
+    phase_col = "Phase Name",
+    phase_levels = c(
+      "<multiple>", "Planning/Design", "Construction",
+      "Information Technology", "Unspecified"
+    )) {
   # timespan <- timespan %||% seq(current_year, current_year + 5)
   # out_years <- setdiff(timespan, current_year)
 
-  data |>
+  data <- data |>
     fmt_wd_proj_worktags(
       fund_cols = fund_cols,
       cost_center_cols = cost_center_cols
@@ -120,7 +129,25 @@ fmt_adapt_6yr_program <- function(data,
     dplyr::mutate(
       "RAccount Code" := stringr::str_remove(.data[["RAccount Code"]], ":$")
     ) |>
-    dplyr::select(!any_of(drop_cols)) |>
+    dplyr::select(!any_of(drop_cols))
+
+  if (has_name(data, phase_col)) {
+    data <- data |>
+      dplyr::mutate(
+        "{phase_col}" := dplyr::if_else(
+          is.na(.data[[phase_col]]),
+          "Unspecified",
+          .data[[phase_col]]
+        ),
+        # TODO: Add a similar conversion to factor for 1Phase Code
+        "{phase_col}" := factor(
+          .data[[phase_col]],
+          levels = phase_levels
+        )
+      )
+  }
+
+  data |>
     set_excel_fmt_class(
       cols = timespan_cols,
       fmt_class = "accounting"
@@ -170,6 +197,8 @@ fmt_wd_proj_hierarchy <- function(data) {
 #' [wd_proj_join_hierarchy_labels()] joins the internal
 #' [baltimoreCIPutils::wd_proj_hierarchy_xwalk] data to the input data frame
 #' using "PHierarchy1 Code" and "PHierarchy2 Code" as join columns.
+#' [wd_proj_join_cost_center_labels()] is a variant that joins the "Cost Center
+#' Agency Label" column based on the "Cost Center Code" join column.
 #'
 #' @param data A data frame with columns matching `hierarchy1_col` and
 #'   `hierarchy2_col` arguments.
@@ -231,6 +260,36 @@ wd_proj_join_hierarchy_labels <- function(data,
     )
 }
 
+#' @rdname wd_proj_join_hierarchy_labels
+#' @param cost_center_col Cost Center Code column to join on.
+#' @export
+wd_proj_join_cost_center_labels <- function(
+    data,
+    cost_center_col = "Cost Center Code") {
+  cost_center_xwalk <- baltimoreCIPutils::wd_proj_hierarchy_xwalk |>
+    dplyr::filter(!is.na(.data[["Cost Center Code"]])) |>
+    dplyr::select(
+      all_of(
+        c("Cost Center Code",
+          "Cost Center Agency Label" = "entity"
+        )
+      )
+    )
+
+  data <- data |>
+    dplyr::left_join(
+      cost_center_xwalk,
+      by = cost_center_col
+    )
+
+  data |>
+    dplyr::relocate(
+      any_of(
+        c("Cost Center Agency Label")
+      ),
+      .after = starts_with("Cost Center")
+    )
+}
 
 # TODO: Add a function to join related plan data
 # join_wd_proj_related_plan <- function(data) {

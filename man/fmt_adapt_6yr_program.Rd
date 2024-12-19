@@ -11,7 +11,10 @@ fmt_adapt_6yr_program(
     "Fund, Grant, Special Purpose Name", "RObject Code", "Grant_Detail Code"),
   fund_cols = c("FGSFund Code", "FGSFund Name"),
   cost_center_cols = c("Cost Center Code", "Cost Center Name"),
-  revenue_category_cols = c("Revenue Category Code", "Revenue Category Name")
+  revenue_category_cols = c("Revenue Category Code", "Revenue Category Name"),
+  phase_col = "Phase Name",
+  phase_levels = c("<multiple>", "Planning/Design", "Construction",
+    "Information Technology", "Unspecified")
 )
 }
 \arguments{
@@ -22,6 +25,10 @@ formatting. Passed to cols argument of \code{\link[=set_excel_fmt_class]{set_exc
 \item{fund_cols, cost_center_cols}{Fund and Cost Center column name pairs.
 Must be provided with the code column first and the name column second. One
 but not both may be set to \code{NULL}.}
+
+\item{phase_col}{Name of column with phase name.}
+
+\item{phase_levels}{Ordered character vector of phases.}
 }
 \description{
 \code{\link[=fmt_adapt_6yr_program]{fmt_adapt_6yr_program()}} formats data from the Six-Year Sheet exported from
