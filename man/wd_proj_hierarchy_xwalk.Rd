@@ -25,7 +25,7 @@ wd_proj_hierarchy_xwalk
 \description{
 Reference data to join standard agency, bureau, division, or other entity
 names to Workday capital project data based on "PHierarchy1 Code",
-"PHierarchy2 Code", or "Cost Center Code" columns. Last updated 2024-12-18.
+"PHierarchy2 Code", or "Cost Center Code" columns. Last updated 2024-12-19.
 }
 \details{
 \url{https://airtable.com/app1lcJCwi0mpQGqZ/tbl81zsVzjBxVZePB/viwlrhbxPrDasYqzp?blocks=hide}

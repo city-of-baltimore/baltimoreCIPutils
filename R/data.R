@@ -2,7 +2,7 @@
 #'
 #' Reference data to join standard agency, bureau, division, or other entity
 #' names to Workday capital project data based on "PHierarchy1 Code",
-#' "PHierarchy2 Code", or "Cost Center Code" columns. Last updated 2024-12-18.
+#' "PHierarchy2 Code", or "Cost Center Code" columns. Last updated 2024-12-19.
 #'
 #' @format A data frame with 128 rows and 10 variables:
 #' \describe{
@@ -23,9 +23,9 @@
 #' Workday Project to Asset ID Crosswalk
 #'
 #' Reference data to join asset ID values to Workday Projects. Last updated
-#' 2024-11-19.
+#' 2024-12-19.
 #'
-#' @format A data frame with 796 rows and 6 variables:
+#' @format A data frame with 1116 rows and 6 variables:
 #' \describe{
 #'   \item{`asset_id`}{Asset ID value, primarily DGS Building ID numbers}
 #'   \item{`Project Code`}{Join key for Project Code}
