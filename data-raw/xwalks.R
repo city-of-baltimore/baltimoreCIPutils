@@ -52,6 +52,9 @@ load_wd_proj_asset_xwalk <- function(
     ) |>
     dplyr::rename(
       `Project Code` = project_code
+    ) |>
+    dplyr::filter(
+      !is.na(asset_id)
     )
 }
 
