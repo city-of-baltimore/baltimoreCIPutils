@@ -5,7 +5,7 @@
 \alias{wd_proj_asset_xwalk}
 \title{Workday Project to Asset ID Crosswalk}
 \format{
-A data frame with 788 rows and 6 variables:
+A data frame with 793 rows and 7 variables:
 \describe{
 \item{\code{asset_id}}{Asset ID value, primarily DGS Building ID numbers}
 \item{\verb{Project Code}}{Join key for Project Code}
