@@ -82,6 +82,9 @@ fmt_wd_proj_worktags <- function(
         cost_center_cols[[1]],
         cost_center_cols[[2]],
         code_pattern = cost_center_pattern
+      ) |>
+      wd_proj_join_cost_center_labels(
+        cost_center_col = cost_center_cols[[1]]
       )
   }
 
