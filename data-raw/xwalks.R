@@ -135,6 +135,9 @@ load_revenue_category_xwalk <- function(cip_data = NULL, ...) {
     sheet = "revenue_category_name_xwalk"
   )
 
+  revenue_category_xwalk <- revenue_category_xwalk |>
+    dplyr::filter(!is.na(revenue_category_code))
+
   return(revenue_category_xwalk)
 
   revenue_categories <- cip_data |>
@@ -149,5 +152,12 @@ load_revenue_category_xwalk <- function(cip_data = NULL, ...) {
     filter(!is.na(`Revenue Category Code`))
 }
 
+wd_revenue_category_xwalk <- load_revenue_category_xwalk() |>
+  dplyr::select(
+    tidyselect::starts_with("revenue_category_")
+  ) |>
+  dplyr::arrange(
+    dplyr::desc(revenue_category_sort)
+  )
 
-revenue_category_xwalk <- load_revenue_category_xwalk()
+usethis::use_data(wd_revenue_category_xwalk, overwrite = TRUE)

@@ -97,3 +97,22 @@
 #' }
 #' @details <https://docs.google.com/spreadsheets/d/1hZY-O_jO9VXvTQ_mol0VXwF4EUQJjZijHpVAZssuNLk/edit?usp=sharing>
 "wd_proj_cip_num_xwalk"
+
+
+#' Workday Revenue Category Label Crosswalk
+#'
+#' `wd_revenue_category_xwalk` is a data frame with labels and short names for
+#' revenue categories. Last updated 2025-01-08.
+#'
+#' @format A data frame with 35 rows and 7 variables:
+#' \describe{
+#'   \item{`revenue_category_name`}{Revenue Category name}
+#'   \item{`revenue_category_code`}{Revenue Category code}
+#'   \item{`revenue_category_name_adaptive`}{Revenue Category name (Adaptive Planning)}
+#'   \item{`revenue_category_label`}{Revenue Category label}
+#'   \item{`revenue_category_name_short`}{Revenue Category short name}
+#'   \item{`revenue_category_sort`}{Revenue Category sort order}
+#'   \item{`revenue_category_group`}{Revenue Category group}
+#' }
+#' @details <https://docs.google.com/spreadsheets/d/1LFjKUq_OgrrvZeXC5rZ9jgqZtqltnG8NLG9NDplvMtg/edit?usp=sharing>
+"wd_revenue_category_xwalk"
