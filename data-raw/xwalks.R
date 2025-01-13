@@ -157,7 +157,7 @@ wd_revenue_category_xwalk <- load_revenue_category_xwalk() |>
     tidyselect::starts_with("revenue_category_")
   ) |>
   dplyr::arrange(
-    dplyr::desc(revenue_category_sort)
+    revenue_category_sort
   )
 
 usethis::use_data(wd_revenue_category_xwalk, overwrite = TRUE)
