@@ -18,7 +18,7 @@ wd_revenue_category_label <- function(
     )
   ) {
   stopifnot(
-    is.character(keep),
+    is.character(cols),
     is.character(by)
   )
 
