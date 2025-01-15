@@ -74,6 +74,10 @@ fiscal_year <- function(x,
 #'
 #' fy_span(2025, n = 2)
 #'
+#' fy_span_label(2025, n = 6)
+#'
+#' fy_span_label(2025, type = "year_prefix", n = 6)
+#'
 #' curr_fy_span()
 #'
 #' prior_fy_span()
@@ -95,15 +99,9 @@ fy_span <- function(year, before = "FY", n = 1, type = "year_prefix") {
 
 #' @rdname fy_span
 #' @param sep Separator between first and last element in label.
-#' @examples
-#'
-#' fy_span_label(2025, )
-#'
-#' fy_span_label(2025, type = "year_prefix")
-#'
 #' @export
 fy_span_label <- function(year,
-                          n = 6,
+                          n = 1,
                           before = c("FY", ""),
                           sep = "-",
                           type = "year_prefix_abb",

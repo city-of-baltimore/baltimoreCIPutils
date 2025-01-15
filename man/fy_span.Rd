@@ -2,11 +2,21 @@
 % Please edit documentation in R/fiscal_year.R
 \name{fy_span}
 \alias{fy_span}
+\alias{fy_span_label}
 \alias{curr_fy_span}
 \alias{prior_fy_span}
 \title{Create a fiscal year vector of specified length from a start year}
 \usage{
 fy_span(year, before = "FY", n = 1, type = "year_prefix")
+
+fy_span_label(
+  year,
+  n = 1,
+  before = c("FY", ""),
+  sep = "-",
+  type = "year_prefix_abb",
+  ...
+)
 
 curr_fy_span(
   year = getOption("baltimoreCIP.curr_year", 2026),
@@ -27,22 +37,32 @@ prior_fy_span(
 Required.}
 
 \item{before}{Text to use as prefix if type is "year_prefix"
-or "year_prefix_abb". Ignored for other types. Defaults to "FY".}
+or "year_prefix_abb". Ignored for other types. Defaults to "FY" or \code{c("FY", "")} for \code{\link[=fy_span_label]{fy_span_label()}}.}
 
 \item{n}{Number of years in span. Defaults to \code{NULL} (equivalent to \code{n = 1})
 for \code{\link[=fy_span]{fy_span()}} or 6 for \code{\link[=curr_fy_span]{curr_fy_span()}} and \code{\link[=prior_fy_span]{prior_fy_span()}}.}
 
 \item{type}{One of "year", "year_prefix", "year_prefix_abb", "date_first", or
 "date_last". Defaults to "year".}
+
+\item{sep}{Separator between first and last element in label.}
 }
 \description{
 \code{\link[=fy_span]{fy_span()}} is a helper function for returning a vector of specified length.
+}
+\details{
+\code{\link[=fy_span_label]{fy_span_label()}} is a helper that returns a string serving as a label for
+the range of the span.
 }
 \examples{
 
 fy_span(2023, type = "year_prefix_abb")
 
 fy_span(2025, n = 2)
+
+fy_span_label(2025, n = 6)
+
+fy_span_label(2025, type = "year_prefix", n = 6)
 
 curr_fy_span()
 
