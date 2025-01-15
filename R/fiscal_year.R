@@ -57,8 +57,14 @@ fiscal_year <- function(x,
 #'
 #' [fy_span()] is a helper function for returning a vector of specified length.
 #'
+#' [fy_span_label()] is a helper that returns a string serving as a label for
+#' the range of the span.
+#'
 #' @param year Start year in span. Character or numeric coercible to integer.
 #'   Required.
+#' @param before Text to use as prefix if type is "year_prefix"
+#'   or "year_prefix_abb". Ignored for other types. Defaults to "FY" or `c("FY",
+#'   "")` for [fy_span_label()].
 #' @inheritParams fiscal_year
 #' @param n Number of years in span. Defaults to `NULL` (equivalent to `n = 1`)
 #'   for [fy_span()] or 6 for [curr_fy_span()] and [prior_fy_span()].
@@ -85,6 +91,44 @@ fy_span <- function(year, before = "FY", n = 1, type = "year_prefix") {
   range <- seq(year, year + n - 1)
 
   fiscal_year(paste0(range, "-01-01"), before = before, type = type)
+}
+
+#' @rdname fy_span
+#' @param sep Separator between first and last element in label.
+#' @examples
+#'
+#' fy_span_label(2025, )
+#'
+#' fy_span_label(2025, type = "year_prefix")
+#'
+#' @export
+fy_span_label <- function(year,
+                          n = 6,
+                          before = c("FY", ""),
+                          sep = "-",
+                          type = "year_prefix_abb",
+                          ...) {
+  year <- fy_span(year, n = n, before = "", type = type, ...)
+
+  if (!(type %in% c("year_prefix", "year_prefix_abb"))) {
+    before <- c("", "")
+  }
+
+  if (n == 1) {
+    return(paste0(before[1], year))
+  }
+
+  if (length(before) < 2) {
+    before <- rep(before, 2)
+  }
+
+  paste0(
+    before[1],
+    year[1],
+    sep,
+    before[2],
+    year[length(year)]
+  )
 }
 
 #' [curr_yr_span()] defaults to using the start year set by the
