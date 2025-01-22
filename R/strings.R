@@ -43,6 +43,21 @@ str_extract_project_code <- function(string,
   )
 }
 
+
+#' [str_extract_revenue_category_code()] extracts a Workday Revenue Category Code at the start of a string.
+#' @rdname str_capital
+#' @name str_extract_revenue_category_code
+#' @export
+str_extract_revenue_category_code <- function(string,
+                                              pattern = baltimoreCIPutils::cap_patterns[["revenue_category"]],
+                                              ...) {
+  stringr::str_extract(
+    string,
+    pattern = pattern,
+    ...
+  )
+}
+
 #' [str_extract_all_project_codes()] extracts a list of Workday Project Code.
 #' @rdname str_capital
 #' @name str_extract_all_project_codes

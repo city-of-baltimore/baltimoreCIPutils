@@ -3,6 +3,7 @@
 \name{str_capital}
 \alias{str_capital}
 \alias{str_extract_project_code}
+\alias{str_extract_revenue_category_code}
 \alias{str_extract_all_project_codes}
 \alias{str_extract_contract_num}
 \alias{str_extract_all_contract_num}
@@ -15,6 +16,12 @@ str_extract_project_code(
   pattern = baltimoreCIPutils::cap_patterns[["project_code"]],
   remove_pattern = "-",
   simplify = FALSE,
+  ...
+)
+
+str_extract_revenue_category_code(
+  string,
+  pattern = baltimoreCIPutils::cap_patterns[["revenue_category"]],
   ...
 )
 
