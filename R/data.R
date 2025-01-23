@@ -98,21 +98,24 @@
 #' @details <https://docs.google.com/spreadsheets/d/1hZY-O_jO9VXvTQ_mol0VXwF4EUQJjZijHpVAZssuNLk/edit?usp=sharing>
 "wd_proj_cip_num_xwalk"
 
-
 #' Workday Revenue Category Label Crosswalk
 #'
 #' `wd_revenue_category_xwalk` is a data frame with labels and short names for
-#' revenue categories. Last updated 2025-01-08.
+#' revenue categories. Last updated 2025-01-23.
 #'
-#' @format A data frame with 35 rows and 7 variables:
+#' @format A data frame with 39 rows and 11 variables:
 #' \describe{
-#'   \item{`revenue_category_name`}{Revenue Category name}
-#'   \item{`revenue_category_code`}{Revenue Category code}
-#'   \item{`revenue_category_name_adaptive`}{Revenue Category name (Adaptive Planning)}
-#'   \item{`revenue_category_label`}{Revenue Category label}
-#'   \item{`revenue_category_name_short`}{Revenue Category short name}
-#'   \item{`revenue_category_sort`}{Revenue Category sort order}
-#'   \item{`revenue_category_group`}{Revenue Category group}
+#'   \item{`Effective Year`}{Effective year (GO Bonds only)}
+#'   \item{`Revenue Category`}{Revenue Category code and name combined}
+#'   \item{`Revenue Category Code`}{Revenue Category code}
+#'   \item{`Revenue Category Name`}{Revenue Category name}
+#'   \item{`Prior Revenue Category Code`}{Prior equivalent revenue category code (GO Bonds only)}
+#'   \item{`Prior Revenue Category Name`}{Prior equivalent revenue category name (GO Bonds only)}
+#'   \item{`Revenue Category Label`}{Revenue Category label}
+#'   \item{`Revenue Category Label Short`}{Revenue Category short label}
+#'   \item{`Revenue Category Group`}{Revenue Category group}
+#'   \item{`Request Category`}{Request Category}
+#'   \item{`Request Category Pos`}{Request Category position (overall sort order)}
 #' }
-#' @details <https://docs.google.com/spreadsheets/d/1LFjKUq_OgrrvZeXC5rZ9jgqZtqltnG8NLG9NDplvMtg/edit?usp=sharing>
+#' @details <https://docs.google.com/spreadsheets/d/1jEgFt1-8a96IxzSyUU2J_tqoII5qL4utWiK6v4OBIBw/edit?usp=sharing>
 "wd_revenue_category_xwalk"

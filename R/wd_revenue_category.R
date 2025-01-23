@@ -14,20 +14,14 @@ wd_revenue_category_label <- function(
     by = "Revenue Category Code",
     cols = c(
       "Revenue Category Label",
-      "Revenue Category Name Short"
-    )
-  ) {
+      "Revenue Category Label Short"
+    )) {
   stopifnot(
     is.character(cols),
     is.character(by)
   )
 
   wd_revenue_category_rs <- baltimoreCIPutils::wd_revenue_category_xwalk |>
-    dplyr::rename_with(
-      \(x) {
-        stringr::str_to_title(stringr::str_replace_all(x, "_", " "))
-      }
-    ) |>
     dplyr::select(
       tidyselect::all_of(c(by, cols))
     )
