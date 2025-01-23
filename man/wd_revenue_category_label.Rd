@@ -7,7 +7,7 @@
 wd_revenue_category_label(
   data,
   by = "Revenue Category Code",
-  cols = c("Revenue Category Label", "Revenue Category Name Short")
+  cols = c("Revenue Category Label", "Revenue Category Label Short")
 )
 }
 \arguments{

@@ -5,15 +5,19 @@
 \alias{wd_revenue_category_xwalk}
 \title{Workday Revenue Category Label Crosswalk}
 \format{
-A data frame with 35 rows and 7 variables:
+A data frame with 39 rows and 11 variables:
 \describe{
-\item{\code{revenue_category_name}}{Revenue Category name}
-\item{\code{revenue_category_code}}{Revenue Category code}
-\item{\code{revenue_category_name_adaptive}}{Revenue Category name (Adaptive Planning)}
-\item{\code{revenue_category_label}}{Revenue Category label}
-\item{\code{revenue_category_name_short}}{Revenue Category short name}
-\item{\code{revenue_category_sort}}{Revenue Category sort order}
-\item{\code{revenue_category_group}}{Revenue Category group}
+\item{\verb{Effective Year}}{Effective year (GO Bonds only)}
+\item{\verb{Revenue Category}}{Revenue Category code and name combined}
+\item{\verb{Revenue Category Code}}{Revenue Category code}
+\item{\verb{Revenue Category Name}}{Revenue Category name}
+\item{\verb{Prior Revenue Category Code}}{Prior equivalent revenue category code (GO Bonds only)}
+\item{\verb{Prior Revenue Category Name}}{Prior equivalent revenue category name (GO Bonds only)}
+\item{\verb{Revenue Category Label}}{Revenue Category label}
+\item{\verb{Revenue Category Label Short}}{Revenue Category short label}
+\item{\verb{Revenue Category Group}}{Revenue Category group}
+\item{\verb{Request Category}}{Request Category}
+\item{\verb{Request Category Pos}}{Request Category position (overall sort order)}
 }
 }
 \usage{
@@ -21,9 +25,9 @@ wd_revenue_category_xwalk
 }
 \description{
 \code{wd_revenue_category_xwalk} is a data frame with labels and short names for
-revenue categories. Last updated 2025-01-08.
+revenue categories. Last updated 2025-01-23.
 }
 \details{
-\url{https://docs.google.com/spreadsheets/d/1LFjKUq_OgrrvZeXC5rZ9jgqZtqltnG8NLG9NDplvMtg/edit?usp=sharing}
+\url{https://docs.google.com/spreadsheets/d/1jEgFt1-8a96IxzSyUU2J_tqoII5qL4utWiK6v4OBIBw/edit?usp=sharing}
 }
 \keyword{datasets}

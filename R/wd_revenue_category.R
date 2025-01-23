@@ -33,3 +33,63 @@ wd_revenue_category_label <- function(
       na_matches = "never"
     )
 }
+
+#' Replace Workday Revenue Category Values with Prior Equivalents
+#'
+#' [wd_revenue_category_update()] uses the prepared crosswalk
+#' `baltimoreCIPutils::wd_revenue_category_xwalk` to replace values for Revenue Category Code, Revenue Category Name, and Revenue Category (assumed to be the combination of the prior two values) with the prior effective equivalent. This is
+#'
+#' @param effective_year Year to use as replacement values.
+#' @param cols Columns to replace for input data.
+#' @export
+wd_revenue_category_update <- function(
+    .data,
+    cols = c(
+      "Revenue Category Code", "Revenue Category Name"
+    ),
+    effective_year = 2026,
+    ...) {
+  effective_year_xwalk <- baltimoreCIPutils::wd_revenue_category_xwalk |>
+    dplyr::filter(
+      !is.na(`Effective Year`),
+      `Effective Year` == effective_year
+    ) |>
+    dplyr::mutate(
+      `Prior Revenue Category` = paste(
+        `Prior Revenue Category Code`,
+        `Prior Revenue Category Name`
+      )
+    )
+
+  # TODO: This pattern only supports the replacement of current year values with
+  # prior year values
+  pattern <- c(
+    dplyr::pull(
+      effective_year_xwalk,
+      `Prior Revenue Category`,
+      `Revenue Category`
+    ),
+    dplyr::pull(
+      effective_year_xwalk,
+      `Prior Revenue Category Name`,
+      `Revenue Category Name`
+    ),
+    dplyr::pull(
+      effective_year_xwalk,
+      `Prior Revenue Category Code`,
+      `Revenue Category Code`
+    )
+  )
+
+  dplyr::mutate(
+    dplyr::across(
+      .cols = tidyselect::all_of(cols),
+      \(x) {
+        stringr::str_replace_all(
+          x,
+          pattern = pattern
+        )
+      }
+    )
+  )
+}
