@@ -82,6 +82,7 @@ wd_revenue_category_update <- function(
   )
 
   dplyr::mutate(
+    .data,
     dplyr::across(
       .cols = tidyselect::all_of(cols),
       \(x) {
