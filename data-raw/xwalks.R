@@ -132,12 +132,12 @@ usethis::use_data(wd_proj_cip_num_xwalk, overwrite = TRUE)
 
 load_revenue_category_xwalk <- function(cip_data = NULL, ...) {
   revenue_category_xwalk <- googlesheets4::read_sheet(
-    "https://docs.google.com/spreadsheets/d/1LFjKUq_OgrrvZeXC5rZ9jgqZtqltnG8NLG9NDplvMtg/edit?usp=sharing",
-    sheet = "revenue_category_name_xwalk"
+    "https://docs.google.com/spreadsheets/d/1jEgFt1-8a96IxzSyUU2J_tqoII5qL4utWiK6v4OBIBw/edit?usp=sharing",
+    sheet = "revenue_category_label_xwalk"
   )
 
   revenue_category_xwalk <- revenue_category_xwalk |>
-    dplyr::filter(!is.na(revenue_category_code))
+    dplyr::filter(!is.na(`Revenue Category Code`))
 
   return(revenue_category_xwalk)
 
@@ -148,17 +148,21 @@ load_revenue_category_xwalk <- function(cip_data = NULL, ...) {
   revenue_categories |>
     right_join(
       revenue_category_xwalk,
-      by = c("Revenue Category Code" = "revenue_category_code")
+      by = "Revenue Category Code"
     ) |>
     filter(!is.na(`Revenue Category Code`))
 }
 
 wd_revenue_category_xwalk <- load_revenue_category_xwalk() |>
   dplyr::select(
-    tidyselect::starts_with("revenue_category_")
+    c(
+      `Effective Year`,
+      tidyselect::contains("Revenue Category"),
+      tidyselect::starts_with("Request Category")
+    )
   ) |>
   dplyr::arrange(
-    revenue_category_sort
+    `Request Category Pos`, `Revenue Category Label`
   )
 
 usethis::use_data(wd_revenue_category_xwalk, overwrite = TRUE)
