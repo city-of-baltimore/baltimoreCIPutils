@@ -13,8 +13,9 @@ fmt_adapt_6yr_program(
   cost_center_cols = c("Cost Center Code", "Cost Center Name"),
   revenue_category_cols = c("Revenue Category Code", "Revenue Category Name"),
   phase_col = "Phase Name",
-  phase_levels = c("<multiple>", "Planning/Design", "Construction",
-    "Information Technology", "Unspecified")
+  phase_levels = c("<multiple>", "Planning/Design", "Construction", "Post-construction",
+    "Information Technology", na_phase_level),
+  na_phase_level = "Unspecified"
 )
 }
 \arguments{
@@ -29,6 +30,8 @@ but not both may be set to \code{NULL}.}
 \item{phase_col}{Name of column with phase name.}
 
 \item{phase_levels}{Ordered character vector of phases.}
+
+\item{na_phase_level}{Value to use as replacement for NA values in phase name column.}
 }
 \description{
 \code{\link[=fmt_adapt_6yr_program]{fmt_adapt_6yr_program()}} formats data from the Six-Year Sheet exported from

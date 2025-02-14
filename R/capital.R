@@ -78,6 +78,7 @@ fmt_adapt_proj_details <- function(
 #'   [curr_fy_span()].
 #' @param phase_col Name of column with phase name.
 #' @param phase_levels Ordered character vector of phases.
+#' @param na_phase_level Value to use as replacement for NA values in phase name column.
 #' @export
 fmt_adapt_6yr_program <- function(
     data,
@@ -105,9 +106,10 @@ fmt_adapt_6yr_program <- function(
     ),
     phase_col = "Phase Name",
     phase_levels = c(
-      "<multiple>", "Planning/Design", "Construction",
-      "Information Technology", "Unspecified"
-    )) {
+      "<multiple>", "Planning/Design", "Construction", "Post-construction",
+      "Information Technology", na_phase_level
+    ),
+    na_phase_level = "Unspecified") {
   # timespan <- timespan %||% seq(current_year, current_year + 5)
   # out_years <- setdiff(timespan, current_year)
 
@@ -135,8 +137,8 @@ fmt_adapt_6yr_program <- function(
     data <- data |>
       dplyr::mutate(
         "{phase_col}" := dplyr::if_else(
-          is.na(.data[[phase_col]]),
-          "Unspecified",
+          is.na(.data[[phase_col]]) && !is.null(na_phase_level),
+          na_phase_level,
           .data[[phase_col]]
         ),
         # TODO: Add a similar conversion to factor for 1Phase Code
