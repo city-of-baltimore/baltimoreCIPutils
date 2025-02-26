@@ -12,27 +12,32 @@
 #'   all duplicative of retained columns or fully empty.
 #' @export
 fmt_adapt_proj_details <- function(
-    data,
-    date_cols = c(
-      "Date Beg",
-      "Date End",
-      "Design Start Date",
-      "Construction Start Date"
-    ),
-    drop_cols = c(
-      "PStatus Code", "PDescription Code",
-      "PPercentComplete Code",
-      "PCode Code", "PCode Name",
-      "Fund, Grant, Special Purpose Code",
-      # TODO: Check if either of the Fund,
-      # Grant, Special Purpose Code columns
-      # should be retained
-      "Fund, Grant, Special Purpose Name",
-      "RObject Code", "Grant_Detail Code",
-      # TODO: Check when/how these columns
-      # changed in Workday
-      "PManager Code", "PProjectOwner Code"
-    )) {
+  data,
+  date_cols = c(
+    "Date Beg",
+    "Date End",
+    "Design Start Date",
+    "Construction Start Date"
+  ),
+  drop_cols = c(
+    "PStatus Code",
+    "PDescription Code",
+    "PPercentComplete Code",
+    "PCode Code",
+    "PCode Name",
+    "Fund, Grant, Special Purpose Code",
+    # TODO: Check if either of the Fund,
+    # Grant, Special Purpose Code columns
+    # should be retained
+    "Fund, Grant, Special Purpose Name",
+    "RObject Code",
+    "Grant_Detail Code",
+    # TODO: Check when/how these columns
+    # changed in Workday
+    "PManager Code",
+    "PProjectOwner Code"
+  )
+) {
   data |>
     dplyr::select(
       !any_of(drop_cols)
@@ -81,35 +86,42 @@ fmt_adapt_proj_details <- function(
 #' @param na_phase_level Value to use as replacement for NA values in phase name column.
 #' @export
 fmt_adapt_6yr_program <- function(
-    data,
-    timespan_cols = curr_fy_span(),
-    drop_cols = c(
-      "PCode Code", "PCode Name",
-      "Fund, Grant, Special Purpose Code",
-      # TODO: Check if either of the Fund,
-      # Grant, Special Purpose Code columns
-      # should be retained
-      "Fund, Grant, Special Purpose Name",
-      "RObject Code", "Grant_Detail Code"
-    ),
-    fund_cols = c(
-      "FGSFund Code",
-      "FGSFund Name"
-    ),
-    cost_center_cols = c(
-      "Cost Center Code",
-      "Cost Center Name"
-    ),
-    revenue_category_cols = c(
-      "Revenue Category Code",
-      "Revenue Category Name"
-    ),
-    phase_col = "Phase Name",
-    phase_levels = c(
-      "<multiple>", "Planning/Design", "Construction", "Post-construction",
-      "Information Technology", na_phase_level
-    ),
-    na_phase_level = "Unspecified") {
+  data,
+  timespan_cols = curr_fy_span(),
+  drop_cols = c(
+    "PCode Code",
+    "PCode Name",
+    "Fund, Grant, Special Purpose Code",
+    # TODO: Check if either of the Fund,
+    # Grant, Special Purpose Code columns
+    # should be retained
+    "Fund, Grant, Special Purpose Name",
+    "RObject Code",
+    "Grant_Detail Code"
+  ),
+  fund_cols = c(
+    "FGSFund Code",
+    "FGSFund Name"
+  ),
+  cost_center_cols = c(
+    "Cost Center Code",
+    "Cost Center Name"
+  ),
+  revenue_category_cols = c(
+    "Revenue Category Code",
+    "Revenue Category Name"
+  ),
+  phase_col = "Phase Name",
+  phase_levels = c(
+    "<multiple>",
+    "Planning/Design",
+    "Construction",
+    "Post-construction",
+    "Information Technology",
+    na_phase_level
+  ),
+  na_phase_level = "Unspecified"
+) {
   # timespan <- timespan %||% seq(current_year, current_year + 5)
   # out_years <- setdiff(timespan, current_year)
 
@@ -137,7 +149,7 @@ fmt_adapt_6yr_program <- function(
     data <- data |>
       dplyr::mutate(
         "{phase_col}" := dplyr::if_else(
-          is.na(.data[[phase_col]]) && !is.null(na_phase_level),
+          is.na(.data[[phase_col]]) & !is.null(na_phase_level),
           na_phase_level,
           .data[[phase_col]]
         ),
@@ -209,9 +221,11 @@ fmt_wd_proj_hierarchy <- function(data) {
 #' @returns A data frame with added columns "PHierarchy1 Label" and "PHierarchy2
 #'   Label"
 #' @export
-wd_proj_join_hierarchy_labels <- function(data,
-                                          hierarchy1_col = "PHierarchy1 Code",
-                                          hierarchy2_col = "PHierarchy2 Code") {
+wd_proj_join_hierarchy_labels <- function(
+  data,
+  hierarchy1_col = "PHierarchy1 Code",
+  hierarchy2_col = "PHierarchy2 Code"
+) {
   stopifnot(
     has_name(data, hierarchy1_col) || is.null(hierarchy1_col),
     has_name(data, hierarchy2_col) || is.null(hierarchy2_col)
@@ -222,9 +236,7 @@ wd_proj_join_hierarchy_labels <- function(data,
       dplyr::filter(!is.na(.data[["PHierarchy1 Code"]])) |>
       dplyr::select(
         all_of(
-          c("PHierarchy1 Code",
-            "PHierarchy1 Label" = "entity"
-          )
+          c("PHierarchy1 Code", "PHierarchy1 Label" = "entity")
         )
       )
 
@@ -240,9 +252,7 @@ wd_proj_join_hierarchy_labels <- function(data,
       dplyr::filter(!is.na(.data[["PHierarchy2 Code"]])) |>
       dplyr::select(
         all_of(
-          c("PHierarchy2 Code",
-            "PHierarchy2 Label" = "entity"
-          )
+          c("PHierarchy2 Code", "PHierarchy2 Label" = "entity")
         )
       )
 
@@ -266,15 +276,14 @@ wd_proj_join_hierarchy_labels <- function(data,
 #' @param cost_center_col Cost Center Code column to join on.
 #' @export
 wd_proj_join_cost_center_labels <- function(
-    data,
-    cost_center_col = "Cost Center Code") {
+  data,
+  cost_center_col = "Cost Center Code"
+) {
   cost_center_xwalk <- baltimoreCIPutils::wd_proj_hierarchy_xwalk |>
     dplyr::filter(!is.na(.data[["Cost Center Code"]])) |>
     dplyr::select(
       all_of(
-        c("Cost Center Code",
-          "Cost Center Agency Label" = "entity"
-        )
+        c("Cost Center Code", "Cost Center Agency Label" = "entity")
       )
     )
 
