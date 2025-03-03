@@ -5,7 +5,7 @@
 \alias{wd_proj_asset_xwalk}
 \title{Workday Project to Asset ID Crosswalk}
 \format{
-A data frame with 811 rows and 7 variables:
+A data frame with 799 rows and 7 variables:
 \describe{
 \item{\code{asset_id}}{Asset ID value, primarily DGS Building ID numbers}
 \item{\verb{Project Code}}{Join key for Project Code}
@@ -21,7 +21,7 @@ wd_proj_asset_xwalk
 }
 \description{
 Reference data to join asset ID values to Workday Projects. Last updated
-2025-02-26.
+2025-03-03.
 }
 \details{
 \url{https://docs.google.com/spreadsheets/d/1jEgFt1-8a96IxzSyUU2J_tqoII5qL4utWiK6v4OBIBw/edit?usp=sharing}
