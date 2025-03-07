@@ -13,7 +13,12 @@ wd_read_report <- function(file, start_row = 4, ..., name_repair = "unique") {
 
   if (fileext == "csv") {
     check_installed("readr")
-    data <- readr::read_csv(file, ..., skip = (start_row - 1), name_repair = name_repair)
+    data <- readr::read_csv(
+      file,
+      ...,
+      skip = (start_row - 1),
+      name_repair = name_repair
+    )
   } else {
     data <- openxlsx2::read_xlsx(file, start_row = start_row, ...)
 
@@ -50,16 +55,23 @@ wd_read_report <- function(file, start_row = 4, ..., name_repair = "unique") {
 #' Improvement Program. Changes to the naming conventions or structure of these
 #' reports may break these functions.
 #'
+#' @details
+#' - [wd_read_proj_plan()] reads the "Capital Projects With Plan Info" Workday report.
+#' - [wd_read_proj_ltd()] reads the "COB Extract Projects With LTD Balances" Workday report.
+#' - [wd_read_extract_cost_center()] reads the "COB Extract Cost
+#' Centers" Workday report for capital cost centers.
+#' - [wd_read_extract_revenue_cat()] reads the Revenue Category
+#' Workday report for all Revenue Categories (dropping revenue categories with no code).
 #' @inheritParams wd_read_report
-#' @name wd_read_report_proj
+#' @name wd_read_proj
 NULL
 
-#' @rdname wd_read_report_proj
+#' @rdname wd_read_proj
 #' @export
-wd_read_report_proj_plan <- function(file, start_row = 4, ...) {
+wd_read_proj_plan <- function(file, start_row = 4, ...) {
   if (!grepl("Capital_Projects_With_Plan_Info", file)) {
     cli::cli_alert_warning(
-      "{.f wd_read_report_proj_plan} is designed for use with the {.str Capital Projects With Plan Info} report."
+      "{.f wd_read_proj_plan} is designed for use with the {.str Capital Projects With Plan Info} report."
     )
   }
 
@@ -70,12 +82,12 @@ wd_read_report_proj_plan <- function(file, start_row = 4, ...) {
     )
 }
 
-#' @rdname wd_read_report_proj
+#' @rdname wd_read_proj
 #' @export
-wd_read_report_proj_ltd <- function(file, start_row = 2, ...) {
+wd_read_proj_ltd <- function(file, start_row = 2, ...) {
   if (!grepl("COB_Extract_Projects_With_LTD_Balances", file)) {
     cli::cli_alert_warning(
-      "{.f wd_read_report_proj_ltd} is designed for use with the {.str COB_Extract_Projects_With_LTD_Balances} report."
+      "{.f wd_read_proj_ltd} is designed for use with the {.str COB_Extract_Projects_With_LTD_Balances} report."
     )
   }
 
@@ -86,28 +98,25 @@ wd_read_report_proj_ltd <- function(file, start_row = 2, ...) {
     )
 }
 
-#' @rdname wd_read_report_proj
+#' @rdname wd_read_proj
 #' @param drop_cols Character vector with names of columns from report to drop.
-#' @param drop_role_name As of Dec. 19, 2024, the COB Project Extract report
-#'   includes a "Role Name" column that results in duplicate project entries in
-#'   the data. If `TRUE`, exclude this column and then use [dplyr::distinct()]
-#'   to get unique values.
 #' @export
-wd_read_report_extract_proj <- function(file,
-                                        start_row = 8,
-                                        ...,
-                                        drop_cols = c(
-                                          "Include Project ID in Name",
-                                          "Inactive - Current",
-                                          "Billable",
-                                          "Project Currency",
-                                          "Customer",
-                                          "Time Cost - Approved (Project Currency)",
-                                          "Total Task Estimated Hours",
-                                          "Total Hours Worked",
-                                          "Total Task Hours Remaining"
-                                        ),
-                                        drop_role_name = TRUE) {
+wd_read_extract_proj <- function(
+  file,
+  start_row = 7,
+  ...,
+  drop_cols = c(
+    "Include Project ID in Name",
+    "Inactive - Current",
+    "Billable",
+    "Project Currency",
+    "Customer",
+    "Time Cost - Approved (Project Currency)",
+    "Total Task Estimated Hours",
+    "Total Hours Worked",
+    "Total Task Hours Remaining"
+  )
+) {
   data <- wd_read_report(
     file = file,
     start_row = start_row,
@@ -127,14 +136,38 @@ wd_read_report_extract_proj <- function(file,
       !tidyselect::any_of(drop_cols)
     )
 
-  if (!drop_role_name) {
-    return(data)
-  }
+  data
+}
 
-  data |>
+#' @rdname wd_read_proj
+#' @export
+wd_read_extract_cost_center <- function(file, start_row = 1, ...) {
+  wd_read_report(file, start_row = start_row) |>
     dplyr::select(
-      # NOTE: Role name should be removed from the project extract report
-      !tidyselect::any_of("Role Name")
+      `Cost Center Code` = Code,
+      `Cost Center Name` = `Cost Center Name`,
+      `Cost Center`,
+      Agency,
+      Service
+    )
+}
+
+#' @rdname wd_read_proj
+#' @export
+wd_read_extract_revenue_cat <- function(file, start_row = 2, ...) {
+  wd_read_report(file, start_row = start_row) |>
+    dplyr::mutate(
+      `Revenue Category Code` = str_extract_revenue_category_code(
+        `Revenue Category Name`
+      )
     ) |>
-    dplyr::distinct()
+    dplyr::filter(
+      !is.na(`Revenue Category Code`)
+    ) |>
+    dplyr::select(
+      `Revenue Category Code`,
+      `Revenue Category`,
+      Fund,
+      `Cost Center`
+    )
 }
