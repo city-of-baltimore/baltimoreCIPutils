@@ -141,11 +141,11 @@ wd_read_extract_proj <- function(
 
 #' @rdname wd_read_proj
 #' @export
-wd_read_extract_cost_center <- function(file, start_row = 1, ...) {
+wd_read_extract_cost_center <- function(file, start_row = 3, ...) {
   wd_read_report(file, start_row = start_row) |>
     dplyr::select(
       `Cost Center Code` = Code,
-      `Cost Center Name` = `Cost Center Name`,
+      `Cost Center Name` = Name,
       `Cost Center`,
       Agency,
       Service

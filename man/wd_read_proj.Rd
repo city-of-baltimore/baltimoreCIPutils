@@ -22,7 +22,7 @@ wd_read_extract_proj(
     "Total Task Estimated Hours", "Total Hours Worked", "Total Task Hours Remaining")
 )
 
-wd_read_extract_cost_center(file, start_row = 1, ...)
+wd_read_extract_cost_center(file, start_row = 3, ...)
 
 wd_read_extract_revenue_cat(file, start_row = 2, ...)
 }
