@@ -148,6 +148,8 @@ fmt_adapt_6yr_program <- function(
   if (has_name(data, phase_col)) {
     data <- data |>
       dplyr::mutate(
+        # Coerce to character (required if all phase col values are missing)
+        "{phase_col}" := as.character(.data[[phase_col]]),
         "{phase_col}" := dplyr::if_else(
           is.na(.data[[phase_col]]) & !is.null(na_phase_level),
           na_phase_level,
