@@ -15,13 +15,14 @@ fmt_adapt_6yr_program(
   phase_col = "Phase Name",
   phase_levels = c("<multiple>", "Planning/Design", "Construction", "Post-construction",
     "Information Technology", na_phase_level),
-  na_phase_level = "Unspecified"
+  na_phase_level = "Unspecified",
+  accounting_fmt = FALSE
 )
 }
 \arguments{
 \item{timespan_cols}{Time span columns to format using default "accounting"
-formatting. Passed to cols argument of \code{\link[=set_excel_fmt_class]{set_excel_fmt_class()}}. Defaults to
-\code{\link[=curr_fy_span]{curr_fy_span()}}.}
+formatting. Passed to cols argument of \code{\link[=set_excel_fmt_class]{set_excel_fmt_class()}} if
+\code{accounting_fmt} is \code{TRUE}. Defaults to \code{\link[=curr_fy_span]{curr_fy_span()}}.}
 
 \item{fund_cols, cost_center_cols}{Fund and Cost Center column name pairs.
 Must be provided with the code column first and the name column second. One
@@ -31,7 +32,11 @@ but not both may be set to \code{NULL}.}
 
 \item{phase_levels}{Ordered character vector of phases.}
 
-\item{na_phase_level}{Value to use as replacement for NA values in phase name column.}
+\item{na_phase_level}{Value to use as replacement for NA values in phase name
+column.}
+
+\item{accounting_fmt}{If \code{TRUE} apply accounting formatting to columns
+specified by \code{timespan_cols}.}
 }
 \description{
 \code{\link[=fmt_adapt_6yr_program]{fmt_adapt_6yr_program()}} formats data from the Six-Year Sheet exported from

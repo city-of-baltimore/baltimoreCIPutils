@@ -79,11 +79,14 @@ fmt_adapt_proj_details <- function(
 #'
 #' @inheritParams fmt_wd_proj_worktags
 #' @param timespan_cols Time span columns to format using default "accounting"
-#'   formatting. Passed to cols argument of [set_excel_fmt_class()]. Defaults to
-#'   [curr_fy_span()].
+#'   formatting. Passed to cols argument of [set_excel_fmt_class()] if
+#'   `accounting_fmt` is `TRUE`. Defaults to [curr_fy_span()].
 #' @param phase_col Name of column with phase name.
 #' @param phase_levels Ordered character vector of phases.
-#' @param na_phase_level Value to use as replacement for NA values in phase name column.
+#' @param na_phase_level Value to use as replacement for NA values in phase name
+#' column.
+#' @param accounting_fmt If `TRUE` apply accounting formatting to columns
+#' specified by `timespan_cols`.
 #' @export
 fmt_adapt_6yr_program <- function(
   data,
@@ -120,7 +123,8 @@ fmt_adapt_6yr_program <- function(
     "Information Technology",
     na_phase_level
   ),
-  na_phase_level = "Unspecified"
+  na_phase_level = "Unspecified",
+  accounting_fmt = FALSE
 ) {
   # timespan <- timespan %||% seq(current_year, current_year + 5)
   # out_years <- setdiff(timespan, current_year)
@@ -161,6 +165,10 @@ fmt_adapt_6yr_program <- function(
           levels = phase_levels
         )
       )
+  }
+
+  if (!accounting_fmt) {
+    return(data)
   }
 
   data |>
