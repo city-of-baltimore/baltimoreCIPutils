@@ -14,14 +14,20 @@
 #' @export
 #' @importFrom dplyr mutate
 #' @importFrom stringr str_extract str_trim str_remove
-fmt_wd_code_name <- function(data,
-                             code_col,
-                             name_col,
-                             code_pattern = NULL,
-                             new_code_col = code_col,
-                             new_name_col = name_col) {
+fmt_wd_code_name <- function(
+  data,
+  code_col,
+  name_col,
+  code_pattern = NULL,
+  new_code_col = code_col,
+  new_name_col = name_col
+) {
   data |>
     dplyr::mutate(
+      # Coerce code and name columns to character vectors (only required if
+      # values are missing)
+      "{code_col}" := as.character(.data[[code_col]]),
+      "{name_col}" := as.character(.data[[name_col]]),
       "{new_code_col}" := stringr::str_extract(.data[[code_col]], code_pattern),
       "{new_name_col}" := stringr::str_trim(
         stringr::str_remove(
@@ -49,17 +55,18 @@ NULL
 #' @rdname fmt_wd_proj
 #' @export
 fmt_wd_proj_worktags <- function(
-    data,
-    fund_cols = c(
-      "FGSFund Code",
-      "FGSFund Name"
-    ),
-    fund_pattern = "^[:digit:]+",
-    cost_center_cols = c(
-      "Cost Center Code",
-      "Cost Center Name"
-    ),
-    cost_center_pattern = baltimoreCIPutils::cap_patterns[["cost_center"]]) {
+  data,
+  fund_cols = c(
+    "FGSFund Code",
+    "FGSFund Name"
+  ),
+  fund_pattern = "^[:digit:]+",
+  cost_center_cols = c(
+    "Cost Center Code",
+    "Cost Center Name"
+  ),
+  cost_center_pattern = baltimoreCIPutils::cap_patterns[["cost_center"]]
+) {
   stopifnot(
     # fund_cols or cost_center_cols must be supplied
     is.character(c(fund_cols, cost_center_cols)),
@@ -99,9 +106,11 @@ fmt_wd_proj_worktags <- function(
 #' @export
 #' @importFrom dplyr filter mutate
 #' @importFrom stringr str_remove
-fmt_wd_proj_name <- function(data,
-                             project_code_col = "Project Code",
-                             project_name_col = "Project Name") {
+fmt_wd_proj_name <- function(
+  data,
+  project_code_col = "Project Code",
+  project_name_col = "Project Name"
+) {
   new_project_name_col <- paste0(project_name_col, " Short")
 
   data |>
@@ -115,15 +124,18 @@ fmt_wd_proj_name <- function(data,
     dplyr::mutate(
       # Strip leading legacy account number
       "{new_project_name_col}" := stringr::str_remove(
-        .data[[new_project_name_col]], "^[:digit:]{6} "
+        .data[[new_project_name_col]],
+        "^[:digit:]{6} "
       ),
       # Strip leading CIP Number
       "{new_project_name_col}" := stringr::str_remove(
-        .data[[new_project_name_col]], "^[:digit:]{3}-[:digit:]{3} "
+        .data[[new_project_name_col]],
+        "^[:digit:]{3}-[:digit:]{3} "
       ),
       # Strip trailing Project Code
       "{new_project_name_col}" := stringr::str_remove(
-        .data[[new_project_name_col]], paste0(.data[[project_code_col]], "$")
+        .data[[new_project_name_col]],
+        paste0(.data[[project_code_col]], "$")
       )
     )
 }
