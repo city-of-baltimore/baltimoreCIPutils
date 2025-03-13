@@ -1,8 +1,9 @@
 #' Load Workday Project Hierarchy-Baltimore City Public Entity Crosswalk from Airtable
 load_wd_proj_hierarchy_xwalk <- function(
-    url = "https://airtable.com/app1lcJCwi0mpQGqZ/tbl81zsVzjBxVZePB/viwlrhbxPrDasYqzp?blocks=hide",
-    cell_format = "string",
-    ...) {
+  url = "https://airtable.com/app1lcJCwi0mpQGqZ/tbl81zsVzjBxVZePB/viwlrhbxPrDasYqzp?blocks=hide",
+  cell_format = "string",
+  ...
+) {
   # pak::pkg_install("matthewjrogers/rairtable@dev")
   xwalks <- rairtable::list_records(
     url = url,
@@ -38,9 +39,10 @@ usethis::use_data(wd_proj_hierarchy_xwalk, overwrite = TRUE)
 
 #' Load Asset ID crosswalk from Workday Capital Project Crosswalks Google Sheet
 load_wd_proj_asset_xwalk <- function(
-    url = "https://docs.google.com/spreadsheets/d/1jEgFt1-8a96IxzSyUU2J_tqoII5qL4utWiK6v4OBIBw/edit?usp=sharing",
-    cell_format = "string",
-    ...) {
+  url = "https://docs.google.com/spreadsheets/d/1jEgFt1-8a96IxzSyUU2J_tqoII5qL4utWiK6v4OBIBw/edit?usp=sharing",
+  cell_format = "string",
+  ...
+) {
   wd_proj_asset_xwalk <- googlesheets4::read_sheet(
     ss = url,
     sheet = "asset_id_xwalk"
@@ -65,9 +67,10 @@ usethis::use_data(wd_proj_asset_xwalk, overwrite = TRUE)
 
 #' Load Related Plan crosswalk from Workday Capital Project Crosswalks Google Sheet
 load_wd_proj_related_plan_xwalk <- function(
-    url = "https://docs.google.com/spreadsheets/d/1jEgFt1-8a96IxzSyUU2J_tqoII5qL4utWiK6v4OBIBw/edit?usp=sharing",
-    cell_format = "string",
-    ...) {
+  url = "https://docs.google.com/spreadsheets/d/1jEgFt1-8a96IxzSyUU2J_tqoII5qL4utWiK6v4OBIBw/edit?usp=sharing",
+  cell_format = "string",
+  ...
+) {
   wd_proj_related_plan_xwalk <- googlesheets4::read_sheet(
     ss = url,
     sheet = "related_plan_xwalk"
@@ -110,8 +113,11 @@ project_details <- googlesheets4::read_sheet(
 wd_proj_detail_updates <- project_details |>
   filter(!is.na(project_name_updated) | !is.na(project_desc_updated)) |>
   select(
-    project_code, project_name_updated, name_justification,
-    project_desc_updated, desc_justification
+    project_code,
+    project_name_updated,
+    name_justification,
+    project_desc_updated,
+    desc_justification
   ) |>
   set_names(
     \(x) {
@@ -162,7 +168,8 @@ wd_revenue_category_xwalk <- load_revenue_category_xwalk() |>
     )
   ) |>
   dplyr::arrange(
-    `Request Category Pos`, `Revenue Category Label`
+    `Request Category Pos`,
+    `Revenue Category Label`
   )
 
 usethis::use_data(wd_revenue_category_xwalk, overwrite = TRUE)
