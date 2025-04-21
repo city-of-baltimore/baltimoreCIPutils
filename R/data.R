@@ -86,9 +86,9 @@
 #' `wd_proj_cip_num_xwalk` is a cross-reference to support the integration of
 #' legacy data on projects referenced by CIP Number with new data using Workday
 #' Project Codes. The data may include inaccurate cross-references. Last updated
-#' 2024-11-23.
+#' 2025-04-21.
 #'
-#' @format A data frame with 640 rows and 4 variables:
+#' @format A data frame with 747 rows and 4 variables:
 #' \describe{
 #'   \item{`cip_number`}{CIP Number}
 #'   \item{`project_code`}{Project Codes}

@@ -131,6 +131,12 @@ wd_proj_cip_num_xwalk <- googlesheets4::read_sheet(
   "https://docs.google.com/spreadsheets/d/1hZY-O_jO9VXvTQ_mol0VXwF4EUQJjZijHpVAZssuNLk/edit?usp=sharing"
 )
 
+wd_proj_cip_num_xwalk <- wd_proj_cip_num_xwalk |>
+  dplyr::filter(
+    !is.na(cip_number),
+    !is.na(project_code)
+  )
+
 usethis::use_data(wd_proj_cip_num_xwalk, overwrite = TRUE)
 
 # TODO: Complete implementation of a reference function for the revenue category
