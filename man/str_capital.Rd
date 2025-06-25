@@ -91,7 +91,12 @@ should be reviewed and validated to flag problems.
 
 str_extract_project_code("PRJ001145 908093 SWC 7764 Race St Box Culvert")
 
-str_extract_all_project_codes(c("PRJ002404 PRJ002550", "PRJ001599 913117 Shake and Bake Recreation Center"))
+str_extract_all_project_codes(
+  c(
+    "PRJ002404 PRJ002550",
+    "PRJ001599 913117 Shake and Bake Recreation Center"
+  )
+)
 
 str_extract_cip_num("PRJ002550 943004 504-004 ADA Infrastructure Upgrades-111")
 
