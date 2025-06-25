@@ -43,6 +43,14 @@ pull_dict_fields <- function(dict, sheet_name, usage = TRUE) {
   fields |>
     # Trim leading/trailing space
     stringr::str_trim() |>
+    # FIXME: Address the following error on check
+    #
+    # Portable packages must use only ASCII characters in their R code
+    # and
+    # NAMESPACE directives, except perhaps in comments. Use \uxxxx escapes for
+    # other characters. Function ‘tools::showNonASCIIfile’ can help in finding
+    # non-ASCII characters in files.
+
     # Remove zero-width space characters
     stringr::str_remove_all("​") |>
     # Restor vector names (Column values)
@@ -53,13 +61,15 @@ pull_dict_fields <- function(dict, sheet_name, usage = TRUE) {
 #' @rdname wd_eib_utils
 #' @export
 get_dict_defaults <- function(dict, sheet_name) {
+  check_installed("tidyr")
+
   dict |>
     dplyr::filter(
       Sheet == sheet_name,
       !is.na(`Default Value`)
     ) |>
     dplyr::select(Fields, `Default Value`) |>
-    purrr::pivot_wider(
+    tidyr::pivot_wider(
       names_from = Fields,
       values_from = `Default Value`
     )
