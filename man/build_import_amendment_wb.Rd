@@ -4,7 +4,15 @@
 \alias{build_import_amendment_wb}
 \title{Build an import budget amendment EIB}
 \usage{
-build_import_amendment_wb(data, eib_dict, eib_wb, ...)
+build_import_amendment_wb(
+  data,
+  eib_dict,
+  eib_wb,
+  ...,
+  amount_col = "Amount",
+  amendment_sheet_name = "Import Budget Amendment",
+  entry_sheet_name = "Amendment Entry Data"
+)
 }
 \description{
 Build an import budget amendment EIB

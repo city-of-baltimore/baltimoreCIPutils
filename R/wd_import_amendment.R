@@ -3,12 +3,33 @@
 fmt_budget_revenue_entries <- function(
   data,
   ...,
+  method = "auto",
   default_col = "Budget Credit Amount",
   amount_col = "Amount",
   debit_flag_value = NULL,
   debit_flag_col = NULL
 ) {
-  if (!is.null(debit_flag_col)) {
+  data <- data |>
+    dplyr::filter(
+      !is.na(.data[[amount_col]]) & .data[[amount_col]] != 0
+    )
+
+  if (method == "auto") {
+    data <- data |>
+      # Create new columns
+      dplyr::mutate(
+        `Budget Debit Amount` = dplyr::if_else(
+          .data[[amount_col]] < 0,
+          .data[[amount_col]] * -1,
+          NA_real_
+        ),
+        `Budget Credit Amount` = dplyr::if_else(
+          .data[[amount_col]] > 0,
+          .data[[amount_col]],
+          NA_real_
+        )
+      )
+  } else if (!is.null(debit_flag_col)) {
     data <- data |>
       # Create new columns
       dplyr::mutate(
@@ -88,8 +109,16 @@ rbind_budget_expense_entries <- function(data, ...) {
         .fns = dplyr::first
       ),
       `Ledger Account Summary` = "AllBudgetExpenses",
-      `Budget Debit Amount Update` = sum(`Budget Credit Amount`, na.rm = TRUE),
-      `Budget Credit Amount Update` = sum(`Budget Debit Amount`, na.rm = TRUE),
+      `Budget Debit Amount Update` = dplyr::if_else(
+        any(!is.na(`Budget Credit Amount`)),
+        sum(`Budget Credit Amount`, na.rm = TRUE),
+        NA_real_
+      ),
+      `Budget Credit Amount Update` = dplyr::if_else(
+        any(!is.na(`Budget Debit Amount`)),
+        sum(`Budget Debit Amount`, na.rm = TRUE),
+        NA_real_
+      ),
       Memo = dplyr::if_else(
         any(!is.na(Memo)),
         as.character(
@@ -165,7 +194,8 @@ build_import_amendment_entry_sheet <- function(
   eib_dict,
   amendment_sheet,
   ...,
-  sheet = "Amendment Entry Data"
+  sheet = "Amendment Entry Data",
+  amount_col = "Amount"
 ) {
   sheet_defaults <- eib_dict |>
     get_dict_defaults(sheet)
@@ -183,7 +213,9 @@ build_import_amendment_entry_sheet <- function(
     #   # Apply corrections to budget names
     #   `Budget Name` = correct_budget_plan_names(`Budget Name`)
     # ) |>
-    fmt_budget_revenue_entries() |>
+    fmt_budget_revenue_entries(
+      amount_col = amount_col
+    ) |>
     # Join Header Key from `amendment_sheet` (renamed)
     dplyr::left_join(
       # TODO: Add a way to handle amendments involving multiple entries for the same project budget
@@ -211,13 +243,16 @@ build_import_amendment_wb <- function(
   data,
   eib_dict,
   eib_wb,
-  ...
+  ...,
+  amount_col = "Amount",
+  amendment_sheet_name = "Import Budget Amendment",
+  entry_sheet_name = "Amendment Entry Data"
 ) {
   amendment_fields <- eib_dict |>
-    pull_dict_fields("Import Budget Amendment")
+    pull_dict_fields(amendment_sheet_name)
 
   entry_fields <- eib_dict |>
-    pull_dict_fields("Amendment Entry Data")
+    pull_dict_fields(entry_sheet_name)
 
   amendment_sheet <- build_import_amendment_sheet(
     data,
@@ -228,20 +263,21 @@ build_import_amendment_wb <- function(
     data,
     eib_dict = eib_dict,
     amendment_sheet = amendment_sheet,
-    sheet = "Amendment Entry Data"
+    amount_col = amount_col,
+    sheet = entry_sheet_name
   )
 
   eib_out_wb <- reduce_wb_data_fields(
     data = amendment_sheet,
     fields = amendment_fields,
-    sheet = "Import Budget Amendment",
+    sheet = amendment_sheet_name,
     .init = eib_wb
   )
 
   eib_out_wb <- reduce_wb_data_fields(
     data = entry_sheet,
     fields = entry_fields,
-    sheet = "Amendment Entry Data",
+    sheet = entry_sheet_name,
     .init = eib_out_wb
   )
 
