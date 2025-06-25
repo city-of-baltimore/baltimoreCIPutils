@@ -1,0 +1,245 @@
+#' Format Budget Debit Amount and Budget Credit Amount columns for AllProjectBudgetRevenues entries
+#' @noRd
+fmt_budget_revenue_entries <- function(
+  data,
+  ...,
+  default_col = "Budget Credit Amount",
+  amount_col = "Amount",
+  debit_flag_value = NULL,
+  debit_flag_col = NULL
+) {
+  if (!is.null(debit_flag_col)) {
+    data <- data |>
+      # Create new columns
+      dplyr::mutate(
+        `Budget Debit Amount` = dplyr::if_else(
+          .data[[debit_flag_col]] == debit_flag_value,
+          .data[[amount_col]],
+          NA_real_
+        ),
+        `Budget Credit Amount` = dplyr::if_else(
+          .data[[debit_flag_col]] != debit_flag_value,
+          .data[[amount_col]],
+          NA_real_
+        )
+      )
+  } else {
+    default_col <- rlang::arg_match(
+      default_col,
+      c("Budget Debit Amount", "Budget Credit Amount")
+    )
+
+    data <- data |>
+      # Create new columns
+      dplyr::mutate(
+        "{default_col}" := .data[[amount_col]]
+      )
+  }
+
+  data
+}
+
+#' Bind rows with the AllBudgetExpenses entries
+#'
+#' Must be run on data that has already been formatted with [fmt_budget_revenue_entries()]
+#' @noRd
+rbind_budget_expense_entries <- function(data, ...) {
+  budget_expense_entries <- data |>
+    dplyr::filter(
+      !is.na(`Budget Credit Amount`) |
+        !is.na(`Budget Debit Amount`)
+    ) |>
+    dplyr::select(
+      tidyselect::all_of(
+        c(
+          "Header Key",
+          "Budget Name",
+          "Description*",
+          "Fiscal Time Interval*",
+          "Project",
+          "Fund",
+          "Cost Center",
+          "Ledger Account Summary",
+          "Account Set",
+          "Budget Currency",
+          "Budget Debit Amount",
+          "Budget Credit Amount",
+          "Memo"
+        )
+      )
+    ) |>
+    dplyr::summarise(
+      dplyr::across(
+        tidyselect::all_of(
+          c(
+            "Budget Name",
+            "Description*",
+            "Fiscal Time Interval*",
+            "Fund",
+            "Cost Center",
+            "Account Set",
+            "Budget Currency"
+          )
+        ),
+        .fns = dplyr::first
+      ),
+      `Ledger Account Summary` = "AllBudgetExpenses",
+      `Budget Debit Amount Update` = sum(`Budget Credit Amount`, na.rm = TRUE),
+      `Budget Credit Amount Update` = sum(`Budget Debit Amount`, na.rm = TRUE),
+      Memo = dplyr::if_else(
+        any(!is.na(Memo)),
+        as.character(
+          knitr::combine_words(
+            unique(Memo)
+          )
+        ),
+        NA_character_
+      ),
+      # .by = Project
+      .by = `Header Key`
+    ) |>
+    dplyr::rename(
+      `Budget Debit Amount` = `Budget Debit Amount Update`,
+      `Budget Credit Amount` = `Budget Credit Amount Update`
+    )
+
+  purrr::list_rbind(
+    list(
+      data,
+      budget_expense_entries
+    )
+  )
+}
+
+build_import_amendment_sheet <- function(
+  data,
+  eib_dict,
+  ...,
+  sheet = "Import Budget Amendment",
+  amendment_date = lubridate::today()
+) {
+  sheet_defaults <- eib_dict |>
+    get_dict_defaults(sheet) |>
+    # Set the fiscal year and amendment date columns
+    dplyr::mutate(
+      `Amendment Date*` = amendment_date
+    )
+
+  sheet_fields <- eib_dict |>
+    pull_dict_fields(sheet)
+
+  # Build the Import Budget Amendment sheet
+  sheet_data <- data |>
+    # NOTE: Keep unique Project values
+    # FIXME: This may not be allowed
+    dplyr::distinct(Project, ..., .keep_all = TRUE) |>
+    cbind_defaults(
+      sheet_defaults
+    ) |>
+    dplyr::arrange(
+      `Cost Center`,
+      `Project`
+    ) |>
+    # Assign header keys
+    dplyr::mutate(
+      `Header Key*` = dplyr::row_number()
+      # Apply corrections to budget names
+      # `Budget Name` = correct_budget_plan_names(
+      #   `Budget Name`
+      # )
+    ) |>
+    dplyr::select(
+      tidyselect::all_of(as.character(sheet_fields))
+    )
+
+  sheet_data
+}
+
+#' @noRd
+build_import_amendment_entry_sheet <- function(
+  data,
+  eib_dict,
+  amendment_sheet,
+  ...,
+  sheet = "Amendment Entry Data"
+) {
+  sheet_defaults <- eib_dict |>
+    get_dict_defaults(sheet)
+
+  sheet_fields <- eib_dict |>
+    pull_dict_fields(sheet)
+
+  # Build "Amendment Entry Data" sheet
+  entry_sheet <- data |>
+    # Fill default values
+    cbind_defaults(
+      sheet_defaults
+    ) |>
+    # mutate(
+    #   # Apply corrections to budget names
+    #   `Budget Name` = correct_budget_plan_names(`Budget Name`)
+    # ) |>
+    fmt_budget_revenue_entries() |>
+    # Join Header Key from `amendment_sheet` (renamed)
+    dplyr::left_join(
+      # TODO: Add a way to handle amendments involving multiple entries for the same project budget
+      amendment_sheet |>
+        dplyr::select(
+          `Budget Name`,
+          `Header Key` = `Header Key*`
+        ),
+      na_matches = "never",
+      by = dplyr::join_by(`Budget Name`)
+    ) |>
+    rbind_budget_expense_entries() |>
+    # Set Line Key by Header Key
+    dplyr::mutate(
+      `Line Key` = dplyr::row_number(),
+      .by = `Header Key`
+    ) |>
+    dplyr::arrange(`Header Key`)
+}
+
+#' Build an import budget amendment EIB
+#'
+#' @export
+build_import_amendment_wb <- function(
+  data,
+  eib_dict,
+  eib_wb,
+  ...
+) {
+  amendment_fields <- eib_dict |>
+    pull_dict_fields("Import Budget Amendment")
+
+  entry_fields <- eib_dict |>
+    pull_dict_fields("Amendment Entry Data")
+
+  amendment_sheet <- build_import_amendment_sheet(
+    data,
+    eib_dict = eib_dict
+  )
+
+  entry_sheet <- build_import_amendment_entry_sheet(
+    data,
+    eib_dict = eib_dict,
+    amendment_sheet = amendment_sheet,
+    sheet = "Amendment Entry Data"
+  )
+
+  eib_out_wb <- reduce_wb_data_fields(
+    data = amendment_sheet,
+    fields = amendment_fields,
+    sheet = "Import Budget Amendment",
+    .init = eib_wb
+  )
+
+  eib_out_wb <- reduce_wb_data_fields(
+    data = entry_sheet,
+    fields = entry_fields,
+    sheet = "Amendment Entry Data",
+    .init = eib_out_wb
+  )
+
+  eib_out_wb
+}
