@@ -10,18 +10,22 @@
 #'   Cost Center Code values to filter by. Default: `NULL`
 #' @keywords internal
 #' @export
-wd_proj_filter <- function(data,
-                           cost_center = NULL,
-                           hierarchy = NULL) {
+wd_proj_filter <- function(data, cost_center = NULL, hierarchy = NULL) {
   stopifnot(
     is.null(hierarchy) || all(stringr::str_detect(hierarchy, "^PJH")),
-    is.null(cost_center) || all(stringr::str_detect(cost_center, baltimoreCIPutils::cap_patterns[["cost_center"]]))
+    is.null(cost_center) ||
+      all(stringr::str_detect(
+        cost_center,
+        baltimoreCIPutils::cap_patterns[["cost_center"]]
+      ))
   )
 
   if (!is.null(hierarchy)) {
     data <- data |>
       dplyr::filter(
-        .data[["PHierarchy1 Code"]] %in% hierarchy | .data[["PHierarchy2 Code"]] %in% hierarchy
+        .data[["PHierarchy1 Code"]] %in%
+          hierarchy |
+          .data[["PHierarchy2 Code"]] %in% hierarchy
       )
   }
 
@@ -37,8 +41,13 @@ wd_proj_filter <- function(data,
 
 #' Vector of project status levels (also known as milestones)
 proj_status_levels <- c(
-  "Project Initiation", "Design", "Construction",
-  "Warranty", "Close Out", "Maintenance", "On Hold"
+  "Project Initiation",
+  "Design",
+  "Construction",
+  "Warranty",
+  "Close Out",
+  "Maintenance",
+  "On Hold"
 )
 
 wb_add_proj_status_validation <- function(wb, x, cols) {
@@ -71,17 +80,19 @@ vec_as_str_list_value <- function(x) {
 #' Add currency formatting to a workbook
 #'
 #' @inheritParams gt::fmt_currency
-wb_add_currencyfmt <- function(wb,
-                               sheet = openxlsx2::current_sheet(),
-                               dims = "A1",
-                               currency = NULL,
-                               use_subunits = TRUE,
-                               decimals = NULL,
-                               locale = NULL,
-                               accounting = FALSE,
-                               force_sign = FALSE,
-                               sep_mark = ",",
-                               ...) {
+wb_add_currencyfmt <- function(
+  wb,
+  sheet = openxlsx2::current_sheet(),
+  dims = "A1",
+  currency = NULL,
+  use_subunits = TRUE,
+  decimals = NULL,
+  locale = NULL,
+  accounting = FALSE,
+  force_sign = FALSE,
+  sep_mark = ",",
+  ...
+) {
   check_installed("gt")
 
   currency <- currency %||% gt:::get_locale_currency_code(currency)
@@ -135,9 +146,7 @@ wb_add_currencyfmt <- function(wb,
 #' future.
 #'
 #' @keywords internal
-wb_save_ext <- function(wb,
-                        file = NULL,
-                        ...) {
+wb_save_ext <- function(wb, file = NULL, ...) {
   if (is.null(file)) {
     core_props <- wb |>
       openxlsx2::wb_get_properties()
@@ -189,16 +198,18 @@ wb_save_ext <- function(wb,
 #' @importFrom epoxy epoxy
 #' @importFrom dplyr select arrange desc mutate if_else case_when left_join pick
 #' @importFrom stringr str_sub
-wb_wd_proj_status <- function(project_wb,
-                              hierarchy = NULL,
-                              cost_center = NULL,
-                              status_wb = NULL,
-                              # FIXME: Unsure if it makes sense to expose these
-                              # as arguments
-                              status_table_style = "TableStyleLight1",
-                              proj_table_style = "TableStyleLight2",
-                              na.strings = getOption("openxlsx2.na.strings", ""),
-                              ...) {
+wb_wd_proj_status <- function(
+  project_wb,
+  hierarchy = NULL,
+  cost_center = NULL,
+  status_wb = NULL,
+  # FIXME: Unsure if it makes sense to expose these
+  # as arguments
+  status_table_style = "TableStyleLight1",
+  proj_table_style = "TableStyleLight2",
+  na.strings = getOption("openxlsx2.na.strings", ""),
+  ...
+) {
   # Load project data ----
   wd_proj_data <- openxlsx2::read_xlsx(project_wb) |>
     fmt_wd_proj_worktags() |>
@@ -290,7 +301,9 @@ wb_wd_proj_status <- function(project_wb,
       # TODO: Document how the default value for this column is set
       "No Change" := dplyr::case_when(
         is.na(.data[["Last Reported Status"]]) ~ NA_character_,
-        .data[["Last Reported Status"]] %in% c("Close Out", "Maintenance", "On Hold") ~ "Y",
+        .data[["Last Reported Status"]] %in%
+          c("Close Out", "Maintenance", "On Hold") ~
+          "Y",
         .default = "N"
       )
     )
@@ -308,9 +321,17 @@ wb_wd_proj_status <- function(project_wb,
     dplyr::select(
       all_of(
         c(
-          "Project Code", "Project Name", "Cost Center Code", "Cost Center Name",
-          "Last Reported Date", "Last Reported Status", "Status",
-          "Last Reported Explanation", "Status Explanation", "No Change", "Status Date"
+          "Project Code",
+          "Project Name",
+          "Cost Center Code",
+          "Cost Center Name",
+          "Last Reported Date",
+          "Last Reported Status",
+          "Status",
+          "Last Reported Explanation",
+          "Status Explanation",
+          "No Change",
+          "Status Date"
         )
       )
     ) |>
@@ -318,8 +339,12 @@ wb_wd_proj_status <- function(project_wb,
     dplyr::arrange(dplyr::pick(all_of("Last Reported Status")))
 
   protected_proj_status_cols <- c(
-    "Project Code", "Project Name", "Cost Center Code", "Cost Center Name",
-    "Last Reported Date", "Last Reported Status"
+    "Project Code",
+    "Project Name",
+    "Cost Center Code",
+    "Cost Center Name",
+    "Last Reported Date",
+    "Last Reported Status"
   )
 
   proj_status_value_cols <- c("Last Reported Status", "Status")
@@ -329,7 +354,8 @@ wb_wd_proj_status <- function(project_wb,
     title = paste0(
       c(
         "Capital Project Status Updates",
-        hierarchy, cost_center,
+        hierarchy,
+        cost_center,
         stringr::str_sub(Sys.Date(), end = 7)
       ),
       collapse = " - "
@@ -454,15 +480,21 @@ wb_wd_proj_status <- function(project_wb,
 #'   "hyperlink", "percentage", "scientific", "formula").
 #' <https://janmarvin.github.io/openxlsx2/articles/openxlsx2_style_manual.html#numfmts2>
 #' @inheritParams rlang::arg_match
-set_excel_fmt_class <- function(data,
-                                cols,
-                                fmt_class = "currency",
-                                multiple = TRUE) {
+set_excel_fmt_class <- function(
+  data,
+  cols,
+  fmt_class = "currency",
+  multiple = TRUE
+) {
   fmt_class <- arg_match(
     fmt_class,
     c(
-      "currency", "accounting", "hyperlink",
-      "percentage", "scientific", "formula"
+      "currency",
+      "accounting",
+      "hyperlink",
+      "percentage",
+      "scientific",
+      "formula"
     ),
     multiple = multiple
   )

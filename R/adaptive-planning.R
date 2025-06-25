@@ -17,13 +17,15 @@
 #' @importFrom fs path_file file_info
 #' @importFrom vctrs vec_as_names
 #' @importFrom dplyr cumany
-adapt_read_sheet <- function(file,
-                             types = NULL,
-                             col_names = NULL,
-                             ...,
-                             start_row = 4,
-                             keep = c("values", "child", "parent", "all"),
-                             name_repair = "minimal") {
+adapt_read_sheet <- function(
+  file,
+  types = NULL,
+  col_names = NULL,
+  ...,
+  start_row = 4,
+  keep = c("values", "child", "parent", "all"),
+  name_repair = "minimal"
+) {
   adapt_wb <- openxlsx2::wb_load(file)
   adapt_wb_sheets <- openxlsx2::wb_get_sheet_names(adapt_wb)
   keep <- arg_match(keep)
@@ -65,8 +67,12 @@ adapt_read_sheet <- function(file,
 
     adapt_sheet_info_msg <- set_names(
       paste0(
-        "{.field ", names(adapt_sheet_info), "}: ",
-        "{.str ", adapt_sheet_info, "}"
+        "{.field ",
+        names(adapt_sheet_info),
+        "}: ",
+        "{.str ",
+        adapt_sheet_info,
+        "}"
       ),
       rep("*", 4)
     )
@@ -128,15 +134,16 @@ adapt_read_sheet <- function(file,
 #' @inheritParams dplyr::summarise
 #' @export
 summarise_timespan <- function(
-    .data,
-    timespan_cols = curr_fy_span(),
-    .fns = \(x) {
-      sum(x, na.rm = TRUE)
-    },
-    .by = NULL,
-    .names = NULL,
-    .unpack = FALSE,
-    .groups = NULL) {
+  .data,
+  timespan_cols = curr_fy_span(),
+  .fns = \(x) {
+    sum(x, na.rm = TRUE)
+  },
+  .by = NULL,
+  .names = NULL,
+  .unpack = FALSE,
+  .groups = NULL
+) {
   dplyr::summarise(
     .data,
     dplyr::across(
@@ -159,9 +166,11 @@ summarise_timespan <- function(
 #' @param timespan_cols Required. Defaults to [curr_fy_span()]. Passed to `.cols`
 #'   argument of [dplyr::across()] (wrapped by [tidyselect::any_of()]).
 #' @export
-replace_na_timespan <- function(.data,
-                                timespan_cols = curr_fy_span(),
-                                replacement = 0) {
+replace_na_timespan <- function(
+  .data,
+  timespan_cols = curr_fy_span(),
+  replacement = 0
+) {
   dplyr::mutate(
     .data,
     dplyr::across(

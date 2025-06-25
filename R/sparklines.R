@@ -3,10 +3,11 @@
 #' @inheritParams create_sparkline_group
 #' @export
 create_timespan_sparklines <- function(
-    wb,
-    timespan_cols = curr_fy_span(),
-    sheet = NULL,
-    ...) {
+  wb,
+  timespan_cols = curr_fy_span(),
+  sheet = NULL,
+  ...
+) {
   create_sparkline_group(
     wb = wb,
     cols = timespan_cols,
@@ -24,14 +25,15 @@ create_timespan_sparklines <- function(
 #' @inheritParams openxlsx2::create_sparklines
 #' @export
 create_sparkline_group <- function(
-    wb,
-    cols,
-    sheet = NULL,
-    sqref = NULL,
-    display_empty_cells_as = "zero",
-    type = "column",
-    first = TRUE,
-    ...) {
+  wb,
+  cols,
+  sheet = NULL,
+  sqref = NULL,
+  display_empty_cells_as = "zero",
+  type = "column",
+  first = TRUE,
+  ...
+) {
   data <- wb_data(wb, sheet = sheet)
 
   sheet <- sheet %||% openxlsx2::wb_get_active_sheet(wb)
@@ -50,18 +52,19 @@ create_sparkline_group <- function(
     character(1)
   )
 
-  group_sqref <- sqref %||% vapply(
-    rows,
-    \(x) {
-      openxlsx2::wb_dims(
-        x = data,
-        cols = ncol(data),
-        rows = x,
-        from_col = 2
-      )
-    },
-    character(1)
-  )
+  group_sqref <- sqref %||%
+    vapply(
+      rows,
+      \(x) {
+        openxlsx2::wb_dims(
+          x = data,
+          cols = ncol(data),
+          rows = x,
+          from_col = 2
+        )
+      },
+      character(1)
+    )
 
   vapply(
     rows,

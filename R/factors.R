@@ -8,13 +8,15 @@ NULL
 
 #' @rdname fmt_wd_proj_fct
 #' @export
-fmt_wd_proj_importance <- function(data,
-                                   col = "Importance Rating",
-                                   levels = c(
-                                     "Critical" = "1 - Critical",
-                                     "Major" = "2 - Major",
-                                     "Minor" = "3 - Minor"
-                                   )) {
+fmt_wd_proj_importance <- function(
+  data,
+  col = "Importance Rating",
+  levels = c(
+    "Critical" = "1 - Critical",
+    "Major" = "2 - Major",
+    "Minor" = "3 - Minor"
+  )
+) {
   data |>
     fmt_fct_recode(
       col = col,
@@ -24,13 +26,15 @@ fmt_wd_proj_importance <- function(data,
 
 #' @rdname fmt_wd_proj_fct
 #' @export
-fmt_wd_proj_priority <- function(data,
-                                 col = "Priority",
-                                 levels = c(
-                                   "High" = "1-High",
-                                   "Medium" = "2-Medium",
-                                   "Low" = "3-Low"
-                                 )) {
+fmt_wd_proj_priority <- function(
+  data,
+  col = "Priority",
+  levels = c(
+    "High" = "1-High",
+    "Medium" = "2-Medium",
+    "Low" = "3-Low"
+  )
+) {
   data |>
     fmt_fct_recode(
       col = col,
@@ -40,13 +44,15 @@ fmt_wd_proj_priority <- function(data,
 
 #' @rdname fmt_wd_proj_fct
 #' @export
-fmt_wd_proj_risk <- function(data,
-                             col = "Risk Level",
-                             levels = c(
-                               "High",
-                               "Medium",
-                               "Low"
-                             )) {
+fmt_wd_proj_risk <- function(
+  data,
+  col = "Risk Level",
+  levels = c(
+    "High",
+    "Medium",
+    "Low"
+  )
+) {
   data |>
     fmt_fct_recode(
       col = col,
@@ -63,11 +69,13 @@ fmt_wd_proj_risk <- function(data,
 #' @param new_levels New levels to use instead of levels. Ignored if levels is a named vector.
 #' @keywords internal
 #' @export
-fmt_fct_recode <- function(data,
-                           col,
-                           levels = NULL,
-                           new_col = col,
-                           new_levels = NULL) {
+fmt_fct_recode <- function(
+  data,
+  col,
+  levels = NULL,
+  new_col = col,
+  new_levels = NULL
+) {
   if (is.null(levels)) {
     return(data)
   }

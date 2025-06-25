@@ -12,11 +12,13 @@
 #'   status value and explanation.
 #' @export
 #' @importFrom dplyr bind_rows
-fmt_wd_proj_lifecycle <- function(data,
-                                  status_cols = c(
-                                    "Status" = "Milestone Name",
-                                    "Status Explanation" = "Milestone Explanation"
-                                  )) {
+fmt_wd_proj_lifecycle <- function(
+  data,
+  status_cols = c(
+    "Status" = "Milestone Name",
+    "Status Explanation" = "Milestone Explanation"
+  )
+) {
   check_installed("tidyr")
 
   related_project_data <- data |>
@@ -34,19 +36,23 @@ fmt_wd_proj_lifecycle <- function(data,
         str_detect(
           `Status Explanation`,
           "Project canceled|Transfer to|Transferring to|MOVE BALANCE|Move Balance|Transferring fund to|TRANSFER RESERVE AMOUNT|Transferring Funds to"
-        ) ~ "Transfer balance to another project",
+        ) ~
+          "Transfer balance to another project",
         str_detect(
           `Status Explanation`,
           "Waiting transfers|MAKE PRIMARY ACCOUNT|INTO THIS ACCOUNT"
-        ) ~ "Transfer balance from other projects",
+        ) ~
+          "Transfer balance from other projects",
         str_detect(
           `Status Explanation`,
           "Reserve for|Reserve project for"
-        ) ~ "Hold in reserve for another project",
+        ) ~
+          "Hold in reserve for another project",
         str_detect(
           `Status Explanation`,
           "Refer to"
-        ) ~ "Superseded by another project"
+        ) ~
+          "Superseded by another project"
       )
     ) |>
     tidyr::unnest_longer(

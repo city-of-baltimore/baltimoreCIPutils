@@ -11,11 +11,13 @@
 #' @param multiple Defaults to "nested" which nests the data by project code
 #'   column and then sets `multiple = "any"`. Passed to [dplyr::left_join()]
 #' @export
-wd_proj_join_asset_id <- function(data,
-                                  project_code_col = "Project Code",
-                                  asset_id_col = "asset_id",
-                                  .key = asset_id_col,
-                                  multiple = "nested") {
+wd_proj_join_asset_id <- function(
+  data,
+  project_code_col = "Project Code",
+  asset_id_col = "asset_id",
+  .key = asset_id_col,
+  multiple = "nested"
+) {
   asset_xwalk_cols <- set_names(
     c("Project Code", asset_id_col),
     c(project_code_col, asset_id_col)

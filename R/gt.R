@@ -7,12 +7,14 @@
 #' @inheritDotParams gt::fmt_currency
 #' @keywords gt internal
 #' @export
-fmt_fy_span_currency <- function(data,
-                                 columns = tidyselect::all_of(curr_fy_span(year)),
-                                 ...,
-                                 year = getOption("baltimoreCIP.curr_year", 2026),
-                                 decimals = 0,
-                                 suffixing = "K") {
+fmt_fy_span_currency <- function(
+  data,
+  columns = tidyselect::all_of(curr_fy_span(year)),
+  ...,
+  year = getOption("baltimoreCIP.curr_year", 2026),
+  decimals = 0,
+  suffixing = "K"
+) {
   check_installed("gt")
 
   gt::fmt_currency(

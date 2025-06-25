@@ -24,13 +24,18 @@
 #' fiscal_year("2021-01-01", "date_last")
 #'
 #' @export
-fiscal_year <- function(x,
-                        type = c(
-                          "year", "year_prefix", "year_prefix_abb",
-                          "date_first", "date_last"
-                        ),
-                        before = "FY",
-                        ...) {
+fiscal_year <- function(
+  x,
+  type = c(
+    "year",
+    "year_prefix",
+    "year_prefix_abb",
+    "date_first",
+    "date_last"
+  ),
+  before = "FY",
+  ...
+) {
   type <- rlang::arg_match(type)
 
   if (!all(inherits(x, "Date"))) {
@@ -43,10 +48,15 @@ fiscal_year <- function(x,
     lubridate::year(x) + 1
   )
 
-  switch(type,
+  switch(
+    type,
     year = fy,
     year_prefix = dplyr::if_else(!is.na(fy), paste0(before, fy), NA_character_),
-    year_prefix_abb = dplyr::if_else(!is.na(fy), paste0(before, substr(fy, 3, 4)), NA_character_),
+    year_prefix_abb = dplyr::if_else(
+      !is.na(fy),
+      paste0(before, substr(fy, 3, 4)),
+      NA_character_
+    ),
     date_first = lubridate::as_date(paste0(fy - 1, "-07-01")),
     date_last = lubridate::as_date(paste0(fy, "-06-30"))
   )
@@ -100,12 +110,14 @@ fy_span <- function(year, before = "FY", n = 1, type = "year_prefix") {
 #' @rdname fy_span
 #' @param sep Separator between first and last element in label.
 #' @export
-fy_span_label <- function(year,
-                          n = 1,
-                          before = c("FY", ""),
-                          sep = "-",
-                          type = "year_prefix_abb",
-                          ...) {
+fy_span_label <- function(
+  year,
+  n = 1,
+  before = c("FY", ""),
+  sep = "-",
+  type = "year_prefix_abb",
+  ...
+) {
   year <- fy_span(year, n = n, before = "", type = type, ...)
 
   if (!(type %in% c("year_prefix", "year_prefix_abb"))) {
@@ -134,10 +146,12 @@ fy_span_label <- function(year,
 #'
 #' @rdname fy_span
 #' @export
-curr_fy_span <- function(year = getOption("baltimoreCIP.curr_year", 2026),
-                         before = "FY",
-                         n = 6,
-                         type = "year_prefix") {
+curr_fy_span <- function(
+  year = getOption("baltimoreCIP.curr_year", 2026),
+  before = "FY",
+  n = 6,
+  type = "year_prefix"
+) {
   fy_span(year, before, n, type)
 }
 
@@ -146,9 +160,11 @@ curr_fy_span <- function(year = getOption("baltimoreCIP.curr_year", 2026),
 #'
 #' @rdname fy_span
 #' @export
-prior_fy_span <- function(year = getOption("baltimoreCIP.prior_year", 2025),
-                          before = "FY",
-                          n = 6,
-                          type = "year_prefix") {
+prior_fy_span <- function(
+  year = getOption("baltimoreCIP.prior_year", 2025),
+  before = "FY",
+  n = 6,
+  type = "year_prefix"
+) {
   fy_span(year, before, n, type)
 }
