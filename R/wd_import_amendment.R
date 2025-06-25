@@ -24,15 +24,19 @@ fmt_budget_revenue_entries <- function(
         )
       )
   } else {
+    col_values <- c("Budget Debit Amount", "Budget Credit Amount")
     default_col <- rlang::arg_match(
       default_col,
-      c("Budget Debit Amount", "Budget Credit Amount")
+      col_values
     )
+
+    non_default_col = col_values[default_col != col_values]
 
     data <- data |>
       # Create new columns
       dplyr::mutate(
-        "{default_col}" := .data[[amount_col]]
+        "{default_col}" := .data[[amount_col]],
+        "{non_default_col}" := NA_real_
       )
   }
 
