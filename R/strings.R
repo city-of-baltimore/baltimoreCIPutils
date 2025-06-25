@@ -16,7 +16,12 @@
 #'
 #' str_extract_project_code("PRJ001145 908093 SWC 7764 Race St Box Culvert")
 #'
-#' str_extract_all_project_codes(c("PRJ002404 PRJ002550", "PRJ001599 913117 Shake and Bake Recreation Center"))
+#' str_extract_all_project_codes(
+#'   c(
+#'     "PRJ002404 PRJ002550",
+#'     "PRJ001599 913117 Shake and Bake Recreation Center"
+#'   )
+#' )
 #'
 #' str_extract_cip_num("PRJ002550 943004 504-004 ADA Infrastructure Upgrades-111")
 #'
@@ -31,11 +36,13 @@ NULL
 #' @rdname str_capital
 #' @name str_extract_project_code
 #' @export
-str_extract_project_code <- function(string,
-                                     pattern = baltimoreCIPutils::cap_patterns[["project_code"]],
-                                     remove_pattern = "-",
-                                     simplify = FALSE,
-                                     ...) {
+str_extract_project_code <- function(
+  string,
+  pattern = baltimoreCIPutils::cap_patterns[["project_code"]],
+  remove_pattern = "-",
+  simplify = FALSE,
+  ...
+) {
   stringr::str_extract(
     stringr::str_remove(toupper(string), remove_pattern),
     pattern = pattern,
@@ -48,9 +55,11 @@ str_extract_project_code <- function(string,
 #' @rdname str_capital
 #' @name str_extract_revenue_category_code
 #' @export
-str_extract_revenue_category_code <- function(string,
-                                              pattern = baltimoreCIPutils::cap_patterns[["revenue_category"]],
-                                              ...) {
+str_extract_revenue_category_code <- function(
+  string,
+  pattern = baltimoreCIPutils::cap_patterns[["revenue_category"]],
+  ...
+) {
   stringr::str_extract(
     string,
     pattern = pattern,
@@ -62,11 +71,13 @@ str_extract_revenue_category_code <- function(string,
 #' @rdname str_capital
 #' @name str_extract_all_project_codes
 #' @export
-str_extract_all_project_codes <- function(string,
-                                          pattern = baltimoreCIPutils::cap_patterns[["project_code"]],
-                                          remove_pattern = "-",
-                                          simplify = FALSE,
-                                          ...) {
+str_extract_all_project_codes <- function(
+  string,
+  pattern = baltimoreCIPutils::cap_patterns[["project_code"]],
+  remove_pattern = "-",
+  simplify = FALSE,
+  ...
+) {
   stringr::str_extract_all(
     stringr::str_remove(toupper(string), remove_pattern),
     pattern,
@@ -84,11 +95,12 @@ str_extract_all_project_codes <- function(string,
 #' @importFrom stringr str_extract str_extract_all
 #' @export
 str_extract_contract_num <- function(
-    string,
-    pattern = baltimoreCIPutils::cap_patterns[["contract_num"]],
-    extract_all = FALSE,
-    remove_pattern = "[:space:]|[:punct:]",
-    ...) {
+  string,
+  pattern = baltimoreCIPutils::cap_patterns[["contract_num"]],
+  extract_all = FALSE,
+  remove_pattern = "[:space:]|[:punct:]",
+  ...
+) {
   fn <- stringr::str_extract
 
   # FIXME: Implement separate str_extract_all_contract_nums function
@@ -124,10 +136,12 @@ str_extract_contract_num <- function(
 #' @rdname str_capital
 #' @name str_extract_all_contract_num
 #' @export
-str_extract_all_contract_num <- function(string,
-                                         pattern = baltimoreCIPutils::cap_patterns[["contract_num"]],
-                                         remove_pattern = "[:space:]|[:punct:]",
-                                         ...) {
+str_extract_all_contract_num <- function(
+  string,
+  pattern = baltimoreCIPutils::cap_patterns[["contract_num"]],
+  remove_pattern = "[:space:]|[:punct:]",
+  ...
+) {
   string <- stringr::str_extract_all(string, pattern, ...)
 
   lapply(
@@ -142,9 +156,11 @@ str_extract_all_contract_num <- function(string,
 #' @rdname str_capital
 #' @name str_extract_cip_num
 #' @export
-str_extract_cip_num <- function(string,
-                                pattern = baltimoreCIPutils::cap_patterns[["cip_num"]],
-                                ...) {
+str_extract_cip_num <- function(
+  string,
+  pattern = baltimoreCIPutils::cap_patterns[["cip_num"]],
+  ...
+) {
   stringr::str_extract(
     string,
     pattern = pattern,
@@ -156,9 +172,11 @@ str_extract_cip_num <- function(string,
 #' @rdname str_capital
 #' @name str_extract_dgs_asset_id
 #' @export
-str_extract_dgs_asset_id <- function(string,
-                                     pattern = baltimoreCIPutils::cap_patterns[["dgs_asset_id"]],
-                                     ...) {
+str_extract_dgs_asset_id <- function(
+  string,
+  pattern = baltimoreCIPutils::cap_patterns[["dgs_asset_id"]],
+  ...
+) {
   stringr::str_extract(
     string,
     pattern = pattern,
