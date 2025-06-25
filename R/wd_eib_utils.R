@@ -40,6 +40,15 @@ pull_dict_fields <- function(dict, sheet_name, usage = TRUE) {
     ) |>
     dplyr::pull(Fields, name = Column)
 
+  if (length(fields) == 0) {
+    cli::cli_abort(
+      c(
+        "{.arg dict} is not specifying any fields.",
+        "i" = 'Check the "Usage" column of your `xlsx` dictionary file.'
+      )
+    )
+  }
+
   fields |>
     # Trim leading/trailing space
     stringr::str_trim() |>
