@@ -15,6 +15,7 @@ fmt_adapt_6yr_program(
   phase_col = "Phase Name",
   phase_levels = c("<multiple>", "Planning/Design", "Construction", "Post-construction",
     "Information Technology", na_phase_level),
+  grant_cols = c("FGSGrant Code", "FGSGrant Name"),
   na_phase_level = "Unspecified",
   accounting_fmt = FALSE
 )

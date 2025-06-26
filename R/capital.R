@@ -123,6 +123,10 @@ fmt_adapt_6yr_program <- function(
     "Information Technology",
     na_phase_level
   ),
+  grant_cols = c(
+    "FGSGrant Code",
+    "FGSGrant Name"
+  ),
   na_phase_level = "Unspecified",
   accounting_fmt = FALSE
 ) {
@@ -143,6 +147,11 @@ fmt_adapt_6yr_program <- function(
       "RAccount Code",
       "RAccount Name",
       "^([:digit:]|:)+"
+    ) |>
+    fmt_wd_code_name(
+      grant_cols[[1]],
+      grant_cols[[2]],
+      "^GRT[:digit:]+"
     ) |>
     dplyr::mutate(
       "RAccount Code" := stringr::str_remove(.data[["RAccount Code"]], ":$")
