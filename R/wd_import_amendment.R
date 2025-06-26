@@ -30,6 +30,8 @@ fmt_budget_revenue_entries <- function(
         )
       )
   } else if (!is.null(debit_flag_col)) {
+    # TODO: This should be triggered by a `method` option - not by the presence
+    # of `debit_flag_col`
     data <- data |>
       # Create new columns
       dplyr::mutate(
@@ -45,6 +47,7 @@ fmt_budget_revenue_entries <- function(
         )
       )
   } else {
+    # FIXME: This option isn't being used
     col_values <- c("Budget Debit Amount", "Budget Credit Amount")
     default_col <- rlang::arg_match(
       default_col,
@@ -75,30 +78,43 @@ rbind_budget_expense_entries <- function(data, ...) {
         !is.na(`Budget Debit Amount`)
     ) |>
     dplyr::select(
+      # Avoiding tidyselect::all_of to allow variant column names across EIB files
       tidyselect::all_of(
         c(
           "Header Key",
           "Budget Name",
+          # Project may need to move to any_of
+          "Project",
           # TODO: Keep Description* if needed as key field
           # "Description*",
           "Fiscal Time Interval*",
           "Project",
           "Fund",
           "Cost Center",
-          "Ledger Account Summary",
           "Account Set",
           "Budget Currency",
           "Budget Debit Amount",
           "Budget Credit Amount",
           "Memo"
         )
+      ),
+      tidyselect::any_of(
+        c(
+          # Used by amend_budget only
+          "Ledger Account Summary",
+          # Used by import_budget only
+          "Ledger Account or Ledger Account Summary"
+        )
       )
     ) |>
     dplyr::summarise(
       dplyr::across(
+        # Avoiding tidyselect::all_of to allow variant column names across EIB files
         tidyselect::all_of(
           c(
             "Budget Name",
+            # Project may need to move to any_of
+            "Project",
             # TODO: Keep Description* if needed as key field
             # "Description*",
             "Fiscal Time Interval*",
@@ -110,7 +126,6 @@ rbind_budget_expense_entries <- function(data, ...) {
         ),
         .fns = dplyr::first
       ),
-      `Ledger Account Summary` = "AllBudgetExpenses",
       `Budget Debit Amount Update` = dplyr::if_else(
         any(!is.na(`Budget Credit Amount`)),
         sum(`Budget Credit Amount`, na.rm = TRUE),
@@ -136,6 +151,10 @@ rbind_budget_expense_entries <- function(data, ...) {
     dplyr::rename(
       `Budget Debit Amount` = `Budget Debit Amount Update`,
       `Budget Credit Amount` = `Budget Credit Amount Update`
+    ) |>
+    dplyr::mutate(
+      `Ledger Account or Ledger Account Summary` = "AllBudgetExpenses",
+      `Ledger Account Summary` = "AllBudgetExpenses"
     )
 
   purrr::list_rbind(
@@ -339,6 +358,8 @@ build_import_budget_wb <- function(
   data,
   eib_dict,
   eib_wb,
+  memo = NULL,
+  amount_col = "Amount",
   budget_sheet_name = "Import Budget High Volume",
   lines_sheet_name = "Budget Lines Data"
 ) {
@@ -348,10 +369,24 @@ build_import_budget_wb <- function(
   budget_defaults <- eib_dict |>
     get_dict_defaults(budget_sheet_name)
 
-  budget_sheet <- data |>
+  data <- data |>
+    dplyr::mutate(
+      `Budget Name*` = Project
+    )
+
+  budget_sheet_init <- data |>
+    dplyr::distinct(`Budget Name*`, .keep_all = TRUE) |>
     # FIXME: Add code for budget sheet
+    dplyr::mutate(
+      `Header Key*` = dplyr::row_number()
+    ) |>
     cbind_defaults(budget_defaults) |>
-    dplyr::select(all_of(as.character(budget_fields)))
+    dplyr::mutate(
+      `Budget Memo` = memo %||% NA_character_
+    )
+
+  budget_sheet <- budget_sheet_init |>
+    dplyr::select(tidyselect::all_of(as.character(budget_fields)))
 
   lines_fields <- eib_dict |>
     pull_dict_fields(lines_sheet_name)
@@ -359,9 +394,30 @@ build_import_budget_wb <- function(
   lines_defaults <- eib_dict |>
     get_dict_defaults(lines_sheet_name)
 
+  print(lines_defaults)
+
   lines_sheet <- data |>
-    # FIXME: Add code for lines sheet
+    dplyr::left_join(
+      budget_sheet_init |>
+        dplyr::select(
+          `Budget Name*`,
+          `Header Key` = `Header Key*`
+        ),
+      by = dplyr::join_by(`Budget Name*`)
+    ) |>
     cbind_defaults(lines_defaults) |>
+    fmt_budget_revenue_entries(
+      amount_col = amount_col
+    ) |>
+    rbind_budget_expense_entries() |>
+    dplyr::mutate(
+      `Line Key` = dplyr::row_number(),
+      .by = `Header Key`
+    ) |>
+    # FIXME: Figure out why this is needed for the budgets_sheet and the lines_sheet
+    dplyr::mutate(
+      `Budget Memo` = memo %||% NA_character_
+    ) |>
     dplyr::select(all_of(as.character(lines_fields)))
 
   eib_wb_out <- reduce_wb_data_fields(

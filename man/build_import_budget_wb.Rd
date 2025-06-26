@@ -8,6 +8,8 @@ build_import_budget_wb(
   data,
   eib_dict,
   eib_wb,
+  memo = NULL,
+  amount_col = "Amount",
   budget_sheet_name = "Import Budget High Volume",
   lines_sheet_name = "Budget Lines Data"
 )
