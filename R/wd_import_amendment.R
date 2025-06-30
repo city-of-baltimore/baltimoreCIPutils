@@ -89,7 +89,7 @@ rbind_budget_expense_entries <- function(data, ...) {
 
     # Other fields that are not in both EIBs
     "Budget Currency",
-    "Grant",
+    # "Grant",
     "Year",
     "Fiscal Time Interval",
     "Fiscal Time Interval*"
@@ -169,15 +169,15 @@ rbind_budget_expense_entries <- function(data, ...) {
         `Budget Credit Amount Update` - `Budget Debit Amount Update`,
         NA_real_
       ),
-      `Budget Debit Amount Update` = if_else(
-        !is.na(`Net Expenses`) & `Net Expenses` > 0,
-        `Net Expenses`,
-        NA_real_
+      `Budget Debit Amount Update` = dplyr::case_when(
+        is.na(`Net Expenses`) ~ `Budget Debit Amount Update`,
+        !is.na(`Net Expenses`) & `Net Expenses` > 0 ~ `Net Expenses`,
+        .default = NA_real_
       ),
-      `Budget Credit Amount Update` = if_else(
-        !is.na(`Net Expenses`) & `Net Expenses` <= 0,
-        `Net Expenses`,
-        NA_real_
+      `Budget Credit Amount Update` = dplyr::case_when(
+        is.na(`Net Expenses`) ~ `Budget Credit Amount Update`,
+        !is.na(`Net Expenses`) & `Net Expenses` <= 0 ~ `Net Expenses` * -1,
+        .default = NA_real_
       )
     ) |>
     dplyr::rename(
@@ -465,6 +465,7 @@ build_import_budget_wb <- function(
       by = dplyr::join_by(`Budget Name*`)
     ) |>
     dplyr::mutate(
+      `Ledger Account or Ledger Account Summary` = "AllBudgetRevenues",
       `Memo` = memo %||% NA_character_,
       Year = year
     ) |>
