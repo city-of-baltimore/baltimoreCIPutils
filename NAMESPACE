@@ -3,7 +3,7 @@
 export(adapt_read_sheet)
 export(build_amend_budget_wb)
 export(build_import_budget_wb)
-export(build_put_buget_template_wb)
+export(build_put_budget_template_wb)
 export(cbind_defaults)
 export(create_sparkline_group)
 export(create_timespan_sparklines)

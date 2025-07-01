@@ -169,13 +169,13 @@ rbind_budget_expense_entries <- function(data, ...) {
         `Budget Credit Amount Update` - `Budget Debit Amount Update`,
         NA_real_
       ),
-      `Budget Debit Amount Update` = dplyr::case_when(
-        is.na(`Net Expenses`) ~ `Budget Debit Amount Update`,
+      `Budget Credit Amount Update` = dplyr::case_when(
+        is.na(`Net Expenses`) ~ `Budget Credit Amount Update`,
         !is.na(`Net Expenses`) & `Net Expenses` > 0 ~ `Net Expenses`,
         .default = NA_real_
       ),
-      `Budget Credit Amount Update` = dplyr::case_when(
-        is.na(`Net Expenses`) ~ `Budget Credit Amount Update`,
+      `Budget Debit Amount Update` = dplyr::case_when(
+        is.na(`Net Expenses`) ~ `Budget Debit Amount Update`,
         !is.na(`Net Expenses`) & `Net Expenses` <= 0 ~ `Net Expenses` * -1,
         .default = NA_real_
       )
@@ -317,7 +317,13 @@ build_amend_budget_wb <- function(
   amendment_sheet_name = "Import Budget Amendment",
   entry_sheet_name = "Amendment Entry Data"
 ) {
-  amendment_sheet <- build_import_amendment_sheet(
+
+  data <- data |>
+    dplyr::filter(
+      !is.na(.data[[amount_col]]) & .data[[amount_col]] != 0
+    )
+
+    amendment_sheet <- build_import_amendment_sheet(
     data,
     eib_dict = eib_dict,
     description = description,
@@ -358,7 +364,7 @@ build_amend_budget_wb <- function(
 
 #' Build a Put Budget Template EIB
 #' @export
-build_put_buget_template_wb <- function(
+build_put_budget_template_wb <- function(
   data,
   eib_dict,
   eib_wb,
@@ -437,9 +443,21 @@ build_import_budget_wb <- function(
       )
   }
 
+  if (
+    has_name(data, "Fiscal Year*") &
+      !has_name(data, "Year")
+  ) {
+    data <- data |>
+      dplyr::mutate(
+        `Year` = `Fiscal Year*`
+      )
+  }
+
   budget_sheet_init <- data |>
+    dplyr::filter(
+      !is.na(.data[[amount_col]]) & .data[[amount_col]] != 0
+    ) |>
     dplyr::distinct(`Budget Name*`, .keep_all = TRUE) |>
-    # FIXME: Add code for budget sheet
     dplyr::mutate(
       `Header Key*` = dplyr::row_number(),
       `Budget Memo` = description %||% NA_character_
@@ -459,15 +477,15 @@ build_import_budget_wb <- function(
     dplyr::left_join(
       budget_sheet_init |>
         dplyr::select(
-          `Budget Name*`,
+          Project,
           `Header Key` = `Header Key*`
         ),
-      by = dplyr::join_by(`Budget Name*`)
+      by = dplyr::join_by(Project)
+      # by = dplyr::join_by(`Budget Name*`)
     ) |>
     dplyr::mutate(
-      `Ledger Account or Ledger Account Summary` = "AllBudgetRevenues",
-      `Memo` = memo %||% NA_character_,
-      Year = year
+      `Ledger Account or Ledger Account Summary` = "AllProjectBudgetRevenues",
+      `Memo` = memo %||% NA_character_
     ) |>
     cbind_defaults(lines_defaults) |>
     fmt_budget_revenue_entries(
