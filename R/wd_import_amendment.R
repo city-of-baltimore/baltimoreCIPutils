@@ -301,6 +301,8 @@ build_amendment_entry_sheet <- function(
       .by = `Header Key`
     ) |>
     dplyr::arrange(`Header Key`)
+
+  entry_sheet
 }
 
 #' Build an import budget amendment EIB
@@ -323,7 +325,7 @@ build_amend_budget_wb <- function(
       !is.na(.data[[amount_col]]) & .data[[amount_col]] != 0
     )
 
-    amendment_sheet <- build_import_amendment_sheet(
+  amendment_sheet <- build_import_amendment_sheet(
     data,
     eib_dict = eib_dict,
     description = description,
