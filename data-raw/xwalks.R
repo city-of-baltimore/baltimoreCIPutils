@@ -98,9 +98,12 @@ cap_patterns <- list(
   "cip_num" = "[:digit:]{3}\\-[:digit:]{3}",
   # NOTE: Matches DGS Asset ID values enclosed in parentheses only
   "dgs_asset_id" = "(?<=\\()(B|C|L|M|P|A|T|Z)[:digit:]+(?=\\))",
-  # NOTE: Matches valid, upper-case project codes only
+  # NOTE: Matches valid, upper-case project codes at front of string only
   "project_code" = "^PRJ[:digit:]{6}",
-  "revenue_category" = "^RC[:digit:]{4}"
+  "revenue_category" = "^RC[:digit:]{4}",
+  "grant" = "^GRT[:digit:]+",
+  # FIXME: Update to use more restrictive pattern
+  "fund" = "^[:digit:]+"
 )
 
 usethis::use_data(cap_patterns, overwrite = TRUE)

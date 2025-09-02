@@ -5,8 +5,8 @@
 \alias{cap_patterns}
 \title{String patterns for capital projects}
 \format{
-A length 6 list with named patterns:
-contract_num, cost_center, cip_num, dgs_asset_id, project_code, and revenue_category
+A length 8 list with named patterns:
+contract_num, cost_center, cip_num, dgs_asset_id, project_code, revenue_category, grant, and fund
 }
 \usage{
 cap_patterns
