@@ -319,7 +319,6 @@ build_amend_budget_wb <- function(
   amendment_sheet_name = "Import Budget Amendment",
   entry_sheet_name = "Amendment Entry Data"
 ) {
-
   data <- data |>
     dplyr::filter(
       !is.na(.data[[amount_col]]) & .data[[amount_col]] != 0

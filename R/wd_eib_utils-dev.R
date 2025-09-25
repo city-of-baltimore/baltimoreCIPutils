@@ -1,4 +1,3 @@
-
 # pkg_install_cip_utils <- function(
 #   pkg = "/Users/elipousson/Projects/00_dop/baltimoreCIPutils",
 #   reinstall = TRUE,
@@ -26,12 +25,12 @@ read_proj_list <- function(
   baltimoreCIPutils::wd_read_report(
     file,
     start_row = start_row
-  )# |>
-    # validate_project_dates
-    # TODO: Check if this is all still appropriate and what to use it for
-    # validate_project_dates(
-    #   curr_fy_start_date = fy_start_date
-    # )
+  ) # |>
+  # validate_project_dates
+  # TODO: Check if this is all still appropriate and what to use it for
+  # validate_project_dates(
+  #   curr_fy_start_date = fy_start_date
+  # )
 }
 
 #' Read and format project plans Workday report
