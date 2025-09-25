@@ -9,8 +9,8 @@ existing values}
 fmt_request_items(
   program_data,
   first_year = 2027,
-  program_version_name = "FY2027 CAP Requests",
-  program_version_date = "2025-06-30",
+  program_version_name = NULL,
+  program_version_date = NULL,
   remove_na = TRUE
 )
 
@@ -18,6 +18,12 @@ fmt_request_worktags(program_data)
 }
 \arguments{
 \item{program_data}{Program data from Six-Year CIP Sheet in Adaptive Planning.}
+
+\item{first_year}{Whole number for first year of six year range in fiscal year columns.}
+
+\item{program_version_name, program_version_date}{Program version name and date.}
+
+\item{remove_na}{If \code{TRUE}, remove rows where all fiscal year column values are \code{NA} or 0.}
 }
 \description{
 Format request items optionally adding a following cycle based on the

@@ -206,13 +206,15 @@ fmt_request_items <- function(
     "adapt_sheet_info"
   )
 
-  program_version_name <- program_version_name %||%
-    adapt_sheet_info[["Version"]]
+  if (!is.null(adapt_sheet_info)) {
+    program_version_name <- program_version_name %||%
+      adapt_sheet_info[["Version"]]
 
-  program_version_date <- program_version_date %||%
-    as.POSIXct(
-      as.numeric(adapt_sheet_info[["birth_time"]])
-    )
+    program_version_date <- program_version_date %||%
+      as.POSIXct(
+        as.numeric(adapt_sheet_info[["birth_time"]])
+      )
+  }
 
   request_items <- program_data |>
     fmt_request_worktags()
