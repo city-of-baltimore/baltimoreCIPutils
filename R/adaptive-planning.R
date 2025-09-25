@@ -185,3 +185,99 @@ replace_na_timespan <- function(
     )
   )
 }
+
+#' Format request items optionally adding a following cycle based on the
+#' existing values
+#' @param program_data Program data from Six-Year CIP Sheet in Adaptive Planning.
+#' @param first_year Whole number for first year of six year range in fiscal year columns.
+#' @param  program_version_name,program_version_date Program version name and date.
+#' @param remove_na If `TRUE`, remove rows where all fiscal year column values are `NA` or 0.
+#' @keywords internal
+#' @export
+fmt_request_items <- function(
+  program_data,
+  first_year = 2027,
+  program_version_name = NULL,
+  program_version_date = NULL,
+  remove_na = TRUE
+) {
+  adapt_sheet_info <- attr(
+    program_data,
+    "adapt_sheet_info"
+  )
+
+  program_version_name <- program_version_name %||%
+    adapt_sheet_info[["Version"]]
+
+  program_version_date <- program_version_date %||%
+    as.POSIXct(
+      as.numeric(adapt_sheet_info[["birth_time"]])
+    )
+
+  request_items <- program_data |>
+    fmt_request_worktags()
+
+  if (remove_na) {
+    request_items <- request_items |>
+      dplyr::filter(
+        !dplyr::if_all(
+          tidyselect::starts_with("FY"),
+          \(x) {
+            is.na(x) | x == 0
+          }
+        )
+      )
+  }
+
+  request_items |>
+    dplyr::mutate(
+      `First Fiscal Year` = first_year,
+      `Request Version` = program_version_name,
+      `Request Version Date` = as.Date(program_version_date)
+    ) |>
+    # Update FY columns to match request table convention
+    dplyr::rename_with(
+      .cols = tidyselect::starts_with("FY"),
+      \(x) {
+        # Convert first year into Year 1
+        yr <- as.integer(stringr::str_remove(x, "^FY")) - first_year + 1
+        paste0("Year", yr)
+      }
+    )
+}
+
+#' Format Fund ID, Grant ID, and Revenue Category ID columns
+#' @rdname fmt_request_items
+#' @export
+fmt_request_worktags <- function(
+  program_data
+) {
+  assertthat::assert_that(
+    assertthat::has_name(
+      program_data,
+      c(
+        "FGSFund Code",
+        "FGSFund Name",
+        "FGSGrant Code",
+        "FGSGrant Name",
+        "Revenue Category Code"
+      )
+    )
+  )
+
+  dplyr::mutate(
+    .data = program_data,
+    `FGSFund Code` = stringr::str_extract(
+      `FGSFund Name`,
+      baltimoreCIPutils::cap_patterns$fund
+    ),
+    `FGSGrant Code` = stringr::str_extract(
+      `FGSGrant Name`,
+      baltimoreCIPutils::cap_patterns$grant
+    ),
+    `Revenue Category Code` = stringr::str_extract(
+      `Revenue Category Code`,
+      baltimoreCIPutils::cap_patterns$revenue_category
+    )
+  )
+}
