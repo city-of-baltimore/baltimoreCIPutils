@@ -20,6 +20,22 @@
 #' @details <https://airtable.com/app1lcJCwi0mpQGqZ/tbl81zsVzjBxVZePB/viwlrhbxPrDasYqzp?blocks=hide>
 "wd_proj_hierarchy_xwalk"
 
+#' Agency Worktag Reference
+#'
+#' Reference data on capital agencies. Last updated 2025-10-18.
+#'
+#' @format A data frame with 17 rows and 6 variables:
+#' \describe{
+#'   \item{`Agency Name`}{Agency name}
+#'   \item{`Agency Label`}{Short agency label}
+#'   \item{`Agency`}{Agency worktag}
+#'   \item{`Agency ID`}{Agency ID}
+#'   \item{`Cost Center`}{Cost Center worktag}
+#'   \item{`Cost Center ID`}{Cost Center ID}
+#'}
+#' @details From Citywide CIP Contact List file on DOP-CIP SharePoint site.
+"wd_agencies"
+
 #' Workday Project to Asset ID Crosswalk
 #'
 #' Reference data to join asset ID values to Workday Projects. Last updated
