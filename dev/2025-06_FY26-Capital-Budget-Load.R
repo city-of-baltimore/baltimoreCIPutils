@@ -3,6 +3,8 @@ library(targets)
 # library(baltimoreCIPutils)
 options(openxlsx2.na.strings = "")
 
+devtools::document()
+
 file_list <- list_input_files(
   dir = "C:/Users/Eli.Pousson/City Of Baltimore/DOP-POLICY&DATA - Documents/CIP/FY 2026-2031/Budget Load/files"
 )
@@ -45,12 +47,16 @@ proj_plans <- read_proj_plans(
     !(`Plan Workday ID` %in%
       c(
         "52bf431a6a8410015fd9808c41920000",
-        "8b8ac394e3151000c082ce1436a50000"
+        "8b8ac394e3151000c082ce1436a50000",
+        "0f664102adf910010c117445ce840001"
       ))
   ) |>
   fmt_proj_plans()
 
-
+# proj_plans |>
+#   filter(
+#     `Project ID` == "PRJ001876"
+#   )
 # proj_plans |>
 #   filter(
 #     `Fiscal Year*` == 2016,
@@ -73,12 +79,24 @@ proj_list <- read_proj_list(
   file_list$sources$project_list$path
 )
 
-
 # FIXME: Read Project Plan ID values from file
 # proj_list <- read_proj_list(
 #   "C:/Users/Eli.Pousson/Downloads/DOP_CIP_-_List_Projects.xlsx"
 # )
 # proj_list$`Company ID` |> unique()
+
+# cip_6yr |>
+#   baltimoreCIPutils::wd_proj_join_cost_center_labels() |>
+#   # Drop Child Rows
+#   dplyr::filter(
+#     `Is Split Child Row` == "No",
+#     FY2026 > 0
+#   ) |>
+#   dplyr::distinct(`Project Code`, .keep_all = TRUE) |>
+#   count(
+#     `Cost Center Agency Label`
+#   ) |>
+#   clipr::write_clip()
 
 # Read the 6-Year CIP sheet from Adaptive Planning
 cip_6yr <- baltimoreCIPutils::adapt_read_sheet(
@@ -145,6 +163,13 @@ proj_plans |>
   ) |>
   glimpse()
 
+# budget_data |>
+# # proj_plans |>
+#   filter(
+#     `Project ID` == "PRJ001876"
+#   ) |>
+#   View()
+
 # Join the Plans data to the CIP data for the EIB input budget data
 budget_data <- cip_6yr |>
   dplyr::left_join(
@@ -194,30 +219,78 @@ budget_data <- cip_6yr |>
     `Project` = `Project ID`
   ) |>
   dplyr::filter(
-  !(
-    Project %in%
-    c(
-      "PRJ003540",
-      "PRJ003504",
-      "PRJ001876",
-      "PRJ002143"
-    )
+    (`Project ID` %in%
+      c(
+        "PRJ001876",
+        "PRJ002143",
+        "PRJ003540",
+        "PRJ003504",
+        "PRJ003537",
+        "PRJ003571",
+        "PRJ003029",
+        "PRJ002536",
+        "PRJ002178",
+        "PRJ003200"
+      ))
   )
-)
+
+budget_data |>
+  left_join(
+    proj_plans |>
+      select(
+        `Project ID`,
+        amend
+      )
+  ) |>
+  summarise(
+    FY2026 = sum(FY2026, na.rm = TRUE),
+    .by = c(amend)
+  )
+
+# budget_data |>
+# left_join(
+#   proj_plans |>
+#     select(
+#       `Project ID`,
+#       amend
+#     )
+# ) |>
+# summarise(
+#   FY2026 = sum(FY2026, na.rm = TRUE),
+#   .by = c(Fund, `Project ID`, amend)
+# ) |>
+# arrange(`Project ID`) |>
+# # clipr::write_clip()
+# baltimoreCIPutils::summarise_timespan(
+#   .by = "amend"
+# )
+
+# budget_data |>
+#   left_join(
+#     proj_plans |>
+#       select(
+#         `Project ID`,
+#         amend
+#       )
+#   ) |>
+#   openxlsx2Extras::as_wb() |>
+#   openxlsx2::wb_open()
+#   View()
+#   baltimoreCIPutils::summarise_timespan(
+#     .by = all_of(
+#       c("Fund", "Project ID")
+#     )
+#   )# |>
+# clipr::write_clip()
 
 post_fy_start_dates <- proj_list |>
   dplyr::filter(
-   as.Date(`Project Start Date`) > as.Date("2025-07-01"),
-   `Project ID` %in% budget_year_projects$`Project ID`
+    as.Date(`Project Start Date`) > as.Date("2025-07-01"),
+    `Project ID` %in% budget_year_projects$`Project ID`
   ) |>
   left_join(
     proj_plans
   )
-
-  budget_data |>
-    dplyr::filter(
-      FY2026 != 0,
-    )
 
 budget_data_split <- split_proj_list(
   budget_data,
@@ -230,13 +303,14 @@ budget_data_split <- split_proj_list(
 now_txt <- as.character(lubridate::date(lubridate::now()))
 
 budget_data_split$put_budget_template |>
+  # View()
   build_put_budget_template_wb(
     file_list$dictionaries$put_budget_template$dict,
     file_list$templates$put_budget_template$wb
   ) |>
   openxlsx2::wb_save(
     file = glue::glue(
-      "Put_Budget_Template_{now_txt}_Final2.xlsx"
+      "Put_Budget_Template_{now_txt}_Final.xlsx"
     )
   )
 
@@ -254,16 +328,15 @@ budget_data_split$import_budget |>
     file_list$templates$import_budget$wb,
     amount_col = "FY2026",
     description = "FY-26 Capital Budget allocation for new project",
-    memo = "FY2026 Capital Budget"
+    memo = "FY-26 Capital Budget"
   ) |>
   openxlsx2::wb_save(
     file = glue::glue(
-      "COB_Project_Budget_Import_{now_txt}_Final2.xlsx"
+      "Budget_Import_{now_txt}_Final.xlsx"
     )
   )
 
-
-  # budget_data_split$amend_budget |>
+# budget_data_split$amend_budget |>
 #   dplyr::filter(
 #     `Project ID` %in% "PRJ001978"
 #   ) |>
@@ -279,39 +352,43 @@ budget_data_split$amend_budget |>
     file_list$templates$amend_budget$wb,
     amount_col = "FY2026",
     description = "FY-26 Capital Budget allocation for existing project",
-    memo = "FY2026 Capital Budget"
+    memo = "FY-26 Capital Budget"
   ) |>
   openxlsx2::wb_save(
     file = glue::glue(
-      "9953_Data_load_{now_txt}_Final.xlsx"
+      "Budget_Amendment_{now_txt}_Final.xlsx"
     )
   )
 
-  cip_6yr |>
-    baltimoreCIPutils::summarise_timespan()
+cip_6yr |>
+  baltimoreCIPutils::summarise_timespan()
 
-    cip_6yr |>
-      dplyr::filter(
-        `Revenue Category ID` %in% c("RC0603", "RC0602"),
-        is.na(`Grant ID`),
-        # !is.na(FY2026),
-        FY2026 > 0
-      ) |>
-      openxlsx2Extras::as_wb() |>
-      openxlsx2::wb_save(
-        "2025-07-01_FY2026_Projects-Missing-Grant-Worktags.xlsx"
-      )
+cip_6yr |>
+  dplyr::filter(
+    `Revenue Category ID` %in% c("RC0603", "RC0602"),
+    is.na(`Grant ID`),
+    # !is.na(FY2026),
+    FY2026 > 0
+  ) |>
+  openxlsx2Extras::as_wb() |>
+  openxlsx2::wb_save(
+    "2025-07-01_FY2026_Projects-Missing-Grant-Worktags.xlsx"
+  )
 
-
-    cip_6yr |>
-      dplyr::filter(
-        !(`Project ID` %in%
-          c(
-            "PRJ001876",
-            "PRJ002143",
-            "PRJ003540",
-            "PRJ003504"
-          ))
-      ) |>
-      baltimoreCIPutils::summarise_timespan(
-      )
+cip_6yr |>
+  dplyr::filter(
+    !(`Project ID` %in%
+      c(
+        "PRJ001876",
+        "PRJ002143",
+        "PRJ003540",
+        "PRJ003504",
+        "PRJ003537",
+        "PRJ003571",
+        "PRJ003029",
+        "PRJ002536",
+        "PRJ002178",
+        "PRJ003200"
+      ))
+  ) |>
+  baltimoreCIPutils::summarise_timespan()
