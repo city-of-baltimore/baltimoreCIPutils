@@ -141,9 +141,10 @@ fy_span_label <- function(
   )
 }
 
-#' [curr_yr_span()] defaults to using the start year set by the
+#' `curr_yr_span()` defaults to using the start year set by the
 #' `"baltimoreCIP.curr_yr"` option.
 #'
+#' @name curr_fy_span
 #' @rdname fy_span
 #' @export
 curr_fy_span <- function(
@@ -155,9 +156,10 @@ curr_fy_span <- function(
   fy_span(year, before, n, type)
 }
 
-#' [prior_yr_span()] defaults to using the start year set by the
+#' `prior_yr_span()` defaults to using the start year set by the
 #' `"baltimoreCIP.prior_yr"` option.
 #'
+#' @name prior_fy_span
 #' @rdname fy_span
 #' @export
 prior_fy_span <- function(

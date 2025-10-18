@@ -69,7 +69,8 @@ fmt_budget_revenue_entries <- function(
 
 #' Bind rows with the AllBudgetExpenses entries
 #'
-#' Must be run on data that has already been formatted with [fmt_budget_revenue_entries()]
+#' Must be run on data that has already been formatted with
+#' `fmt_budget_revenue_entries()`
 #' @noRd
 rbind_budget_expense_entries <- function(data, ...) {
   ledger_fields <- c(
