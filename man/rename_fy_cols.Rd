@@ -2,6 +2,7 @@
 % Please edit documentation in R/rename.R
 \name{rename_fy_cols}
 \alias{rename_fy_cols}
+\alias{rename_yr_cols}
 \title{Rename "FY" or "Year" columns from an input data frame}
 \usage{
 rename_fy_cols(
@@ -10,8 +11,17 @@ rename_fy_cols(
   existing_before = "FY",
   before = "Year"
 )
+
+rename_yr_cols(
+  .data,
+  start_year = 2027,
+  existing_before = "Year",
+  before = "FY"
+)
 }
 \arguments{
+\item{.data}{Input data frame with "Year" or "FY" columns to rename.}
+
 \item{start_year}{Year to use as "Year 1"}
 
 \item{existing_before}{Prefix text for input years. Required if `x`` is a
@@ -20,8 +30,8 @@ character vector.}
 \item{before}{Prefix to use for output.}
 }
 \description{
-Rename an input data frame with columns prefixed by "FY" (absolute year
-columns) or "Year" (relative year columns).
+Use \code{\link[dplyr:rename]{dplyr::rename_with()}} to rename an input data frame with columns
+prefixed by "FY" (absolute year columns) or "Year" (relative year columns).
 }
 \examples{
 rename_fy_cols(

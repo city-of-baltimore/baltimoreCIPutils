@@ -1,9 +1,11 @@
 
 #' Rename "FY" or "Year" columns from an input data frame
 #'
-#' Rename an input data frame with columns prefixed by "FY" (absolute year
-#' columns) or "Year" (relative year columns).
+#' Use [dplyr::rename_with()] to rename an input data frame with columns
+#' prefixed by "FY" (absolute year columns) or "Year" (relative year columns).
 #'
+#' @param .data Input data frame with "Year" or "FY" columns to rename.
+#' @inheritParams as_relative_year
 #' @examples
 #' rename_fy_cols(
 #'   data.frame(
@@ -19,6 +21,7 @@
 #'   )
 #' )
 #' @inheritParams as_relative_year
+#' @export
 rename_fy_cols <- function(
   .data,
   start_year = 2027,
@@ -40,6 +43,8 @@ rename_fy_cols <- function(
   )
 }
 
+#' @rdname rename_fy_cols
+#' @export
 rename_yr_cols <- function(
   .data,
   start_year = 2027,
