@@ -199,7 +199,7 @@ fmt_request_items <- function(
   first_year = 2027,
   program_version_name = NULL,
   program_version_date = NULL,
-  remove_na = TRUE
+  remove_na = FALSE
 ) {
   adapt_sheet_info <- attr(
     program_data,
@@ -238,13 +238,8 @@ fmt_request_items <- function(
       `Request Version Date` = as.Date(program_version_date)
     ) |>
     # Update FY columns to match request table convention
-    dplyr::rename_with(
-      .cols = tidyselect::starts_with("FY"),
-      \(x) {
-        # Convert first year into Year 1
-        yr <- as.integer(stringr::str_remove(x, "^FY")) - first_year + 1
-        paste0("Year", yr)
-      }
+    rename_fy_cols(
+      start_year = first_year
     )
 }
 

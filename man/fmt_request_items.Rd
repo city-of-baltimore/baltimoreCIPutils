@@ -11,7 +11,7 @@ fmt_request_items(
   first_year = 2027,
   program_version_name = NULL,
   program_version_date = NULL,
-  remove_na = TRUE
+  remove_na = FALSE
 )
 
 fmt_request_worktags(program_data)
