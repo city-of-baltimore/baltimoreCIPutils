@@ -191,15 +191,16 @@ replace_na_timespan <- function(
 #' @param program_data Program data from Six-Year CIP Sheet in Adaptive Planning.
 #' @param first_year Whole number for first year of six year range in fiscal year columns.
 #' @param  program_version_name,program_version_date Program version name and date.
-#' @param remove_na If `TRUE`, remove rows where all fiscal year column values are `NA` or 0.
+#' @param remove_na If `TRUE`, remove rows where all fiscal year column values are `NA` or 0. Default to `FALSE`.
 #' @keywords internal
 #' @export
 fmt_request_items <- function(
   program_data,
-  first_year = 2027,
+  start_year = 2027,
+  first_year = NULL,
   program_version_name = NULL,
   program_version_date = NULL,
-  remove_na = TRUE
+  remove_na = FALSE
 ) {
   adapt_sheet_info <- attr(
     program_data,
@@ -231,20 +232,20 @@ fmt_request_items <- function(
       )
   }
 
+  # TODO: Add check to confirm that `Is Split Child Row` is a character vector with Yes and No values
   request_items |>
+    dplyr::mutate(
+      `Is Split Child Row` = `Is Split Child Row` == "Yes"
+    ) |>
     dplyr::mutate(
       `First Fiscal Year` = first_year,
       `Request Version` = program_version_name,
-      `Request Version Date` = as.Date(program_version_date)
+      `Request Version Date` = as.Date(program_version_date),
+      .after = tidyselect::everything()
     ) |>
     # Update FY columns to match request table convention
-    dplyr::rename_with(
-      .cols = tidyselect::starts_with("FY"),
-      \(x) {
-        # Convert first year into Year 1
-        yr <- as.integer(stringr::str_remove(x, "^FY")) - first_year + 1
-        paste0("Year", yr)
-      }
+    rename_fy_cols(
+      start_year = first_year %||% start_year
     )
 }
 
@@ -254,6 +255,8 @@ fmt_request_items <- function(
 fmt_request_worktags <- function(
   program_data
 ) {
+  check_installed("assertthat")
+
   assertthat::assert_that(
     assertthat::has_name(
       program_data,
