@@ -245,7 +245,7 @@ fmt_request_items <- function(
     ) |>
     # Update FY columns to match request table convention
     rename_fy_cols(
-      start_year = first_year %||% start_year
+      start_year = first_year
     )
 }
 
