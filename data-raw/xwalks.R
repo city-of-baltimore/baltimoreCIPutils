@@ -179,6 +179,11 @@ wd_revenue_category_xwalk <- load_revenue_category_xwalk() |>
   dplyr::arrange(
     `Request Category Pos`,
     `Revenue Category Label`
+  ) |>
+  # Add duplicative columns for FY27 version
+  dplyr::mutate(
+    RevenueCategory = `Revenue Category`,
+    RevenueCategoryID = `Revenue Category Code`
   )
 
 usethis::use_data(wd_revenue_category_xwalk, overwrite = TRUE)

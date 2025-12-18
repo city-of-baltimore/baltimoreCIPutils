@@ -132,6 +132,7 @@
 #'   \item{`Revenue Category Group`}{Revenue Category group}
 #'   \item{`Request Category`}{Request Category}
 #'   \item{`Request Category Pos`}{Request Category position (overall sort order)}
-#' }
+#'   \item{`RequestCategory`}{Revenue category (duplicate column to match FY27-32 schema)}
+#'   \item{`RequestCategoryID`}{Request category ID (duplicate column to match FY27-32 schema)}
 #' @details <https://docs.google.com/spreadsheets/d/1jEgFt1-8a96IxzSyUU2J_tqoII5qL4utWiK6v4OBIBw/edit?usp=sharing>
 "wd_revenue_category_xwalk"
