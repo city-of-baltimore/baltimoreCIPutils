@@ -18,14 +18,15 @@ A data frame with 43 rows and 11 variables:
 \item{\verb{Revenue Category Group}}{Revenue Category group}
 \item{\verb{Request Category}}{Request Category}
 \item{\verb{Request Category Pos}}{Request Category position (overall sort order)}
-}
+\item{\code{RequestCategory}}{Revenue category (duplicate column to match FY27-32 schema)}
+\item{\code{RequestCategoryID}}{Request category ID (duplicate column to match FY27-32 schema)}
 }
 \usage{
 wd_revenue_category_xwalk
 }
 \description{
 \code{wd_revenue_category_xwalk} is a data frame with labels and short names for
-revenue categories. Last updated 2025-03-13.
+revenue categories. Last updated 2025-12-18.
 }
 \details{
 \url{https://docs.google.com/spreadsheets/d/1jEgFt1-8a96IxzSyUU2J_tqoII5qL4utWiK6v4OBIBw/edit?usp=sharing}
