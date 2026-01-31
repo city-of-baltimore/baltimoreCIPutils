@@ -12,6 +12,8 @@ fiscal_year(
 )
 }
 \arguments{
+\item{x}{a vector of \link{POSIXt}, numeric or character objects}
+
 \item{type}{One of "year", "year_prefix", "year_prefix_abb", "date_first", or
 "date_last". Defaults to "year".}
 
@@ -21,7 +23,7 @@ or "year_prefix_abb". Ignored for other types. Defaults to "FY".}
 \item{...}{
   Arguments passed on to \code{\link[lubridate:as_date]{lubridate::as_date}}
   \describe{
-    \item{\code{x}}{a vector of \link{POSIXt}, numeric or character objects}
+    \item{\code{}}{}
   }}
 }
 \value{

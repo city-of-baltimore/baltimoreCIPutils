@@ -8,7 +8,9 @@ openxlsx2}
 set_excel_fmt_class(data, cols, fmt_class = "currency", multiple = TRUE)
 }
 \arguments{
-\item{cols}{description}
+\item{data}{Input data frame with columns named in \code{cols}.}
+
+\item{cols}{Columns to apply Excel style class to.}
 
 \item{fmt_class}{Excel style class, one of: c("currency", "accounting",
 "hyperlink", "percentage", "scientific", "formula").

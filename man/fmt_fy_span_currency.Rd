@@ -95,6 +95,16 @@ such as \code{"$23"} can be fashioned as \code{"$23."} by setting
 An option to use digit group separators. The type of digit group separator
 is set by \code{sep_mark} and overridden if a locale ID is provided to \code{locale}.
 This setting is \code{TRUE} by default.}
+    \item{\code{min_sep_threshold}}{\emph{Minimum digit threshold for grouping separators}
+
+\code{scalar<numeric|integer>(val>=1)} // \emph{default:} \code{1}
+
+The minimum number of digits required in the integer part of a number for
+grouping separators to be applied. This parameter determines when digit
+grouping begins based on the magnitude of values. The value \code{1} (the
+default) applies separators starting at 4-digit numbers (e.g., \verb{1,000} and
+above). A value of \code{2} starts grouping at 5-digit numbers (\verb{10,000} and
+above), while \code{3} begins at 6-digit numbers (\verb{100,000} and above).}
     \item{\code{accounting}}{\emph{Use accounting style}
 
 \verb{scalar<logical>} // \emph{default:} \code{FALSE}

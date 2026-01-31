@@ -1,22 +1,5 @@
-# pkg_install_cip_utils <- function(
-#   pkg = "/Users/elipousson/Projects/00_dop/baltimoreCIPutils",
-#   reinstall = TRUE,
-#   ask = FALSE,
-#   dependencies = TRUE
-# ) {
-#   # pak::cache_delete(package = "baltimoreCIPutils")
-
-#   if (reinstall) {
-#     pkg <- paste0(pkg, "?reinstall=true")
-#   }
-
-#   if (fs::file_exists(pkg)) {
-#     pak::local_install(pkg, ask = ask, dependencies = dependencies)
-#   } else {
-#     pak::pkg_install(pkg, ask = ask, dependencies = dependencies)
-#   }
-# }
-
+#' Read Project List Workday report
+#' @noRd
 read_proj_list <- function(
   file,
   fy_start_date = lubridate::date("2025-07-01"),
@@ -34,6 +17,7 @@ read_proj_list <- function(
 }
 
 #' Read and format project plans Workday report
+#' @noRd
 read_proj_plans <- function(file, ..., start_row = 7) {
   proj_plans <- baltimoreCIPutils::wd_read_report(
     file,
@@ -45,6 +29,7 @@ read_proj_plans <- function(file, ..., start_row = 7) {
 }
 
 #' Format project plans for use with EIB
+#' @noRd
 fmt_proj_plans <- function(.data) {
   .data |>
     # Check initial Plan count per project
@@ -83,6 +68,8 @@ fmt_proj_plans <- function(.data) {
     )
 }
 
+#' List input files based on specified YAML index
+#' @noRd
 list_input_files <- function(
   input = "_files.yml",
   type = NULL,
@@ -122,6 +109,8 @@ list_input_files <- function(
   input_reference
 }
 
+#' Split project list into three groups for annual budget load
+#' @noRd
 split_proj_list <- function(
   proj_list,
   proj_plans

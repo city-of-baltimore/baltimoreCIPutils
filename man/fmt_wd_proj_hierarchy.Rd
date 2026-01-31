@@ -6,6 +6,11 @@
 \usage{
 fmt_wd_proj_hierarchy(data)
 }
+\arguments{
+\item{data}{Input data frame from Adaptive Project Project Details sheet
+with columns: "PHierarchy1 Code", "PHierarchy1 Name", "PHierarchy2 Code", and
+"PHierarchy2 Name".}
+}
 \description{
 \code{\link[=fmt_wd_proj_hierarchy]{fmt_wd_proj_hierarchy()}} formats the PHierarchy1 Code and Name and
 PHierarchy2 Code and Name columns and then joins related labels from the

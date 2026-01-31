@@ -8,7 +8,8 @@ existing values}
 \usage{
 fmt_request_items(
   program_data,
-  first_year = 2027,
+  start_year = 2027,
+  first_year = NULL,
   program_version_name = NULL,
   program_version_date = NULL,
   remove_na = FALSE
@@ -23,7 +24,7 @@ fmt_request_worktags(program_data)
 
 \item{program_version_name, program_version_date}{Program version name and date.}
 
-\item{remove_na}{If \code{TRUE}, remove rows where all fiscal year column values are \code{NA} or 0.}
+\item{remove_na}{If \code{TRUE}, remove rows where all fiscal year column values are \code{NA} or 0. Default to \code{FALSE}.}
 }
 \description{
 Format request items optionally adding a following cycle based on the

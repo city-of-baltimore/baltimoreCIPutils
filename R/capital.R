@@ -193,6 +193,9 @@ fmt_adapt_6yr_program <- function(
 #' PHierarchy2 Code and Name columns and then joins related labels from the
 #' `wd_proj_hierarchy_xwalk` reference data.
 #'
+#' @param data Input data frame from Adaptive Project Project Details sheet
+#' with columns: "PHierarchy1 Code", "PHierarchy1 Name", "PHierarchy2 Code", and
+#'  "PHierarchy2 Name".
 #' @keywords enrichment
 fmt_wd_proj_hierarchy <- function(data) {
   phierarhcy1_cols <- c(

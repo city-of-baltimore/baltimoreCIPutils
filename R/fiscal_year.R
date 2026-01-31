@@ -3,6 +3,7 @@
 #' [fiscal_year()] uses [lubridate::as_date()] to return a fiscal year value
 #' based on any input vector coercible to dates.
 #'
+#' @inheritParams lubridate::as_date
 #' @param type One of "year", "year_prefix", "year_prefix_abb", "date_first", or
 #'   "date_last". Defaults to "year".
 #' @param before Text to use as prefix if type is "year_prefix"
@@ -109,6 +110,7 @@ fy_span <- function(year, before = "FY", n = 1, type = "year_prefix") {
 
 #' @rdname fy_span
 #' @param sep Separator between first and last element in label.
+#' @param ... Additional parameters passed to `fy_span()` by `fy_span_label()`.
 #' @export
 fy_span_label <- function(
   year,

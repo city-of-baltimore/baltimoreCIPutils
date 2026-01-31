@@ -46,6 +46,8 @@ for \code{\link[=fy_span]{fy_span()}} or 6 for \code{\link[=curr_fy_span]{curr_f
 "date_last". Defaults to "year".}
 
 \item{sep}{Separator between first and last element in label.}
+
+\item{...}{Additional parameters passed to \code{fy_span()} by \code{fy_span_label()}.}
 }
 \description{
 \code{\link[=fy_span]{fy_span()}} is a helper function for returning a vector of specified length.

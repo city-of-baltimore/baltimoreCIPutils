@@ -135,6 +135,7 @@ str_extract_contract_num <- function(
 #' [str_extract_all_contract_num()] extracts a list of contract numbers.
 #' @rdname str_capital
 #' @name str_extract_all_contract_num
+#' @param ... Additional arguments passed to [stringr::str_extract_all()]
 #' @export
 str_extract_all_contract_num <- function(
   string,

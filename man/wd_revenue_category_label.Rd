@@ -11,6 +11,9 @@ wd_revenue_category_label(
 )
 }
 \arguments{
+\item{data}{Input data frame to join labels from
+\code{baltimoreCIPutils::wd_revenue_category_xwalk}.}
+
 \item{by}{Column name to join on defaults to \code{"Revenue Category Code"}.}
 
 \item{cols}{Additional columns to keep from

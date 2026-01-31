@@ -12,9 +12,16 @@ wd_revenue_category_update(
 )
 }
 \arguments{
+\item{.data}{Input data frame with "Revenue Category",
+"Revenue Category Name", and/or "Revenue Category Code" columns to update
+based on equivalent values defined in
+\code{baltimoreCIPutils::wd_revenue_category_xwalk}.}
+
 \item{cols}{Columns to replace for input data.}
 
 \item{effective_year}{Year to use as replacement values.}
+
+\item{...}{Ignored.}
 }
 \description{
 \code{\link[=wd_revenue_category_update]{wd_revenue_category_update()}} uses the prepared crosswalk

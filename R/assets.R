@@ -8,6 +8,7 @@
 #'   `project_code_col`.
 #' @param project_code_col Project code column name in data.
 #' @param asset_id_col Asset ID column name.
+#' @param .key Key value passed to `dplyr::nest_by`. Deafults to `asset_id_col`.
 #' @param multiple Defaults to "nested" which nests the data by project code
 #'   column and then sets `multiple = "any"`. Passed to [dplyr::left_join()]
 #' @export

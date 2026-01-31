@@ -4,6 +4,8 @@
 #' `baltimoreCIPutils::wd_revenue_category_xwalk` to join labels and short names
 #' to a data frame with a revenue category column.
 #'
+#' @param data Input data frame to join labels from
+#' `baltimoreCIPutils::wd_revenue_category_xwalk`.
 #' @param by Column name to join on defaults to `"Revenue Category Code"`.
 #' @param cols Additional columns to keep from
 #'   `baltimoreCIPutils::wd_revenue_category_xwalk` (together with column
@@ -40,8 +42,13 @@ wd_revenue_category_label <- function(
 #' [wd_revenue_category_update()] uses the prepared crosswalk
 #' `baltimoreCIPutils::wd_revenue_category_xwalk` to replace values for Revenue Category Code, Revenue Category Name, and Revenue Category (assumed to be the combination of the prior two values) with the prior effective equivalent. This is
 #'
+#' @param .data Input data frame with "Revenue Category",
+#' "Revenue Category Name", and/or "Revenue Category Code" columns to update
+#' based on equivalent values defined in
+#' `baltimoreCIPutils::wd_revenue_category_xwalk`.
 #' @param effective_year Year to use as replacement values.
 #' @param cols Columns to replace for input data.
+#' @param ... Ignored.
 #' @export
 wd_revenue_category_update <- function(
   .data,

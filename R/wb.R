@@ -475,7 +475,8 @@ wb_wd_proj_status <- function(
 #'
 #' [set_excel_fmt_class()] applies a style to each specified column.
 #'
-#' @param cols description
+#' @param data Input data frame with columns named in `cols`.
+#' @param cols Columns to apply Excel style class to.
 #' @param fmt_class Excel style class, one of: c("currency", "accounting",
 #'   "hyperlink", "percentage", "scientific", "formula").
 #' <https://janmarvin.github.io/openxlsx2/articles/openxlsx2_style_manual.html#numfmts2>

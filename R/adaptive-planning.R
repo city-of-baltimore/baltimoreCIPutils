@@ -5,6 +5,7 @@
 #' parent rows if sheet allows row splitting.
 #'
 #' @inheritParams openxlsx2::wb_load
+#' @inheritParams openxlsx2::wb_to_df
 #' @param col_names Names to use for returned data frame.
 #' @inheritDotParams openxlsx2::wb_to_df -col_names -start_row
 #' @param keep Values from input file to keep. "values" keeps all values.
@@ -163,8 +164,11 @@ summarise_timespan <- function(
 #' replacement value (0 by default).
 #'
 #' @seealso [summarise_timespan()]
+#' @param .data Input data frame with any of columns identified in
+#' `timespan_cols`.
 #' @param timespan_cols Required. Defaults to [curr_fy_span()]. Passed to `.cols`
 #'   argument of [dplyr::across()] (wrapped by [tidyselect::any_of()]).
+#' @param replacement Replacement value for `NA` values.
 #' @export
 replace_na_timespan <- function(
   .data,

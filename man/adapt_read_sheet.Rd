@@ -17,6 +17,9 @@ adapt_read_sheet(
 \arguments{
 \item{file}{A path to an existing .xlsx, .xlsm or .xlsb file}
 
+\item{types}{A named numeric indicating, the type of the data.
+Names must match the returned data. See \strong{Details} for more.}
+
 \item{col_names}{Names to use for returned data frame.}
 
 \item{...}{
@@ -42,8 +45,6 @@ Blank cells will be returned as \code{NA}.}
     \item{\code{dims}}{Character string of type "A1:B2" as optional dimensions to be imported.}
     \item{\code{show_formula}}{If \code{TRUE}, the underlying Excel formulas are shown.}
     \item{\code{convert}}{If \code{TRUE}, a conversion to dates and numerics is attempted.}
-    \item{\code{types}}{A named numeric indicating, the type of the data.
-Names must match the returned data. See \strong{Details} for more.}
     \item{\code{named_region}}{Character string with a \code{named_region} (defined name or table).
 If no sheet is selected, the first appearance will be selected. See \code{\link[openxlsx2:wb_get_named_regions]{wb_get_named_regions()}}}
     \item{\code{keep_attributes}}{If \code{TRUE} additional attributes are returned.
@@ -51,6 +52,8 @@ If no sheet is selected, the first appearance will be selected. See \code{\link[
     \item{\code{check_names}}{If \code{TRUE} then the names of the variables in the data frame are checked to ensure that they are syntactically valid variable names.}
     \item{\code{show_hyperlinks}}{If \code{TRUE} instead of the displayed text, hyperlink targets are shown.}
   }}
+
+\item{start_row}{first row to begin looking for data.}
 
 \item{keep}{Values from input file to keep. "values" keeps all values.
 "child" and "parent" are used if the input data uses row-splitting and are

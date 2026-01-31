@@ -20,6 +20,8 @@ wd_proj_join_asset_id(
 
 \item{asset_id_col}{Asset ID column name.}
 
+\item{.key}{Key value passed to \code{dplyr::nest_by}. Deafults to \code{asset_id_col}.}
+
 \item{multiple}{Defaults to "nested" which nests the data by project code
 column and then sets \code{multiple = "any"}. Passed to \code{\link[dplyr:mutate-joins]{dplyr::left_join()}}}
 }
