@@ -21,6 +21,7 @@ A data frame with 43 rows and 11 variables:
 \item{\code{RequestCategory}}{Revenue category (duplicate column to match FY27-32 schema)}
 \item{\code{RequestCategoryID}}{Request category ID (duplicate column to match FY27-32 schema)}
 }
+}
 \usage{
 wd_revenue_category_xwalk
 }
@@ -30,5 +31,8 @@ revenue categories. Last updated 2025-12-18.
 }
 \details{
 \url{https://docs.google.com/spreadsheets/d/1jEgFt1-8a96IxzSyUU2J_tqoII5qL4utWiK6v4OBIBw/edit?usp=sharing}
+}
+\examples{
+wd_revenue_category_xwalk
 }
 \keyword{datasets}

@@ -30,4 +30,7 @@ names to Workday capital project data based on "PHierarchy1 Code",
 \details{
 \url{https://airtable.com/app1lcJCwi0mpQGqZ/tbl81zsVzjBxVZePB/viwlrhbxPrDasYqzp?blocks=hide}
 }
+\examples{
+wd_proj_hierarchy_xwalk
+}
 \keyword{datasets}

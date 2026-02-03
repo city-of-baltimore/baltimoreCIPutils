@@ -25,4 +25,7 @@ Project Codes. The data may include inaccurate cross-references. Last updated
 \details{
 \url{https://docs.google.com/spreadsheets/d/1hZY-O_jO9VXvTQ_mol0VXwF4EUQJjZijHpVAZssuNLk/edit?usp=sharing}
 }
+\examples{
+wd_proj_cip_num_xwalk
+}
 \keyword{datasets}

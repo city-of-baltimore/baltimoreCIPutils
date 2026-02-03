@@ -17,6 +17,8 @@
 #'   \item{`PHierarchy2 Code`}{Join key for formatted "PHierarchy2 Code" column}
 #'   \item{`Cost Center Code`}{Join key for formatted "Cost Center Code" column}
 #' }
+#' @examples
+#' wd_proj_hierarchy_xwalk
 #' @details <https://airtable.com/app1lcJCwi0mpQGqZ/tbl81zsVzjBxVZePB/viwlrhbxPrDasYqzp?blocks=hide>
 "wd_proj_hierarchy_xwalk"
 
@@ -33,6 +35,8 @@
 #'   \item{`Cost Center`}{Cost Center worktag}
 #'   \item{`Cost Center ID`}{Cost Center ID}
 #'}
+#' @examples
+#' wd_agencies
 #' @details From Citywide CIP Contact List file on DOP-CIP SharePoint site.
 "wd_agencies"
 
@@ -51,6 +55,8 @@
 #'   \item{`fy_scope`}{Flag for matches that are specific to a FY range}
 #'   \item{`notes`}{Notes}
 #' }
+#' @examples
+#' wd_proj_asset_xwalk
 #' @details <https://docs.google.com/spreadsheets/d/1jEgFt1-8a96IxzSyUU2J_tqoII5qL4utWiK6v4OBIBw/edit?usp=sharing>
 "wd_proj_asset_xwalk"
 
@@ -70,6 +76,8 @@
 #'   \item{`airtable_record_id`}{Airtable record ID (from reference Airtable base)}
 #'   \item{`notes`}{Notes}
 #' }
+#' @examples
+#' wd_proj_related_plan_xwalk
 #' @details <https://docs.google.com/spreadsheets/d/1jEgFt1-8a96IxzSyUU2J_tqoII5qL4utWiK6v4OBIBw/edit?usp=sharing>
 "wd_proj_related_plan_xwalk"
 
@@ -94,6 +102,8 @@
 #'   \item{`Project Desc Updated`}{Updated project description}
 #'   \item{`Desc Justification`}{Justification for description update}
 #' }
+#' @examples
+#' wd_proj_detail_updates
 #' @details <https://docs.google.com/spreadsheets/d/1LFjKUq_OgrrvZeXC5rZ9jgqZtqltnG8NLG9NDplvMtg/edit?usp=sharing>
 "wd_proj_detail_updates"
 
@@ -111,6 +121,8 @@
 #'   \item{`accuracy_notes`}{Notes on match accuracy}
 #'   \item{`source_notes`}{Notes on match source}
 #' }
+#' @examples
+#' wd_proj_cip_num_xwalk
 #' @details <https://docs.google.com/spreadsheets/d/1hZY-O_jO9VXvTQ_mol0VXwF4EUQJjZijHpVAZssuNLk/edit?usp=sharing>
 "wd_proj_cip_num_xwalk"
 
@@ -134,5 +146,8 @@
 #'   \item{`Request Category Pos`}{Request Category position (overall sort order)}
 #'   \item{`RequestCategory`}{Revenue category (duplicate column to match FY27-32 schema)}
 #'   \item{`RequestCategoryID`}{Request category ID (duplicate column to match FY27-32 schema)}
+#' }
+#' @examples
+#' wd_revenue_category_xwalk
 #' @details <https://docs.google.com/spreadsheets/d/1jEgFt1-8a96IxzSyUU2J_tqoII5qL4utWiK6v4OBIBw/edit?usp=sharing>
 "wd_revenue_category_xwalk"

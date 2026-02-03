@@ -23,4 +23,7 @@ wd_proj_detail_updates
 \details{
 \url{https://docs.google.com/spreadsheets/d/1LFjKUq_OgrrvZeXC5rZ9jgqZtqltnG8NLG9NDplvMtg/edit?usp=sharing}
 }
+\examples{
+wd_proj_detail_updates
+}
 \keyword{datasets}

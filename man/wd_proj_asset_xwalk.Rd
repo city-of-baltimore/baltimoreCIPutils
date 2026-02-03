@@ -26,4 +26,7 @@ Reference data to join asset ID values to Workday Projects. Last updated
 \details{
 \url{https://docs.google.com/spreadsheets/d/1jEgFt1-8a96IxzSyUU2J_tqoII5qL4utWiK6v4OBIBw/edit?usp=sharing}
 }
+\examples{
+wd_proj_asset_xwalk
+}
 \keyword{datasets}

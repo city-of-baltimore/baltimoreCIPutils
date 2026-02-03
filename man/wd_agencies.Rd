@@ -24,4 +24,7 @@ Reference data on capital agencies. Last updated 2025-10-18.
 \details{
 From Citywide CIP Contact List file on DOP-CIP SharePoint site.
 }
+\examples{
+wd_agencies
+}
 \keyword{datasets}
