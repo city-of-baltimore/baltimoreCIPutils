@@ -2,7 +2,7 @@
 #'
 #' Reference data to join standard agency, bureau, division, or other entity
 #' names to Workday capital project data based on "PHierarchy1 Code",
-#' "PHierarchy2 Code", or "Cost Center Code" columns. Last updated 2024-12-19.
+#' "PHierarchy2 Code", or "Cost Center Code" columns. Last updated 2026-02-03.
 #'
 #' @format A data frame with 128 rows and 10 variables:
 #' \describe{
