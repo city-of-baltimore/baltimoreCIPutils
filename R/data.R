@@ -43,9 +43,9 @@
 #' Workday Project to Asset ID Crosswalk
 #'
 #' Reference data to join asset ID values to Workday Projects. Last updated
-#' 2025-12-22.
+#' 2026-02-11.
 #'
-#' @format A data frame with 878 rows and 7 variables:
+#' @format A data frame with 898 rows and 7 variables:
 #' \describe{
 #'   \item{`asset_id`}{Asset ID value, primarily DGS Building ID numbers}
 #'   \item{`Project Code`}{Join key for Project Code}
@@ -129,9 +129,9 @@
 #' Workday Revenue Category Label Crosswalk
 #'
 #' `wd_revenue_category_xwalk` is a data frame with labels and short names for
-#' revenue categories. Last updated 2025-12-18.
+#' revenue categories. Last updated 2026-02-11.
 #'
-#' @format A data frame with 43 rows and 11 variables:
+#' @format A data frame with 90 rows and 11 variables:
 #' \describe{
 #'   \item{`Effective Year`}{Effective year (GO Bonds only)}
 #'   \item{`Revenue Category`}{Revenue Category code and name combined}

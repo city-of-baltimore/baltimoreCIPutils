@@ -5,7 +5,7 @@
 \alias{wd_revenue_category_xwalk}
 \title{Workday Revenue Category Label Crosswalk}
 \format{
-A data frame with 43 rows and 11 variables:
+A data frame with 90 rows and 11 variables:
 \describe{
 \item{\verb{Effective Year}}{Effective year (GO Bonds only)}
 \item{\verb{Revenue Category}}{Revenue Category code and name combined}
@@ -27,7 +27,7 @@ wd_revenue_category_xwalk
 }
 \description{
 \code{wd_revenue_category_xwalk} is a data frame with labels and short names for
-revenue categories. Last updated 2025-12-18.
+revenue categories. Last updated 2026-02-11.
 }
 \details{
 \url{https://docs.google.com/spreadsheets/d/1jEgFt1-8a96IxzSyUU2J_tqoII5qL4utWiK6v4OBIBw/edit?usp=sharing}
