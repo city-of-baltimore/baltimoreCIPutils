@@ -157,15 +157,15 @@ load_revenue_category_xwalk <- function(cip_data = NULL, ...) {
   return(revenue_category_xwalk)
 
   revenue_categories <- cip_data |>
-    select(contains("Revenue")) |>
-    distinct()
+    dplyr::select(tidyselect::contains("Revenue")) |>
+    dplyr::distinct()
 
   revenue_categories |>
-    right_join(
+    dplyr::right_join(
       revenue_category_xwalk,
       by = "Revenue Category Code"
     ) |>
-    filter(!is.na(`Revenue Category Code`))
+    dplyr::filter(!is.na(`Revenue Category Code`))
 }
 
 wd_revenue_category_xwalk <- load_revenue_category_xwalk() |>
