@@ -26,7 +26,7 @@ fmt_wd_proj_name(
 Must be provided with the code column first and the name column second. One
 but not both may be set to \code{NULL}.}
 
-\item{fund_patern, cost_center_pattern}{Strings with patterns passed to
+\item{fund_pattern, cost_center_pattern}{Strings with patterns passed to
 \code{\link[stringr:str_extract]{stringr::str_extract()}} via \code{\link[=fmt_wd_code_name]{fmt_wd_code_name()}}.}
 }
 \description{
