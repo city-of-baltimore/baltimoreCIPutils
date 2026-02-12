@@ -79,6 +79,7 @@ vec_as_str_list_value <- function(x) {
 
 #' Add currency formatting to a workbook
 #'
+#' @inheritParams openxlsx2::wb_add_numfmt
 #' @inheritParams gt::fmt_currency
 wb_add_currencyfmt <- function(
   wb,
@@ -90,8 +91,7 @@ wb_add_currencyfmt <- function(
   locale = NULL,
   accounting = FALSE,
   force_sign = FALSE,
-  sep_mark = ",",
-  ...
+  sep_mark = ","
 ) {
   check_installed("gt")
 

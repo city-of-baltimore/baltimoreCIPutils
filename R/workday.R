@@ -50,7 +50,7 @@ NULL
 #' @param fund_cols,cost_center_cols Fund and Cost Center column name pairs.
 #'   Must be provided with the code column first and the name column second. One
 #'   but not both may be set to `NULL`.
-#' @param fund_patern,cost_center_pattern Strings with patterns passed to
+#' @param fund_pattern,cost_center_pattern Strings with patterns passed to
 #'   [stringr::str_extract()] via [fmt_wd_code_name()].
 #' @rdname fmt_wd_proj
 #' @export

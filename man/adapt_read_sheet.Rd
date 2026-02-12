@@ -37,13 +37,11 @@ If \code{NULL}, all rows are read.}
     \item{\code{cols}}{A numeric vector specifying which columns in the xlsx file to read.
 If \code{NULL}, all columns are read.}
     \item{\code{detect_dates}}{If \code{TRUE}, attempt to recognize dates and perform conversion.}
-    \item{\code{na.strings}}{A character vector of strings which are to be interpreted as \code{NA}.
-Blank cells will be returned as \code{NA}.}
-    \item{\code{na.numbers}}{A numeric vector of digits which are to be interpreted as \code{NA}.
-Blank cells will be returned as \code{NA}.}
+    \item{\code{na}}{Defines values to be treated as NA. Can be a character vector of strings
+or a named list: list(strings = ..., numbers = ...). Blank cells are always converted to \code{NA}.}
     \item{\code{fill_merged_cells}}{If \code{TRUE}, the value in a merged cell is given to all cells within the merge.}
     \item{\code{dims}}{Character string of type "A1:B2" as optional dimensions to be imported.}
-    \item{\code{show_formula}}{If \code{TRUE}, the underlying Excel formulas are shown.}
+    \item{\code{show_formula}}{If \code{TRUE}, the underlying spreadsheet formulas are shown.}
     \item{\code{convert}}{If \code{TRUE}, a conversion to dates and numerics is attempted.}
     \item{\code{named_region}}{Character string with a \code{named_region} (defined name or table).
 If no sheet is selected, the first appearance will be selected. See \code{\link[openxlsx2:wb_get_named_regions]{wb_get_named_regions()}}}
@@ -51,6 +49,7 @@ If no sheet is selected, the first appearance will be selected. See \code{\link[
 (These are used internally to define a cell type.)}
     \item{\code{check_names}}{If \code{TRUE} then the names of the variables in the data frame are checked to ensure that they are syntactically valid variable names.}
     \item{\code{show_hyperlinks}}{If \code{TRUE} instead of the displayed text, hyperlink targets are shown.}
+    \item{\code{apply_numfmts}}{If \code{TRUE} numeric formats are applied if detected.}
   }}
 
 \item{start_row}{first row to begin looking for data.}

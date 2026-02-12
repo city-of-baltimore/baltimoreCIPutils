@@ -15,13 +15,26 @@ reduce_wb_data_fields(
 )
 }
 \arguments{
-\item{fields}{A named vector of unique values where correspond to column position using in combination with \code{start_row}.}
+\item{data}{Data frame with columns to add to workbook.}
+
+\item{fields}{A named vector of unique values where names correspond to
+column position (used in combination with \code{start_row} to specify starting
+cell location).}
+
+\item{sheet}{The worksheet to write to. Can be the worksheet index or name.}
 
 \item{.init}{A \code{wbWorkbook} to add data to.}
+
+\item{...}{Additional arguments passed to \code{\link[openxlsx2:wb_add_data]{openxlsx2::wb_add_data()}}.}
+
+\item{start_row}{A vector specifying the starting row to write \code{x} to.}
+
+\item{col_names}{If \code{TRUE}, column names of \code{x} are written.}
 }
 \value{
 A \code{wbWorkbook}
 }
 \description{
-\code{\link[=reduce_wb_data_fields]{reduce_wb_data_fields()}} uses a named list of fields to insert select columns from \code{data} into a workbook.
+\code{\link[=reduce_wb_data_fields]{reduce_wb_data_fields()}} uses a named list of fields to insert select
+columns from \code{data} into a workbook.
 }

@@ -7,11 +7,37 @@
 \alias{get_dict_defaults}
 \title{Helper functions to support the creation of EIB files}
 \usage{
-cbind_defaults(data, defaults, ...)
+cbind_defaults(
+  data,
+  defaults,
+  name_repair = c("unique", "universal", "check_unique"),
+  size = NULL
+)
 
 pull_dict_fields(dict, sheet_name, usage = TRUE)
 
 get_dict_defaults(dict, sheet_name)
+}
+\arguments{
+\item{data}{A data frame to combine with values from \code{defaults}.}
+
+\item{defaults}{A named list or data frame with default values to column bind
+to \code{data}.}
+
+\item{name_repair}{One of \code{"unique"}, \code{"universal"}, or \code{"check_unique"}.
+See \code{\link[vctrs:vec_as_names]{vctrs::vec_as_names()}} for the meaning of these options.}
+
+\item{size}{An optional integer size to ensure that every input has the
+same size (i.e. number of rows).}
+
+\item{dict}{A data frame with columns named "Sheet", "Usage", "Fields", and
+"Column".}
+
+\item{sheet_name}{Value to filter for based on "Sheet" column.}
+
+\item{usage}{If \code{TRUE}, exclude rows from \code{dict} data frame with \code{NA} values
+by filtering a column named "Usage". Typically, the "Usage" column should be
+"Y" or blank.}
 }
 \description{
 Helper functions to support the creation of EIB files

@@ -14,11 +14,16 @@ wb_add_currencyfmt(
   locale = NULL,
   accounting = FALSE,
   force_sign = FALSE,
-  sep_mark = ",",
-  ...
+  sep_mark = ","
 )
 }
 \arguments{
+\item{wb}{A Workbook}
+
+\item{sheet}{the worksheet}
+
+\item{dims}{the cell range}
+
 \item{currency}{\emph{Currency to use}
 
 \verb{scalar<character>|obj:<gt_currency>} // \emph{default:} \code{NULL} (\code{optional})

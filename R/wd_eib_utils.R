@@ -4,8 +4,17 @@ NULL
 
 #' [cbind_defaults()] column binds a list or data frame of default values to a data frame
 #' @rdname wd_eib_utils
+#' @param data A data frame to combine with values from `defaults`.
+#' @param defaults A named list or data frame with default values to column bind
+#' to `data`.
+#' @inheritParams purrr::list_cbind
 #' @export
-cbind_defaults <- function(data, defaults, ...) {
+cbind_defaults <- function(
+  data,
+  defaults,
+  name_repair = c("unique", "universal", "check_unique"),
+  size = NULL
+) {
   if (!is.data.frame(defaults)) {
     defaults <- as.data.frame(defaults)
   }
@@ -15,16 +24,25 @@ cbind_defaults <- function(data, defaults, ...) {
       data,
       defaults
     ),
-    ...
+    name_repair = name_repair,
+    size = size
   )
 }
 
 #' [pull_dict_fields()] extracts a vector of fields from a dictionary data frame
+#'
+#' @param dict A data frame with columns named "Sheet", "Usage", "Fields", and
+#' "Column".
+#' @param sheet_name Value to filter for based on "Sheet" column.
+#' @param usage If `TRUE`, exclude rows from `dict` data frame with `NA` values
+#' by filtering a column named "Usage". Typically, the "Usage" column should be
+#' "Y" or blank.
 #' @rdname wd_eib_utils
 #' @export
 pull_dict_fields <- function(dict, sheet_name, usage = TRUE) {
   stopifnot(
-    all(has_name(dict, c("Sheet", "Usage", "Fields", "Column")))
+    all(has_name(dict, c("Sheet", "Usage", "Fields", "Column"))),
+    has_length(sheet_name, 1)
   )
 
   if (isTRUE(usage)) {
@@ -86,10 +104,16 @@ get_dict_defaults <- function(dict, sheet_name) {
 
 #' Create a Workbook using a named vector of fields
 #'
-#' [reduce_wb_data_fields()] uses a named list of fields to insert select columns from `data` into a workbook.
+#' [reduce_wb_data_fields()] uses a named list of fields to insert select
+#' columns from `data` into a workbook.
 #'
-#' @param fields A named vector of unique values where correspond to column position using in combination with `start_row`.
+#' @param data Data frame with columns to add to workbook.
+#' @param fields A named vector of unique values where names correspond to
+#' column position (used in combination with `start_row` to specify starting
+#' cell location).
 #' @param .init A `wbWorkbook` to add data to.
+#' @param ... Additional arguments passed to [openxlsx2::wb_add_data()].
+#' @inheritParams openxlsx2::wb_add_data
 #' @returns A `wbWorkbook`
 #' @export
 reduce_wb_data_fields <- function(
@@ -104,6 +128,7 @@ reduce_wb_data_fields <- function(
   stopifnot(
     rlang::is_named(fields)
   )
+  # TODO: Validate fields against names for data
 
   purrr::reduce(
     fields,

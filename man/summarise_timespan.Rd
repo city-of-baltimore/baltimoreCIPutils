@@ -38,9 +38,7 @@ and the column name using the glue specification in \code{.names}.
 Within these functions you can use \code{\link[dplyr:cur_column]{cur_column()}} and \code{\link[dplyr:cur_group]{cur_group()}}
 to access the current column and grouping keys respectively.}
 
-\item{.by}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-
-<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}> Optionally, a selection of columns to
+\item{.by}{<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}> Optionally, a selection of columns to
 group by for just this operation, functioning as an alternative to \code{\link[dplyr:group_by]{group_by()}}. For
 details and examples, see \link[dplyr:dplyr_by]{?dplyr_by}.}
 
@@ -68,25 +66,18 @@ the data frame you are unpacking.
 \item{.groups}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Grouping structure of the
 result.
 \itemize{
-\item "drop_last": dropping the last level of grouping. This was the
+\item \code{"drop_last"}: drops the last level of grouping. This was the
 only supported option before version 1.0.0.
-\item "drop": All levels of grouping are dropped.
-\item "keep": Same grouping structure as \code{.data}.
-\item "rowwise": Each row is its own group.
+\item \code{"drop"}: All levels of grouping are dropped.
+\item \code{"keep"}: Same grouping structure as \code{.data}.
+\item \code{"rowwise"}: Each row is its own group.
 }
 
-When \code{.groups} is not specified, it is chosen
-based on the number of rows of the results:
-\itemize{
-\item If all the results have 1 row, you get "drop_last".
-\item If the number of rows varies, you get "keep" (note that returning a
-variable number of rows was deprecated in favor of \code{\link[dplyr:reframe]{reframe()}}, which
-also unconditionally drops all levels of grouping).
-}
-
-In addition, a message informs you of that choice, unless the result is ungrouped,
-the option "dplyr.summarise.inform" is set to \code{FALSE},
-or when \code{summarise()} is called from a function in a package.}
+When \code{.groups} is not specified, it is set to \code{"drop_last"} for a grouped
+data frame, and \code{"keep"} for a rowwise data frame. In addition, a message
+informs you of how the result will be grouped unless the result is
+ungrouped, the option \code{"dplyr.summarise.inform"} is set to \code{FALSE}, or when
+\code{summarise()} is called from a function in a package.}
 
 \item{data}{Input data frame.}
 }
