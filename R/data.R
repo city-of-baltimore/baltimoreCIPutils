@@ -129,9 +129,9 @@
 #' Workday Revenue Category Label Crosswalk
 #'
 #' `wd_revenue_category_xwalk` is a data frame with labels and short names for
-#' revenue categories. Last updated 2026-02-11.
+#' revenue categories. Last updated 2026-02-23.
 #'
-#' @format A data frame with 90 rows and 11 variables:
+#' @format A data frame with 91 rows and 13 variables:
 #' \describe{
 #'   \item{`Effective Year`}{Effective year (GO Bonds only)}
 #'   \item{`Revenue Category`}{Revenue Category code and name combined}
