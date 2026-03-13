@@ -43,11 +43,12 @@
 #' Workday Project to Asset ID Crosswalk
 #'
 #' Reference data to join asset ID values to Workday Projects. Last updated
-#' 2026-03-11.
+#' 2026-03-13.
 #'
-#' @format A data frame with 925 rows and 7 variables:
+#' @format A data frame with 933 rows and 7 variables:
 #' \describe{
-#'   \item{`asset_id`}{Asset ID value, primarily DGS Building ID numbers}
+#'   \item{`asset_id`}{Asset ID value, primarily DGS Building ID numbers, DOT
+#' bridge numbers, and references to OpenStreetMap IDs.}
 #'   \item{`Project Code`}{Join key for Project Code}
 #'   \item{`agency`}{Agency name (incomplete)}
 #'   \item{`type_match`}{Type of match (parent asset or same asset)}

@@ -27,7 +27,7 @@ wd_revenue_category_xwalk
 }
 \description{
 \code{wd_revenue_category_xwalk} is a data frame with labels and short names for
-revenue categories. Last updated 2026-02-23.
+revenue categories. Last updated 2026-03-13.
 }
 \details{
 \url{https://docs.google.com/spreadsheets/d/1jEgFt1-8a96IxzSyUU2J_tqoII5qL4utWiK6v4OBIBw/edit?usp=sharing}
