@@ -102,17 +102,21 @@ build_submit_project_wb <- function(
 
   submit_proj_data <- proj_list |>
     dplyr::select(
-      tidyselect::all_of(
+      tidyselect::any_of(
         wd_eib_dict |>
           dplyr::select(Fields, `Workday Report Name`) |>
           tibble::deframe()
       )
     ) |>
+    dplyr::mutate(
+      `Workday Project ID` = Project,
+      `Project State*` = NA # FIXME: Get or set this
+    ) |>
     dplyr::left_join(
       proj_app_info |>
         dplyr::select(
           ProjectID,
-          tidyselect::all_of(
+          tidyselect::any_of(
             app_eib_dict |>
               dplyr::select(Fields, `App Name`) |>
               tibble::deframe()
@@ -177,10 +181,26 @@ build_submit_project_wb <- function(
   )
 }
 
+proj_app_info <- sharepointr::get_sp_list_items(
+  # TODO: Set Capital Project list name based on version in list input config
+  list_name = "CapitalProject_20250917",
+  site_url = "https://bmore.sharepoint.com/sites/DOP-CIP/SitePages/CollabHome.aspx"
+)
+
 
 eib_out_wb <- build_submit_project_wb(
-    proj_list = proj_list,
-    eib_dict = eib_dict,
-    proj_app_info = proj_app_info,
-    eib_wb = eib_wb
-  )
+  proj_list = proj_list,
+  eib_dict = eib_dict,
+  proj_app_info = proj_app_info,
+  eib_wb = eib_wb
+)
+
+eib_out_wb |>
+  openxlsx2::wb_open()
+
+proj_list |>
+  fmt_submit_project_worktags_data() |>
+  dplyr::filter(
+    `Project ID` == "PRJ003693"
+  ) |>
+  clipr::write_clip()
