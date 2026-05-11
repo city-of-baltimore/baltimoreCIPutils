@@ -138,6 +138,12 @@ wd_proj_cip_num_xwalk <- wd_proj_cip_num_xwalk |>
   dplyr::filter(
     !is.na(cip_number),
     !is.na(project_code)
+  ) |>
+  dplyr::select(
+    cip_number,
+    project_code,
+    accuracy_notes,
+    source_notes
   )
 
 usethis::use_data(wd_proj_cip_num_xwalk, overwrite = TRUE)
