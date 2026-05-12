@@ -5,7 +5,7 @@
 \alias{wd_proj_cip_num_xwalk}
 \title{CIP Number to Workday Project Crosswalk}
 \format{
-A data frame with 1316 rows and 4 variables:
+A data frame with 1315 rows and 4 variables:
 \describe{
 \item{\code{cip_number}}{CIP Number}
 \item{\code{project_code}}{Project Codes}

@@ -115,7 +115,7 @@
 #' Project Codes. The data may include inaccurate cross-references. Last updated
 #' 2026-05-12.
 #'
-#' @format A data frame with 1316 rows and 4 variables:
+#' @format A data frame with 1315 rows and 4 variables:
 #' \describe{
 #'   \item{`cip_number`}{CIP Number}
 #'   \item{`project_code`}{Project Codes}
