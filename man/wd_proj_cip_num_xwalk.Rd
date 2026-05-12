@@ -5,7 +5,7 @@
 \alias{wd_proj_cip_num_xwalk}
 \title{CIP Number to Workday Project Crosswalk}
 \format{
-A data frame with 1229 rows and 4 variables:
+A data frame with 1316 rows and 4 variables:
 \describe{
 \item{\code{cip_number}}{CIP Number}
 \item{\code{project_code}}{Project Codes}
@@ -20,7 +20,7 @@ wd_proj_cip_num_xwalk
 \code{wd_proj_cip_num_xwalk} is a cross-reference to support the integration of
 legacy data on projects referenced by CIP Number with new data using Workday
 Project Codes. The data may include inaccurate cross-references. Last updated
-2026-05-11.
+2026-05-12.
 }
 \details{
 \url{https://docs.google.com/spreadsheets/d/1hZY-O_jO9VXvTQ_mol0VXwF4EUQJjZijHpVAZssuNLk/edit?usp=sharing}
