@@ -166,8 +166,8 @@ summarise_timespan <- function(
 #' @seealso [summarise_timespan()]
 #' @param .data Input data frame with any of columns identified in
 #' `timespan_cols`.
-#' @param timespan_cols Required. Defaults to [curr_fy_span()]. Passed to `.cols`
-#'   argument of [dplyr::across()] (wrapped by [tidyselect::any_of()]).
+#' @param timespan_cols Required. Defaults to [curr_fy_span()]. Passed to
+#'   `.cols` argument of [dplyr::across()] (wrapped by [tidyselect::any_of()]).
 #' @param replacement Replacement value for `NA` values.
 #' @export
 replace_na_timespan <- function(
@@ -192,18 +192,22 @@ replace_na_timespan <- function(
 
 #' Format request items optionally adding a following cycle based on the
 #' existing values
-#' @param program_data Program data from Six-Year CIP Sheet in Adaptive Planning.
-#' @param first_year Whole number for first year of six year range in fiscal year columns.
-#' @param  program_version_name,program_version_date Program version name and date.
-#' @param remove_na If `TRUE`, remove rows where all fiscal year column values are `NA` or 0. Default to `FALSE`.
+#' @param program_data Program data from Six-Year CIP Sheet in Adaptive
+#' Planning.
+#' @param first_year Whole number for first year of six year range in fiscal
+#' year columns.
+#' @param  program_version_name,program_version_date Program version name and
+#' date.
+#' @param remove_na If `TRUE`, remove rows where all fiscal year column values
+#' are `NA` or 0. Default to `FALSE`.
 #' @keywords internal
 #' @export
 fmt_request_items <- function(
   program_data,
-  start_year = 2027,
-  first_year = NULL,
+  start_year,
   program_version_name = NULL,
   program_version_date = NULL,
+  cost_centers = NULL,
   remove_na = FALSE
 ) {
   adapt_sheet_info <- attr(
@@ -211,6 +215,8 @@ fmt_request_items <- function(
     "adapt_sheet_info"
   )
 
+  # TODO: Add warning if adapt_sheet_info is not present and
+  # program_version_name or program_version_date are missing
   if (!is.null(adapt_sheet_info)) {
     program_version_name <- program_version_name %||%
       adapt_sheet_info[["Version"]]
@@ -222,34 +228,78 @@ fmt_request_items <- function(
   }
 
   request_items <- program_data |>
+    # Coerce expected program data character columns
+    dplyr::mutate(
+      dplyr::across(
+        c(
+          tidyselect::starts_with("Request"),
+          tidyselect::starts_with("Change"),
+          tidyselect::starts_with("Phase"),
+          tidyselect::starts_with("FGSGrant"),
+          tidyselect::starts_with("Grant_Detail"),
+          Notes
+        ),
+        as.character
+      ),
+      # FIXME: Check if adding this changes behavior anywhere else
+      dplyr::across(
+        tidyselect::starts_with("FY"),
+        \(x) {
+          dplyr::na_if(x, 0)
+        }
+      )
+    ) |>
     fmt_request_worktags()
 
+  # Optionally drop NA values
   if (remove_na) {
     request_items <- request_items |>
       dplyr::filter(
+        # TODO: Switch to filter_out instead
         !dplyr::if_all(
           tidyselect::starts_with("FY"),
           \(x) {
-            is.na(x) | x == 0
+            is.na(x)
           }
         )
       )
   }
 
-  # TODO: Add check to confirm that `Is Split Child Row` is a character vector with Yes and No values
+  # Coerce Is Split Child Row column to boolean
+  if (is.character(request_items[["Is Split Child Row"]])) {
+    request_items <- request_items |>
+      dplyr::mutate(
+        `Is Split Child Row` = `Is Split Child Row` == "Yes"
+      )
+  }
+
+  # TODO: Cost Center ID column must be renamed before this data is joined
+  # if (!is.null(cost_centers)) {
+  #   # Join Agency ID values from Cost Centers
+  #   request_items <- request_items |>
+  #     dplyr::left_join(
+  #       # TODO: Check that cost_centers contains a `Cost Center ID` and `Agency ID` column
+  #       cost_centers |>
+  #         dplyr::select(
+  #           # Field name (not display name) must be used
+  #           CostCenterID = `Cost Center ID`,
+  #           AgencyID = `Agency ID`
+  #         ),
+  #       by = dplyr::join_by(CostCenterID)
+  #     )
+  # }
+
   request_items |>
     dplyr::mutate(
-      `Is Split Child Row` = `Is Split Child Row` == "Yes"
-    ) |>
-    dplyr::mutate(
-      `First Fiscal Year` = first_year,
+      # TODO: Rename `Request Version` and `Request Version Date` to `Program Version` and `Program Version Date`
+      `First Fiscal Year` = start_year,
       `Request Version` = program_version_name,
       `Request Version Date` = as.Date(program_version_date),
       .after = tidyselect::everything()
     ) |>
     # Update FY columns to match request table convention
     rename_fy_cols(
-      start_year = first_year
+      start_year = start_year
     )
 }
 
@@ -259,18 +309,16 @@ fmt_request_items <- function(
 fmt_request_worktags <- function(
   program_data
 ) {
-  check_installed("assertthat")
+  check_installed("chk")
 
-  assertthat::assert_that(
-    assertthat::has_name(
-      program_data,
-      c(
-        "FGSFund Code",
-        "FGSFund Name",
-        "FGSGrant Code",
-        "FGSGrant Name",
-        "Revenue Category Code"
-      )
+  chk::check_names(
+    program_data,
+    c(
+      "FGSFund Code",
+      "FGSFund Name",
+      "FGSGrant Code",
+      "FGSGrant Name",
+      "Revenue Category Code"
     )
   )
 
