@@ -40,10 +40,9 @@ cbind_defaults <- function(
 #' @rdname wd_eib_utils
 #' @export
 pull_dict_fields <- function(dict, sheet_name, usage = TRUE) {
-  stopifnot(
-    all(has_name(dict, c("Sheet", "Usage", "Fields", "Column"))),
-    has_length(sheet_name, 1)
-  )
+  check_installed("chk")
+  chk::check_names(dict, c("Sheet", "Usage", "Fields", "Column"))
+  chk::chk_string(sheet_name)
 
   if (isTRUE(usage)) {
     dict <- dict |>
@@ -88,7 +87,9 @@ pull_dict_fields <- function(dict, sheet_name, usage = TRUE) {
 #' @rdname wd_eib_utils
 #' @export
 get_dict_defaults <- function(dict, sheet_name) {
-  check_installed("tidyr")
+  check_installed(c("tidyr", "chk"))
+  chk::check_names(dict, c("Sheet", "Default Value", "Fields"))
+  chk::chk_string(sheet_name)
 
   dict |>
     dplyr::filter(
@@ -123,12 +124,14 @@ reduce_wb_data_fields <- function(
   .init,
   ...,
   start_row = 6,
+  na = openxlsx2::na_strings(),
   col_names = FALSE
 ) {
-  stopifnot(
-    rlang::is_named(fields)
-  )
-  # TODO: Validate fields against names for data
+  check_installed("chk")
+  chk::chk_named(fields)
+  chk::check_names(data, fields)
+  chk::chk_s3_class(.init, "wbWorkbook")
+  # TODO: Check that sheet is avilalbe for .init workbook
 
   purrr::reduce(
     fields,
@@ -144,6 +147,7 @@ reduce_wb_data_fields <- function(
           start_row
         ),
         ...,
+        na = na,
         col_names = col_names
       )
     },
