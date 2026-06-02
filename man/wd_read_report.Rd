@@ -7,11 +7,9 @@
 wd_read_report(file, start_row = 4, ..., name_repair = "unique")
 }
 \arguments{
-\item{file}{An xlsx file, \link[openxlsx2]{wbWorkbook} object or URL to xlsx file.}
+\item{file}{A workbook file path, a \link[openxlsx2]{wbWorkbook} object, or a valid URL.}
 
-\item{start_row}{first row to begin looking for data.}
-
-\item{...}{additional arguments}
+\item{...}{Additional arguments passed to internal methods.}
 
 \item{name_repair}{Handling of column names. The default behaviour is to
 ensure column names are \code{"unique"}. Various repair strategies are

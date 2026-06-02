@@ -27,11 +27,9 @@ wd_read_extract_cost_center(file, start_row = 3, ...)
 wd_read_extract_revenue_cat(file, start_row = 2, ...)
 }
 \arguments{
-\item{file}{An xlsx file, \link[openxlsx2]{wbWorkbook} object or URL to xlsx file.}
+\item{file}{A workbook file path, a \link[openxlsx2]{wbWorkbook} object, or a valid URL.}
 
-\item{start_row}{first row to begin looking for data.}
-
-\item{...}{additional arguments}
+\item{...}{Additional arguments passed to internal methods.}
 
 \item{drop_cols}{Character vector with names of columns from report to drop.}
 }

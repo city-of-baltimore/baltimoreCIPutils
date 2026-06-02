@@ -1,4 +1,3 @@
-
 #' List input files based on specified YAML index
 #'
 #' `list_input_files()` reads a YAML file index that provides a list of file

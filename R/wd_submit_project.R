@@ -1,6 +1,6 @@
 #' Format Submit Project EIB Worktag columns
 #'
-#' @param data
+#' @param data Input data frame with Fund ID, Cost Center ID, and Grant ID columns.
 #' @noRd
 fmt_submit_project_worktags_data <- function(.data) {
   check_installed("chk")

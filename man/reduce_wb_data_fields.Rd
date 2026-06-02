@@ -11,6 +11,7 @@ reduce_wb_data_fields(
   .init,
   ...,
   start_row = 6,
+  na = openxlsx2::na_strings(),
   col_names = FALSE
 )
 }
@@ -28,6 +29,10 @@ cell location).}
 \item{...}{Additional arguments passed to \code{\link[openxlsx2:wb_add_data]{openxlsx2::wb_add_data()}}.}
 
 \item{start_row}{A vector specifying the starting row to write \code{x} to.}
+
+\item{na}{Value used for replacing \code{NA} values from \code{x}. Default
+looks if \code{options("openxlsx2.na")} is set. Otherwise \code{\link[openxlsx2:na_strings]{na_strings()}}
+uses the special \verb{#N/A} value within the workbook.}
 
 \item{col_names}{If \code{TRUE}, column names of \code{x} are written.}
 }
