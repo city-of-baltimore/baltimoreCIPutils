@@ -1,11 +1,22 @@
-#' Read Project List Workday report
-#' @noRd
+#' Read Workday Report files
+#'
+#'
+#' @inheritParams wd_read_report
+#' @keywords internal
+#' @name wd_budget_load
+NULL
+
+#' `read_proj_list` is a minimal wrapper for `wd_read_report()` to read the
+#' internal "DOP CIP - List Projects" Workday report.
+#' @rdname wd_budget_load
+#' @param fy_start_date not used
+#' @export
 read_proj_list <- function(
   file,
   fy_start_date = lubridate::date("2025-07-01"),
   start_row = 7
 ) {
-  baltimoreCIPutils::wd_read_report(
+  wd_read_report(
     file,
     start_row = start_row
   ) # |>
@@ -16,10 +27,12 @@ read_proj_list <- function(
   # )
 }
 
-#' Read and format project plans Workday report
-#' @noRd
+#' `read_proj_plans` is a minimal wrapper for `wd_read_report()` to read the
+#' internal "DOP CIP - List Capital Project Budget Plans" Workday report.
+#' @rdname wd_budget_load
+#' @export
 read_proj_plans <- function(file, ..., start_row = 7) {
-  proj_plans <- baltimoreCIPutils::wd_read_report(
+  proj_plans <- wd_read_report(
     file,
     start_row = start_row
   )
@@ -28,9 +41,17 @@ read_proj_plans <- function(file, ..., start_row = 7) {
   proj_plans
 }
 
-#' Format project plans for use with EIB
-#' @noRd
+#' `fmt_proj_plans()` formats project plans data frame for use with EIB
+#' @rdname wd_budget_load
+#' @param .data Input data frame created by `read_proj_plans()`.
+#' @export
 fmt_proj_plans <- function(.data) {
+  check_installed("chk")
+  chk::check_names(
+    .data,
+    c("Project ID", "Plan", "Plan Date From", "Plan Status")
+  )
+
   .data |>
     # Check initial Plan count per project
     dplyr::add_count(
@@ -68,49 +89,12 @@ fmt_proj_plans <- function(.data) {
     )
 }
 
-#' List input files based on specified YAML index
-#' @noRd
-list_input_files <- function(
-  input = "_files.yml",
-  type = NULL,
-  dir = here::here()
-) {
-  input_reference <- yaml::yaml.load_file(fs::path(dir, input))
-
-  for (nm in names(input_reference)) {
-    type_reference <- input_reference[[nm]]
-
-    type_reference <- rlang::set_names(
-      type_reference,
-      purrr::map_chr(
-        type_reference,
-        "id"
-      )
-    )
-
-    if (fs::is_dir(dir)) {
-      type_reference <- purrr::map(
-        type_reference,
-        \(x) {
-          x[["path"]] <- fs::path(dir, x[["filename"]])
-
-          x
-        }
-      )
-    }
-
-    input_reference[[nm]] <- type_reference
-  }
-
-  if (!is.null(type)) {
-    return(input_reference[[type]])
-  }
-
-  input_reference
-}
-
-#' Split project list into three groups for annual budget load
-#' @noRd
+#' `split_proj_list()` is a utility function to split the project list into a
+#' named list with three elements based on the `put`, `new`, and `amend` columns
+#' created by `fmt_proj_plans()`. Each element corresponds to a difference EIB
+#' file loaded as part of the annual budget load process.
+#' @rdname wd_budget_load
+#' @export
 split_proj_list <- function(
   proj_list,
   proj_plans
