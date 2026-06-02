@@ -28,11 +28,13 @@ Imports:
     tidyselect,
     vctrs
 Suggests:
+    chk,
     forcats,
     gt,
     readr,
     testthat (>= 3.0.0),
-    tidyr
+    tidyr,
+    yaml12
 Config/testthat/edition: 3
 Encoding: UTF-8
 Language: en-US
