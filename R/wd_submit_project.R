@@ -84,6 +84,9 @@ build_submit_project_wb <- function(
   proj_list,
   eib_dict,
   proj_app_info,
+  proj_resource_plan_ids,
+  proj_hierarchy_ids,
+  proj_group_ids,
   eib_wb = NULL
 ) {
   check_data_frame(eib_dict)
@@ -190,6 +193,33 @@ build_submit_project_wb <- function(
 
   # TODO: Add trimming of whitespace at start and end
 
+  check_data_frame(proj_resource_plan_ids)
+  chk::check_names(
+    proj_resource_plan_ids,
+    c(
+      "Business Object Instance",
+      "Reference ID Value"
+    )
+  )
+
+  check_data_frame(proj_group_ids)
+  chk::check_names(
+    proj_group_ids,
+    c(
+      "Business Object Instance",
+      "Reference ID Value"
+    )
+  )
+
+  check_data_frame(proj_hierarchy_ids)
+  chk::check_names(
+    proj_hierarchy_ids,
+    c(
+      "Business Object Instance",
+      "Reference ID Value"
+    )
+  )
+
   submit_proj_data <- proj_list |>
     # Reformat Y/N columns
     dplyr::mutate(
@@ -201,6 +231,35 @@ build_submit_project_wb <- function(
             x == "Yes" ~ "Y"
           )
         }
+      ),
+      # Extract Fund ID from start of Balancing Worktag
+      `Balancing Worktag` = stringr::str_extract(
+        `Balancing Worktag`,
+        "^[:digit:]+"
+      ),
+      # Replace Project Resource Plan values based on View Reference ID report
+      `Project Resource Plan` = dplyr::replace_values(
+        `Project Resource Plan`,
+        from = proj_resource_plan_ids$`Business Object Instance`,
+        to = proj_resource_plan_ids$`Reference ID Value`
+      ),
+      # Replace Project Groups values based on View Reference ID report
+      `Project Groups` = dplyr::replace_values(
+        `Project Groups`,
+        from = proj_group_ids$`Business Object Instance`,
+        to = proj_group_ids$`Reference ID Value`
+      ),
+      # Replace Primary Project Hierarchy values based on View Reference ID report
+      `Primary Project Hierarchy` = dplyr::replace_values(
+        `Primary Project Hierarchy`,
+        from = proj_hierarchy_ids$`Business Object Instance`,
+        to = proj_hierarchy_ids$`Reference ID Value`
+      ),
+      # Replace Optional Project Hierarchies values based on View Reference ID report
+      `Optional Project Hierarchies` = dplyr::replace_values(
+        `Optional Project Hierarchies`,
+        from = proj_hierarchy_ids$`Business Object Instance`,
+        to = proj_hierarchy_ids$`Reference ID Value`
       )
     ) |>
     # Rename columns to match dictionary
@@ -248,7 +307,21 @@ build_submit_project_wb <- function(
     # Set Spreadsheet Key
     dplyr::arrange(`Workday Project ID`) |>
     dplyr::mutate(
-      `Spreadsheet Key*` = dplyr::row_number()
+      `Spreadsheet Key*` = dplyr::row_number(),
+      # Apply YYYY-MM-DD formatting to date columns
+      dplyr::across(
+        tidyselect::where(
+          \(x) {
+            inherits(x, "Date")
+          }
+        ),
+        \(x) {
+          openxlsx2::apply_numfmt(
+            x,
+            format_code = "yyyy-mm-dd"
+          )
+        }
+      )
     )
 
   default_worktag_data <- proj_list |>

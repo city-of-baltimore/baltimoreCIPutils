@@ -4,7 +4,15 @@
 \alias{build_submit_project_wb}
 \title{Build the Submit Project EIB}
 \usage{
-build_submit_project_wb(proj_list, eib_dict, proj_app_info, eib_wb = NULL)
+build_submit_project_wb(
+  proj_list,
+  eib_dict,
+  proj_app_info,
+  proj_resource_plan_ids,
+  proj_hierarchy_ids,
+  proj_group_ids,
+  eib_wb = NULL
+)
 }
 \arguments{
 \item{proj_list}{Data frame with project information from "DOP CIP = List
