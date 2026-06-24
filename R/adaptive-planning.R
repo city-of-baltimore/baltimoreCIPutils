@@ -225,7 +225,16 @@ fmt_request_items <- function(
       as.POSIXct(
         as.numeric(adapt_sheet_info[["birth_time"]])
       )
+
+    start_year <- start_year %||%
+      stringr::str_extract(
+        program_version_name,
+        "[:digit:]{4}"
+      )
   }
+
+  # Make sure start_year is a whole number
+  start_year <- as.integer(start_year)
 
   request_items <- program_data |>
     # Coerce expected program data character columns
