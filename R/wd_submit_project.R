@@ -360,6 +360,11 @@ build_submit_project_wb <- function(
         }
       ),
       .by = `Spreadsheet Key*`
+    ) |>
+    # Make sure spreadsheet key and row ID values are character
+    dplyr::mutate(
+      `Spreadsheet Key*` = as.character(`Spreadsheet Key*`),
+      `Row ID*` = as.character(`Row ID*`)
     )
 
   reduce_wb_data_fields(
