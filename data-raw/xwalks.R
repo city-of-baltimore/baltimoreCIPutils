@@ -193,3 +193,17 @@ wd_revenue_category_xwalk <- load_revenue_category_xwalk() |>
   )
 
 usethis::use_data(wd_revenue_category_xwalk, overwrite = TRUE)
+
+maco_category_xwalk <- googlesheets4::read_sheet(
+  "https://docs.google.com/spreadsheets/d/1jEgFt1-8a96IxzSyUU2J_tqoII5qL4utWiK6v4OBIBw/edit?usp=sharing",
+  sheet = "maco_category_xwalk"
+)
+
+usethis::use_data(maco_category_xwalk, overwrite = TRUE)
+
+maco_category_patterns <- googlesheets4::read_sheet(
+  "https://docs.google.com/spreadsheets/d/1jEgFt1-8a96IxzSyUU2J_tqoII5qL4utWiK6v4OBIBw/edit?usp=sharing",
+  sheet = "maco_category_patterns"
+)
+
+usethis::use_data(maco_category_patterns, overwrite = TRUE)
