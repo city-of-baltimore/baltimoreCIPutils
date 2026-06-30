@@ -44,8 +44,7 @@ fmt_submit_project_worktags_data <- function(.data) {
       `ID Type` = dplyr::case_when(
         `Worktag Type` == "FUND" ~ "Fund_ID",
         `Worktag Type` == "COST_CENTER" ~ "Organization_Reference_ID",
-        # FIXME: Check if Grant ID is a Organization_Reference_ID or a Grant_ID ID Type
-        `Worktag Type` == "GRANT" ~ "Organization_Reference_ID"
+        `Worktag Type` == "GRANT" ~ "Grant_ID"
       ),
       `Required On Transaction` = dplyr::case_when(
         `Worktag Type` == "FUND" ~ "Y",
@@ -182,16 +181,23 @@ build_submit_project_wb <- function(
   rlang::check_data_frame(proj_list)
   chk::check_names(
     proj_list,
-    c("Project ID", "Inactive", "Billable", "Capital Project")
+    c(
+      "Project ID",
+      "Inactive",
+      "Billable",
+      "Capital Project",
+      "Project Status",
+      "Priority",
+      "Importance Rating"
+    )
   )
 
+  # Update proj_list based on `proj_app_info`
   proj_list <- proj_list |>
     dplyr::rows_update(
       proj_app_info,
       by = "Project ID"
     )
-
-  # TODO: Add trimming of whitespace at start and end
 
   check_data_frame(proj_resource_plan_ids)
   chk::check_names(
@@ -220,6 +226,18 @@ build_submit_project_wb <- function(
     )
   )
 
+  i_inactive <- proj_list[['Inactive']] %in% "Yes"
+
+  if (any(i_inactive)) {
+    cli::cli_alert_info(
+      "Dropping {sum(i_inactive)} inactive projects from the input `proj_list`"
+    )
+
+    proj_list <- proj_list[!i_inactive, ]
+  }
+
+  # TODO: Add check for contractor ID values in Project Owner column
+
   submit_proj_data <- proj_list |>
     # Reformat Y/N columns
     dplyr::mutate(
@@ -232,6 +250,22 @@ build_submit_project_wb <- function(
           )
         }
       ),
+      `Project Status` = stringr::str_replace(
+        `Project Status`,
+        "[:space:]",
+        "_"
+      ),
+      # Remove all digits, punctuation, and spaces from Priority and `Importance Rating` columns
+      dplyr::across(
+        c(Priority, `Importance Rating`),
+        \(x) {
+          stringr::str_remove_all(
+            x,
+            "[:digit:]|[:punct:]|[:space:]"
+          )
+        }
+      ),
+      # TODO: For Priority - trim the leading numbers and punctuation
       # Extract Fund ID from start of Balancing Worktag
       `Balancing Worktag` = stringr::str_extract(
         `Balancing Worktag`,
@@ -242,6 +276,12 @@ build_submit_project_wb <- function(
         `Project Resource Plan`,
         from = proj_resource_plan_ids$`Business Object Instance`,
         to = proj_resource_plan_ids$`Reference ID Value`
+      ),
+      # Use blank values if Project Resource Plan is inherited from the project hierarhcy
+      `Project Resource Plan` = dplyr::if_else(
+        !stringr::str_detect(`Project Resource Plan`, "PROJECT_RESOURCE"),
+        NA_character_,
+        `Project Resource Plan`
       ),
       # Replace Project Groups values based on View Reference ID report
       `Project Groups` = dplyr::replace_values(
@@ -282,17 +322,18 @@ build_submit_project_wb <- function(
             Project,
             paste0("^", `Project ID`)
           ),
-          `Project Name*` = dplyr::if_else(
-            Inactive == "N",
-            `Project Name*`,
-            stringr::str_remove(
-              `Project Name*`,
-              "(Inactive)$"
-            )
-          ),
-          `Project Name*` = stringr::str_trim(
-            `Project Name*`
-          ),
+          # NOTE: This is no longer used because inactive Projects are excluded
+          # `Project Name*` = dplyr::if_else(
+          #   Inactive == "N",
+          #   `Project Name*`,
+          #   stringr::str_remove(
+          #     `Project Name*`,
+          #     "(Inactive)$"
+          #   )
+          # ),
+          # `Project Name*` = stringr::str_trim(
+          #   `Project Name*`
+          # ),
           `Workday Project ID` = `Project ID`,
           .keep = "none"
         ),
@@ -362,6 +403,8 @@ build_submit_project_wb <- function(
       .by = `Spreadsheet Key*`
     ) |>
     # Make sure spreadsheet key and row ID values are character
+    # NOTE: This may be unecessary - it was added while trouble-shooting an
+    # unrelated issue
     dplyr::mutate(
       `Spreadsheet Key*` = as.character(`Spreadsheet Key*`),
       `Row ID*` = as.character(`Row ID*`)
