@@ -331,9 +331,9 @@ build_submit_project_wb <- function(
           #     "(Inactive)$"
           #   )
           # ),
-          # `Project Name*` = stringr::str_trim(
-          #   `Project Name*`
-          # ),
+          `Project Name*` = stringr::str_trim(
+            `Project Name*`
+          ),
           `Workday Project ID` = `Project ID`,
           .keep = "none"
         ),
