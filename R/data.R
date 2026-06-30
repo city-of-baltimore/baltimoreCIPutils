@@ -152,3 +152,29 @@
 #' wd_revenue_category_xwalk
 #' @details <https://docs.google.com/spreadsheets/d/1jEgFt1-8a96IxzSyUU2J_tqoII5qL4utWiK6v4OBIBw/edit?usp=sharing>
 "wd_revenue_category_xwalk"
+
+#' Maryland Association of Counties Capital Budget Category-Cost Center Crosswalk
+#'
+#' Last updated 2026-06-30.
+#'
+#' @format A data frame with 53 rows and 4 variables:
+#' \describe{
+#'   \item{`MACo Label`}{Label for MACo category}
+#'   \item{`Cost Center`}{Workday Cost Center}
+#'   \item{`Cost Center ID`}{Workday Cost Center ID}
+#'   \item{`Label Notes`}{Notes related to the category label/Cost Center}
+#'}
+#' @details DETAILS
+"maco_category_xwalk"
+
+#' Maryland Association of Counties Capital Budget Category Project Name Patterns
+#'
+#' Last updated 2026-06-30.
+#'
+#' @format A data frame with 16 rows and 2 variables:
+#' \describe{
+#'   \item{`pattern`}{Pattern to detec in Project Name values}
+#'   \item{`MACo Label`}{Label for MACo category}
+#'}
+#' @details DETAILS
+"maco_category_patterns"
