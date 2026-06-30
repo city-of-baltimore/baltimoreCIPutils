@@ -90,7 +90,7 @@ rbind_budget_expense_entries <- function(data, ...) {
 
     # Other fields that are not in both EIBs
     "Budget Currency",
-    # "Grant",
+    "Grant",
     "Year",
     "Fiscal Time Interval",
     "Fiscal Time Interval*"
@@ -383,7 +383,7 @@ build_put_budget_template_wb <- function(
     get_dict_defaults(sheet_name)
 
   # Create Plan Name column from Budget Name colum  if present
-  if (!has_name(data, "Plan Name") & has_name(data, c("Budget Name"))) {
+  if (!has_name(data, "Plan Name") && has_name(data, c("Budget Name"))) {
     data <- dplyr::mutate(
       data,
       `Plan Name` = `Budget Name`
