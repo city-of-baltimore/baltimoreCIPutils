@@ -54,7 +54,7 @@ fmt_budget_revenue_entries <- function(
       col_values
     )
 
-    non_default_col = col_values[default_col != col_values]
+    non_default_col <- col_values[default_col != col_values]
 
     data <- data |>
       # Create new columns
@@ -110,6 +110,7 @@ rbind_budget_expense_entries <- function(data, ...) {
     "Budget Credit Amount"
   )
 
+  # TODO: Handle Grant worktags in budget expense entries
   budget_expense_entries <- data |>
     dplyr::filter(
       !is.na(`Budget Credit Amount`) |
@@ -141,17 +142,17 @@ rbind_budget_expense_entries <- function(data, ...) {
       # Only one must be used - apply the net amount only and leave the other column blank
       # If net is positive it goes in debit, if negative go in credit
       `Budget Debit Amount Update` = dplyr::if_else(
-        any(!is.na(`Budget Credit Amount`)),
+        !all(is.na(`Budget Credit Amount`)),
         sum(`Budget Credit Amount`, na.rm = TRUE),
         NA_real_
       ),
       `Budget Credit Amount Update` = dplyr::if_else(
-        any(!is.na(`Budget Debit Amount`)),
+        !all(is.na(`Budget Debit Amount`)),
         sum(`Budget Debit Amount`, na.rm = TRUE),
         NA_real_
       ),
       Memo = dplyr::if_else(
-        any(!is.na(Memo)),
+        !all(is.na(Memo)),
         as.character(
           knitr::combine_words(
             unique(Memo)
@@ -160,7 +161,10 @@ rbind_budget_expense_entries <- function(data, ...) {
         NA_character_
       ),
       # .by = Project
-      .by = `Header Key`
+      .by = c(
+        `Header Key`,
+        Grant
+      )
     ) |>
     # Handle rare cases with a value for both the Budget Debit Amount and Budget Credit Amount
     dplyr::mutate(
