@@ -124,7 +124,7 @@ reduce_wb_data_fields <- function(
   .init,
   ...,
   start_row = 6,
-  na = openxlsx2::na_strings(),
+  na = "",
   col_names = FALSE
 ) {
   check_installed("chk")
