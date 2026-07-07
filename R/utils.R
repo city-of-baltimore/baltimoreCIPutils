@@ -50,3 +50,25 @@ list_input_files <- function(
 
   input_reference
 }
+
+#' Replace value in leading row if repeated in following row
+#'
+#' @inheritParams dplyr::mutate
+#' @param col Column name to check for repeated values in the next row.
+#' @param replacement Value to replace repeated values in the next row.
+#' Defaults to `'"'`
+#' @keywords internal
+#' @examples
+#' replace_lead_row_value(mtcars[, 1:2], "cyl")
+#' @export
+replace_lead_row_value <- function(.data, col, replacement = '"') {
+  dplyr::mutate(
+    .data = .data,
+    "{col}" := dplyr::if_else(
+      !is.na(dplyr::lag(.data[[col]])) &
+        .data[[col]] == dplyr::lag(.data[[col]]),
+      replacement,
+      as.character(.data[[col]])
+    )
+  )
+}
