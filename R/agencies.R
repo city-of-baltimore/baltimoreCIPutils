@@ -40,19 +40,12 @@ join_cap_agency_labels <- function(
     "Baltimore City Mayor's Office",                   "Mayoralty",      "AGC4301 Mayoralty",                                "AGC4301", NA,                                                      NA,
     "Mayor's Office of Recovery Programs",             "MORP",           "AGC4392 M-R Office of Recovery Programs",          "AGC4392", NA,                                                      NA,
     "Parking Authority of Baltimore City",             "Parking",        "AGC7000 Transportation",                           "AGC7000", "CAP009580 CAP Transportation",                          "CAP009580",
-    "Baltimore Development Corporation",               "BDC",            "AGC3100 Housing and Community Development",        "AGC3100", "CAP009601 CAP Baltimore Development Corporation (BDC)", "CAP009601"
+    "Baltimore Development Corporation",               "BDC",            "AGC3100 Housing and Community Development",        "AGC3100", "CAP009601 CAP Baltimore Development Corporation (BDC)", "CAP009601",
+    "Baltimore City Police Department",                "BPD",            "AGC5900 Police",                                   "AGC5900", NA,                                                      NA,
+    "Baltimore City Fire Department",                  "BCFD",           "AGC2500 Fire",                                     "AGC2500", NA,                                                      NA,
+    "Baltimore City Health Department",                "BCHD",           "AGC2700 Health",                                   "AGC2700", NA,                                                      NA,
+    "Baltimore City Comptroller's Office",             "Comptroller",    "AGC1200 Comptroller",                              "AGC1200", NA,                                                      NA
   )
-
-  # TODO: Add missing Cost Center values
-  # CostCenter
-  # CAP009206 CAP Police
-  # CAP009208 CAP Fire
-  # CAP009312 CAP Health
-  # RES009205 RES Police
-  # RES009209 RES Fire
-  # RES009539 RES Comptroller
-  # RES009313 RES Health
-  # CCA000459 Recreation and Parks Public Facilities
 
   data <- data |>
     dplyr::left_join(
@@ -97,6 +90,7 @@ join_cap_agency_labels <- function(
       .before = AgencyID
     )
 
+  # TODO: Determine if the BPD, BCFD, and BCHD projects should be classed as DGS projects
   if (combine_dgs_agencies) {
     data <- data |>
       dplyr::mutate(
