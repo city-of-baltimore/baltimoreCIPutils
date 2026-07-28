@@ -40,7 +40,9 @@ join_cap_agency_labels <- function(
     "Baltimore City Mayor's Office",                   "Mayoralty",      "AGC4301 Mayoralty",                                "AGC4301", NA,                                                      NA,
     "Mayor's Office of Recovery Programs",             "MORP",           "AGC4392 M-R Office of Recovery Programs",          "AGC4392", NA,                                                      NA,
     "Parking Authority of Baltimore City",             "Parking",        "AGC7000 Transportation",                           "AGC7000", "CAP009580 CAP Transportation",                          "CAP009580",
+    "Parking Authority of Baltimore City",             "Parking",        "AGC7000 Transportation",                           "AGC7000", "RES009581 RES Parking Authority",                       "RES009581",
     "Baltimore Development Corporation",               "BDC",            "AGC3100 Housing and Community Development",        "AGC3100", "CAP009601 CAP Baltimore Development Corporation (BDC)", "CAP009601",
+    "Baltimore Development Corporation",               "BDC",            "AGC3100 Housing and Community Development",        "AGC3100", "RES009600 RES Baltimore Development Corporation (BDC)", "RES009600",
     "Baltimore City Police Department",                "BPD",            "AGC5900 Police",                                   "AGC5900", NA,                                                      NA,
     "Baltimore City Fire Department",                  "BCFD",           "AGC2500 Fire",                                     "AGC2500", NA,                                                      NA,
     "Baltimore City Health Department",                "BCHD",           "AGC2700 Health",                                   "AGC2700", NA,                                                      NA,
@@ -70,20 +72,20 @@ join_cap_agency_labels <- function(
           CostCenterID
         ),
       by = dplyr::join_by(AgencyID, CostCenterID),
-      suffix = c("", "Corrected")
+      suffix = c("", "CostCenter")
     ) |>
     dplyr::mutate(
       AgencyName = dplyr::coalesce(
-        AgencyNameCorrected,
+        AgencyNameCostCenter,
         AgencyName
       ),
       AgencyLabel = dplyr::coalesce(
-        AgencyLabelCorrected,
+        AgencyLabelCostCenter,
         AgencyLabel
       )
     ) |>
     dplyr::select(
-      !c(AgencyNameCorrected, AgencyLabelCorrected, AgencyWorktagCorrected)
+      !c(AgencyNameCostCenter, AgencyLabelCostCenter, AgencyWorktagCostCenter)
     ) |>
     dplyr::relocate(
       AgencyName,
