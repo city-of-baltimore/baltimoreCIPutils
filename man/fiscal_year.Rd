@@ -23,7 +23,14 @@ or "year_prefix_abb". Ignored for other types. Defaults to "FY".}
 \item{...}{
   Arguments passed on to \code{\link[lubridate:as_date]{lubridate::as_date}}
   \describe{
-    \item{\code{}}{}
+    \item{\code{tz}}{a time zone name (default: time zone of the POSIXt object \code{x}). See
+\code{\link[=OlsonNames]{OlsonNames()}}.}
+    \item{\code{origin}}{a Date object, or something which can be coerced by \code{as.Date(origin, ...)} to such an object (default: the Unix epoch of "1970-01-01"). Note that in
+this instance, \code{x} is assumed to reflect the number of days since \code{origin} at
+\code{"UTC"}.}
+    \item{\code{format}}{format argument for character methods. When supplied parsing is
+performed by \code{parse_date_time(x, orders = formats, exact = TRUE)}. Thus, multiple
+formats are supported and are tried in turn.}
   }}
 }
 \value{

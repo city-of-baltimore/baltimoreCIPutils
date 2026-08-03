@@ -25,6 +25,8 @@ split_proj_list(proj_list, proj_plans)
 
 \item{fy_start_date}{not used}
 
+\item{start_row}{Optional numeric value specifying the first row to begin data discovery.}
+
 \item{...}{Additional arguments passed to internal methods.}
 
 \item{.data}{Input data frame created by \code{read_proj_plans()}.}

@@ -30,7 +30,7 @@ character vector.}
 \item{before}{Prefix to use for output.}
 }
 \description{
-Use \code{\link[dplyr:rename]{dplyr::rename_with()}} to rename an input data frame with columns
+Use \code{\link[dplyr:rename_with]{dplyr::rename_with()}} to rename an input data frame with columns
 prefixed by "FY" (absolute year columns) or "Year" (relative year columns).
 }
 \examples{

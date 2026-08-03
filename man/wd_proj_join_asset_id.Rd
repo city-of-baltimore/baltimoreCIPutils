@@ -23,7 +23,7 @@ wd_proj_join_asset_id(
 \item{.key}{Key value passed to \code{dplyr::nest_by}. Deafults to \code{asset_id_col}.}
 
 \item{multiple}{Defaults to "nested" which nests the data by project code
-column and then sets \code{multiple = "any"}. Passed to \code{\link[dplyr:mutate-joins]{dplyr::left_join()}}}
+column and then sets \code{multiple = "any"}. Passed to \code{\link[dplyr:left_join]{dplyr::left_join()}}}
 }
 \description{
 By default, \code{\link[=wd_proj_join_asset_id]{wd_proj_join_asset_id()}} uses \code{multiple = "nested"} to store the

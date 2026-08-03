@@ -7,10 +7,10 @@
 \format{
 A data frame with 53 rows and 4 variables:
 \describe{
-\item{\verb{MACo Label}}{Label for MACo category}
-\item{\verb{Cost Center}}{Workday Cost Center}
-\item{\verb{Cost Center ID}}{Workday Cost Center ID}
-\item{\verb{Label Notes}}{Notes related to the category label/Cost Center}
+\item{MACo Label}{Label for MACo category}
+\item{Cost Center}{Workday Cost Center}
+\item{Cost Center ID}{Workday Cost Center ID}
+\item{Label Notes}{Notes related to the category label/Cost Center}
 }
 }
 \usage{
@@ -18,8 +18,5 @@ maco_category_xwalk
 }
 \description{
 Last updated 2026-06-30.
-}
-\details{
-DETAILS
 }
 \keyword{datasets}

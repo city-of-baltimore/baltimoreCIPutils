@@ -14,9 +14,9 @@ A data frame with 128 rows and 10 variables:
 \item{\code{use}}{Source ID or name usage (active or inactive)}
 \item{\code{notes}}{Notes}
 \item{\code{createdTime}}{Created date/time for record}
-\item{\verb{PHierarchy1 Code}}{Join key for formatted "PHierarchy1 Code" column}
-\item{\verb{PHierarchy2 Code}}{Join key for formatted "PHierarchy2 Code" column}
-\item{\verb{Cost Center Code}}{Join key for formatted "Cost Center Code" column}
+\item{PHierarchy1 Code}{Join key for formatted "PHierarchy1 Code" column}
+\item{PHierarchy2 Code}{Join key for formatted "PHierarchy2 Code" column}
+\item{Cost Center Code}{Join key for formatted "Cost Center Code" column}
 }
 }
 \usage{

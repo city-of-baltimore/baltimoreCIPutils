@@ -29,7 +29,30 @@ wd_read_extract_revenue_cat(file, start_row = 2, ...)
 \arguments{
 \item{file}{A workbook file path, a \link[openxlsx2]{wbWorkbook} object, or a valid URL.}
 
-\item{...}{Additional arguments passed to internal methods.}
+\item{start_row}{Optional numeric value specifying the first row to begin data discovery.}
+
+\item{...}{
+  Arguments passed on to \code{\link{wd_read_report}}
+  \describe{
+    \item{\code{name_repair}}{Handling of column names. The default behaviour is to
+ensure column names are \code{"unique"}. Various repair strategies are
+supported:
+\itemize{
+\item \code{"minimal"}: No name repair or checks, beyond basic existence of names.
+\item \code{"unique"} (default value): Make sure names are unique and not empty.
+\item \code{"check_unique"}: No name repair, but check they are \code{unique}.
+\item \code{"unique_quiet"}: Repair with the \code{unique} strategy, quietly.
+\item \code{"universal"}: Make the names \code{unique} and syntactic.
+\item \code{"universal_quiet"}: Repair with the \code{universal} strategy, quietly.
+\item A function: Apply custom name repair (e.g., \code{name_repair = make.names}
+for names in the style of base R).
+\item A purrr-style anonymous function, see \code{\link[rlang:as_function]{rlang::as_function()}}.
+}
+
+This argument is passed on as \code{repair} to \code{\link[vctrs:vec_as_names]{vctrs::vec_as_names()}}.
+See there for more details on these terms and the strategies used
+to enforce them.}
+  }}
 
 \item{drop_cols}{Character vector with names of columns from report to drop.}
 }

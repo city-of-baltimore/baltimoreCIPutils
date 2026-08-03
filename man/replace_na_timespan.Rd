@@ -11,7 +11,7 @@ replace_na_timespan(.data, timespan_cols = curr_fy_span(), replacement = 0)
 \code{timespan_cols}.}
 
 \item{timespan_cols}{Required. Defaults to \code{\link[=curr_fy_span]{curr_fy_span()}}. Passed to
-\code{.cols} argument of \code{\link[dplyr:across]{dplyr::across()}} (wrapped by \code{\link[tidyselect:all_of]{tidyselect::any_of()}}).}
+\code{.cols} argument of \code{\link[dplyr:across]{dplyr::across()}} (wrapped by \code{\link[tidyselect:any_of]{tidyselect::any_of()}}).}
 
 \item{replacement}{Replacement value for \code{NA} values.}
 }

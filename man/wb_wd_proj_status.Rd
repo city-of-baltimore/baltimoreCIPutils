@@ -17,7 +17,7 @@ wb_wd_proj_status(
 )
 }
 \arguments{
-\item{project_wb}{Passed to \code{\link[openxlsx2:wb_to_df]{openxlsx2::read_xlsx()}}}
+\item{project_wb}{Passed to \code{\link[openxlsx2:read_xlsx]{openxlsx2::read_xlsx()}}}
 
 \item{hierarchy, cost_center}{Optional, PHierarchy1 Code. PHierarchy2 Code, or
 Cost Center Code values to filter by. Default: \code{NULL}}

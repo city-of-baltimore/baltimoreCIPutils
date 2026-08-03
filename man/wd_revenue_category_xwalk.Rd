@@ -7,19 +7,19 @@
 \format{
 A data frame with 95 rows and 13 variables:
 \describe{
-\item{\verb{Effective Year}}{Effective year (GO Bonds only)}
-\item{\verb{Revenue Category}}{Revenue Category code and name combined}
-\item{\verb{Revenue Category Code}}{Revenue Category code}
-\item{\verb{Revenue Category Name}}{Revenue Category name}
-\item{\verb{Prior Revenue Category Code}}{Prior equivalent revenue category code (GO Bonds only)}
-\item{\verb{Prior Revenue Category Name}}{Prior equivalent revenue category name (GO Bonds only)}
-\item{\verb{Revenue Category Label}}{Revenue Category label}
-\item{\verb{Revenue Category Label Short}}{Revenue Category short label}
-\item{\verb{Revenue Category Group}}{Revenue Category group}
-\item{\verb{Request Category}}{Request Category}
-\item{\verb{Request Category Pos}}{Request Category position (overall sort order)}
-\item{\code{RequestCategory}}{Revenue category (duplicate column to match Capital Project Information App schema)}
-\item{\code{RequestCategoryID}}{Request category ID (duplicate column to match Capital Project Information App schema)}
+\item{Effective Year}{Effective year (GO Bonds only)}
+\item{Revenue Category}{Revenue Category code and name combined}
+\item{Revenue Category Code}{Revenue Category code}
+\item{Revenue Category Name}{Revenue Category name}
+\item{Prior Revenue Category Code}{Prior equivalent revenue category code (GO Bonds only)}
+\item{Prior Revenue Category Name}{Prior equivalent revenue category name (GO Bonds only)}
+\item{Revenue Category Label}{Revenue Category label}
+\item{Revenue Category Label Short}{Revenue Category short label}
+\item{Revenue Category Group}{Revenue Category group}
+\item{Request Category}{Request Category}
+\item{Request Category Pos}{Request Category position (overall sort order)}
+\item{RevenueCategory}{Revenue category (duplicate column to match Capital Project Information App schema)}
+\item{RevenueCategoryID}{Request category ID (duplicate column to match Capital Project Information App schema)}
 }
 }
 \usage{

@@ -9,7 +9,7 @@ A data frame with 945 rows and 7 variables:
 \describe{
 \item{\code{asset_id}}{Asset ID value, primarily DGS Building ID numbers, DOT
 bridge numbers, and references to OpenStreetMap IDs.}
-\item{\verb{Project Code}}{Join key for Project Code}
+\item{Project Code}{Join key for Project Code}
 \item{\code{agency}}{Agency name (incomplete)}
 \item{\code{type_match}}{Type of match (parent asset or same asset)}
 \item{\code{match}}{Match certainty or precision}

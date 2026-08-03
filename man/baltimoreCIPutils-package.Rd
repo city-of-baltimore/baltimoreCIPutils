@@ -19,5 +19,10 @@ Useful links:
 \author{
 \strong{Maintainer}: Eli Pousson \email{eli.pousson@baltimorecity.gov} (\href{https://orcid.org/0000-0001-8280-1706}{ORCID})
 
+Authors:
+\itemize{
+  \item Eli Pousson \email{eli.pousson@baltimorecity.gov} (\href{https://orcid.org/0000-0001-8280-1706}{ORCID})
+}
+
 }
 \keyword{internal}

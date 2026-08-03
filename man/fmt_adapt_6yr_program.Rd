@@ -21,6 +21,8 @@ fmt_adapt_6yr_program(
 )
 }
 \arguments{
+\item{data}{Data frame based on Six-Year CIP sheet from Adaptive Planning.}
+
 \item{timespan_cols}{Time span columns to format using default "accounting"
 formatting. Passed to cols argument of \code{\link[=set_excel_fmt_class]{set_excel_fmt_class()}} if
 \code{accounting_fmt} is \code{TRUE}. Defaults to \code{\link[=curr_fy_span]{curr_fy_span()}}.}
@@ -38,6 +40,10 @@ column.}
 
 \item{accounting_fmt}{If \code{TRUE} apply accounting formatting to columns
 specified by \code{timespan_cols}.}
+
+\item{project_code_col}{Column name with project reference ID.}
+
+\item{project_name_col}{Column name with project worktag including reference ID and name.}
 }
 \description{
 \code{\link[=fmt_adapt_6yr_program]{fmt_adapt_6yr_program()}} formats data from the Six-Year Sheet exported from

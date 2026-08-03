@@ -76,15 +76,15 @@ following numbers) or \code{"[:space:]|[:punct:]"} (all spaces and punctuation).
 \item \code{TRUE}: returns a character matrix.
 }}
 
-\item{...}{Additional arguments passed to \code{\link[stringr:str_extract]{stringr::str_extract_all()}}}
+\item{...}{Additional arguments passed to \code{\link[stringr:str_extract_all]{stringr::str_extract_all()}}}
 
 \item{extract_all}{Deprecated as of 2024-10-23. If \code{TRUE}, use
-\code{\link[stringr:str_extract]{stringr::str_extract_all()}} and return a list of extracted identifiers.
+\code{\link[stringr:str_extract_all]{stringr::str_extract_all()}} and return a list of extracted identifiers.
 This supports multiple identifiers per string.}
 }
 \description{
 A collection of helper functions using \code{\link[stringr:str_extract]{stringr::str_extract()}} and
-\code{\link[stringr:str_extract]{stringr::str_extract_all()}} to extract identifiers from Workday Project
+\code{\link[stringr:str_extract_all]{stringr::str_extract_all()}} to extract identifiers from Workday Project
 names or other text. Project codes and contract numbers are always converted
 to upper case. When using these functions with unstructured text, the results
 should be reviewed and validated to flag problems.

@@ -7,7 +7,7 @@
 \format{
 A data frame with 81 rows and 8 variables:
 \describe{
-\item{\verb{Project Code}}{Join key for Project Code}
+\item{Project Code}{Join key for Project Code}
 \item{\code{plan}}{Related plan name (from Adaptive Planning Project Details sheet)}
 \item{\code{title}}{Related plan title (from reference Airtable base)}
 \item{\code{year_complete}}{Year completed (from reference Airtable base)}

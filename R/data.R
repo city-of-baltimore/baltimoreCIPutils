@@ -13,9 +13,9 @@
 #'   \item{`use`}{Source ID or name usage (active or inactive)}
 #'   \item{`notes`}{Notes}
 #'   \item{`createdTime`}{Created date/time for record}
-#'   \item{`PHierarchy1 Code`}{Join key for formatted "PHierarchy1 Code" column}
-#'   \item{`PHierarchy2 Code`}{Join key for formatted "PHierarchy2 Code" column}
-#'   \item{`Cost Center Code`}{Join key for formatted "Cost Center Code" column}
+#'   \item{PHierarchy1 Code}{Join key for formatted "PHierarchy1 Code" column}
+#'   \item{PHierarchy2 Code}{Join key for formatted "PHierarchy2 Code" column}
+#'   \item{Cost Center Code}{Join key for formatted "Cost Center Code" column}
 #' }
 #' @examples
 #' wd_proj_hierarchy_xwalk
@@ -28,12 +28,12 @@
 #'
 #' @format A data frame with 17 rows and 6 variables:
 #' \describe{
-#'   \item{`Agency Name`}{Agency name}
-#'   \item{`Agency Label`}{Short agency label}
-#'   \item{`Agency`}{Agency worktag}
-#'   \item{`Agency ID`}{Agency ID}
-#'   \item{`Cost Center`}{Cost Center worktag}
-#'   \item{`Cost Center ID`}{Cost Center ID}
+#'   \item{Agency Name}{Agency name}
+#'   \item{Agency Label}{Short agency label}
+#'   \item{Agency}{Agency worktag}
+#'   \item{Agency ID}{Agency ID}
+#'   \item{Cost Center}{Cost Center worktag}
+#'   \item{Cost Center ID}{Cost Center ID}
 #'}
 #' @examples
 #' wd_agencies
@@ -49,7 +49,7 @@
 #' \describe{
 #'   \item{`asset_id`}{Asset ID value, primarily DGS Building ID numbers, DOT
 #' bridge numbers, and references to OpenStreetMap IDs.}
-#'   \item{`Project Code`}{Join key for Project Code}
+#'   \item{Project Code}{Join key for Project Code}
 #'   \item{`agency`}{Agency name (incomplete)}
 #'   \item{`type_match`}{Type of match (parent asset or same asset)}
 #'   \item{`match`}{Match certainty or precision}
@@ -68,7 +68,7 @@
 #'
 #' @format A data frame with 81 rows and 8 variables:
 #' \describe{
-#'   \item{`Project Code`}{Join key for Project Code}
+#'   \item{Project Code}{Join key for Project Code}
 #'   \item{`plan`}{Related plan name (from Adaptive Planning Project Details sheet)}
 #'   \item{`title`}{Related plan title (from reference Airtable base)}
 #'   \item{`year_complete`}{Year completed (from reference Airtable base)}
@@ -97,11 +97,11 @@
 #'
 #' @format A data frame with 462 rows and 5 variables:
 #' \describe{
-#'   \item{`Project Code`}{Workday Project Code}
-#'   \item{`Project Name Updated`}{Updated project name}
-#'   \item{`Name Justification`}{Justification for name update}
-#'   \item{`Project Desc Updated`}{Updated project description}
-#'   \item{`Desc Justification`}{Justification for description update}
+#'   \item{Project Code}{Workday Project Code}
+#'   \item{Project Name Updated}{Updated project name}
+#'   \item{Name Justification}{Justification for name update}
+#'   \item{Project Desc Updated}{Updated project description}
+#'   \item{Desc Justification}{Justification for description update}
 #' }
 #' @examples
 #' wd_proj_detail_updates
@@ -134,19 +134,19 @@
 #'
 #' @format A data frame with 95 rows and 13 variables:
 #' \describe{
-#'   \item{`Effective Year`}{Effective year (GO Bonds only)}
-#'   \item{`Revenue Category`}{Revenue Category code and name combined}
-#'   \item{`Revenue Category Code`}{Revenue Category code}
-#'   \item{`Revenue Category Name`}{Revenue Category name}
-#'   \item{`Prior Revenue Category Code`}{Prior equivalent revenue category code (GO Bonds only)}
-#'   \item{`Prior Revenue Category Name`}{Prior equivalent revenue category name (GO Bonds only)}
-#'   \item{`Revenue Category Label`}{Revenue Category label}
-#'   \item{`Revenue Category Label Short`}{Revenue Category short label}
-#'   \item{`Revenue Category Group`}{Revenue Category group}
-#'   \item{`Request Category`}{Request Category}
-#'   \item{`Request Category Pos`}{Request Category position (overall sort order)}
-#'   \item{`RequestCategory`}{Revenue category (duplicate column to match Capital Project Information App schema)}
-#'   \item{`RequestCategoryID`}{Request category ID (duplicate column to match Capital Project Information App schema)}
+#'   \item{Effective Year}{Effective year (GO Bonds only)}
+#'   \item{Revenue Category}{Revenue Category code and name combined}
+#'   \item{Revenue Category Code}{Revenue Category code}
+#'   \item{Revenue Category Name}{Revenue Category name}
+#'   \item{Prior Revenue Category Code}{Prior equivalent revenue category code (GO Bonds only)}
+#'   \item{Prior Revenue Category Name}{Prior equivalent revenue category name (GO Bonds only)}
+#'   \item{Revenue Category Label}{Revenue Category label}
+#'   \item{Revenue Category Label Short}{Revenue Category short label}
+#'   \item{Revenue Category Group}{Revenue Category group}
+#'   \item{Request Category}{Request Category}
+#'   \item{Request Category Pos}{Request Category position (overall sort order)}
+#'   \item{RevenueCategory}{Revenue category (duplicate column to match Capital Project Information App schema)}
+#'   \item{RevenueCategoryID}{Request category ID (duplicate column to match Capital Project Information App schema)}
 #' }
 #' @examples
 #' wd_revenue_category_xwalk
@@ -159,10 +159,10 @@
 #'
 #' @format A data frame with 53 rows and 4 variables:
 #' \describe{
-#'   \item{`MACo Label`}{Label for MACo category}
-#'   \item{`Cost Center`}{Workday Cost Center}
-#'   \item{`Cost Center ID`}{Workday Cost Center ID}
-#'   \item{`Label Notes`}{Notes related to the category label/Cost Center}
+#'   \item{MACo Label}{Label for MACo category}
+#'   \item{Cost Center}{Workday Cost Center}
+#'   \item{Cost Center ID}{Workday Cost Center ID}
+#'   \item{Label Notes}{Notes related to the category label/Cost Center}
 #'}
 "maco_category_xwalk"
 

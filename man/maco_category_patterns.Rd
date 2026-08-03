@@ -7,8 +7,8 @@
 \format{
 A data frame with 16 rows and 2 variables:
 \describe{
-\item{\code{pattern}}{Pattern to detec in Project Name values}
-\item{\verb{MACo Label}}{Label for MACo category}
+\item{pattern}{Pattern to detec in Project Name values}
+\item{MACo Label}{Label for MACo category}
 }
 }
 \usage{
@@ -16,8 +16,5 @@ maco_category_patterns
 }
 \description{
 Last updated 2026-06-30.
-}
-\details{
-DETAILS
 }
 \keyword{datasets}

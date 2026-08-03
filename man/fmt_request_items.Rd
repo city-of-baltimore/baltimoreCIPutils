@@ -21,14 +21,14 @@ fmt_request_worktags(program_data)
 \item{program_data}{Program data from Six-Year CIP Sheet in Adaptive
 Planning.}
 
+\item{start_year}{Whole number for first year of six year range in fiscal
+year columns.}
+
 \item{program_version_name, program_version_date}{Program version name and
 date.}
 
 \item{remove_na}{If \code{TRUE}, remove rows where all fiscal year column values
 are \code{NA} or 0. Default to \code{FALSE}.}
-
-\item{first_year}{Whole number for first year of six year range in fiscal
-year columns.}
 }
 \description{
 Format request items optionally adding a following cycle based on the

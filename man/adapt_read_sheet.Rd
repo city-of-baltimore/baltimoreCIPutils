@@ -52,6 +52,8 @@ underlying hyperlink targets.}
 and returns strings.}
   }}
 
+\item{start_row}{Optional numeric value specifying the first row to begin data discovery.}
+
 \item{keep}{Values from input file to keep. "values" keeps all values.
 "child" and "parent" are used if the input data uses row-splitting and are
 not yet supported. "all" retains any trailing "Total" row.}

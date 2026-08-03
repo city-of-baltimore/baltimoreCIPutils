@@ -7,11 +7,11 @@
 \format{
 A data frame with 462 rows and 5 variables:
 \describe{
-\item{\verb{Project Code}}{Workday Project Code}
-\item{\verb{Project Name Updated}}{Updated project name}
-\item{\verb{Name Justification}}{Justification for name update}
-\item{\verb{Project Desc Updated}}{Updated project description}
-\item{\verb{Desc Justification}}{Justification for description update}
+\item{Project Code}{Workday Project Code}
+\item{Project Name Updated}{Updated project name}
+\item{Name Justification}{Justification for name update}
+\item{Project Desc Updated}{Updated project description}
+\item{Desc Justification}{Justification for description update}
 }
 }
 \usage{

@@ -9,6 +9,8 @@ wd_read_report(file, start_row = 4, ..., name_repair = "unique")
 \arguments{
 \item{file}{A workbook file path, a \link[openxlsx2]{wbWorkbook} object, or a valid URL.}
 
+\item{start_row}{Optional numeric value specifying the first row to begin data discovery.}
+
 \item{...}{Additional arguments passed to internal methods.}
 
 \item{name_repair}{Handling of column names. The default behaviour is to

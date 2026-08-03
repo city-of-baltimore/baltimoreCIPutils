@@ -7,12 +7,12 @@
 \format{
 A data frame with 17 rows and 6 variables:
 \describe{
-\item{\verb{Agency Name}}{Agency name}
-\item{\verb{Agency Label}}{Short agency label}
-\item{\code{Agency}}{Agency worktag}
-\item{\verb{Agency ID}}{Agency ID}
-\item{\verb{Cost Center}}{Cost Center worktag}
-\item{\verb{Cost Center ID}}{Cost Center ID}
+\item{Agency Name}{Agency name}
+\item{Agency Label}{Short agency label}
+\item{Agency}{Agency worktag}
+\item{Agency ID}{Agency ID}
+\item{Cost Center}{Cost Center worktag}
+\item{Cost Center ID}{Cost Center ID}
 }
 }
 \usage{
