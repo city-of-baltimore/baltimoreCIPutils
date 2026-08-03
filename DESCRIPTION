@@ -19,12 +19,15 @@ Imports:
     dplyr,
     epoxy,
     fs,
+    here,
+    knitr,
     lifecycle,
     lubridate,
     openxlsx2,
     purrr,
     rlang,
     stringr,
+    tibble,
     tidyselect,
     vctrs
 Suggests:
@@ -42,4 +45,4 @@ Encoding: UTF-8
 Language: en-US
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
+Config/roxygen2/version: 8.0.0
