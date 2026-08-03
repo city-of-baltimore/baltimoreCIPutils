@@ -95,11 +95,27 @@ wb_add_currencyfmt <- function(
 ) {
   check_installed("gt")
 
-  currency <- currency %||% gt:::get_locale_currency_code(currency)
+  get_locale_currency_code <- utils::getFromNamespace(
+    "get_locale_currency_code",
+    "gt"
+  )
 
-  gt:::validate_currency(currency = currency)
+  validate_currency <- utils::getFromNamespace(
+    "validate_currency",
+    "gt"
+  )
 
-  decimals <- gt:::get_currency_decimals(
+  get_currency_decimals <- utils::getFromNamespace(
+    "get_currency_decimals",
+    "gt"
+  )
+
+  currency <- currency %||%
+    get_locale_currency_code(currency)
+
+  validate_currency(currency = currency)
+
+  decimals <- get_currency_decimals(
     currency = currency,
     decimals = decimals,
     use_subunits = use_subunits
@@ -119,9 +135,14 @@ wb_add_currencyfmt <- function(
   }
 
   if (accounting) {
+    currencies <- utils::getFromNamespace(
+      "currencies",
+      "gt"
+    )
+
     currency_sym <- paste0(
       "[$",
-      gt:::currencies[gt:::currencies[["curr_code"]] == currency, ][["symbol"]],
+      currencies[currencies[["curr_code"]] == currency, ][["symbol"]],
       "]"
     )
 
@@ -190,10 +211,7 @@ wb_save_ext <- function(wb, file = NULL, ...) {
 #' }
 #' @rdname wb_wd_proj_status
 #' @export
-#' @importFrom openxlsx2 read_xlsx wb_workbook wb_add_worksheet
-#'   wb_add_data_table wb_freeze_pane wb_add_data_validation wb_set_col_widths
-#'   wb_set_cell_style create_cell_style wb_protect_worksheet
-#'   wb_set_active_sheet
+#' @importFrom openxlsx2 read_xlsx wb_workbook wb_add_worksheet wb_add_data_table wb_freeze_pane wb_add_data_validation wb_set_col_widths wb_set_cell_style create_cell_style wb_protect_worksheet wb_set_active_sheet
 #' @importFrom fs path_file file_info
 #' @importFrom epoxy epoxy
 #' @importFrom dplyr select arrange desc mutate if_else case_when left_join pick
