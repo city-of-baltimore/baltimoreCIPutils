@@ -17,7 +17,7 @@ compare_adapt_6yr_program <- function(
   cy_timespan_cols = curr_fy_span(),
   py_timespan_cols = prior_fy_span()
 ) {
-  last_cy_timespan_col <- tail(cy_timespan_cols, 1)
+  last_cy_timespan_col <- utils::tail(cy_timespan_cols, 1)
   comparison_timespan_cols <- setdiff(cy_timespan_cols, last_cy_timespan_col)
 
   capital_plan_changes <- cip_data_cy |>
