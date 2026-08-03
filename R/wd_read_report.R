@@ -6,9 +6,15 @@
 #' retained as an attribute for both CSV and XLSX input files.
 #'
 #' @inheritParams openxlsx2::read_xlsx
+#' @param start_row Optional numeric value specifying the first row to begin data discovery.
 #' @inheritParams readr::read_csv
 #' @export
-wd_read_report <- function(file, start_row = 4, ..., name_repair = "unique") {
+wd_read_report <- function(
+  file,
+  start_row = 4,
+  ...,
+  name_repair = "unique"
+) {
   fileext <- fs::path_ext(file)
 
   if (fileext == "csv") {
@@ -20,7 +26,11 @@ wd_read_report <- function(file, start_row = 4, ..., name_repair = "unique") {
       name_repair = name_repair
     )
   } else {
-    data <- openxlsx2::read_xlsx(file, start_row = start_row, ...)
+    data <- openxlsx2::read_xlsx(
+      file,
+      start_row = start_row,
+      ...
+    )
 
     data <- rlang::set_names(
       data,
@@ -63,6 +73,7 @@ wd_read_report <- function(file, start_row = 4, ..., name_repair = "unique") {
 #' - [wd_read_extract_revenue_cat()] reads the Revenue Category
 #' Workday report for all Revenue Categories (dropping revenue categories with no code).
 #' @inheritParams wd_read_report
+#' @inheritDotParams wd_read_report
 #' @name wd_read_proj
 NULL
 

@@ -8,6 +8,7 @@
 #' @inheritParams openxlsx2::wb_to_df
 #' @param col_names Names to use for returned data frame.
 #' @inheritDotParams openxlsx2::wb_to_df -col_names -start_row
+#' @param start_row Optional numeric value specifying the first row to begin data discovery.
 #' @param keep Values from input file to keep. "values" keeps all values.
 #'   "child" and "parent" are used if the input data uses row-splitting and are
 #'   not yet supported. "all" retains any trailing "Total" row.
@@ -194,7 +195,7 @@ replace_na_timespan <- function(
 #' existing values
 #' @param program_data Program data from Six-Year CIP Sheet in Adaptive
 #' Planning.
-#' @param first_year Whole number for first year of six year range in fiscal
+#' @param start_year Whole number for first year of six year range in fiscal
 #' year columns.
 #' @param  program_version_name,program_version_date Program version name and
 #' date.

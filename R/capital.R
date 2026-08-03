@@ -77,6 +77,9 @@ fmt_adapt_proj_details <- function(
 #' [fmt_adapt_6yr_program()] formats data from the Six-Year Sheet exported from
 #' Adaptive Planning.
 #'
+#' @param data Data frame based on Six-Year CIP sheet from Adaptive Planning.
+#' @param project_code_col Column name with project reference ID.
+#' @param project_name_col Column name with project worktag including reference ID and name.
 #' @inheritParams fmt_wd_proj_worktags
 #' @param timespan_cols Time span columns to format using default "accounting"
 #'   formatting. Passed to cols argument of [set_excel_fmt_class()] if

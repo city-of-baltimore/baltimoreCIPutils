@@ -164,7 +164,6 @@
 #'   \item{`Cost Center ID`}{Workday Cost Center ID}
 #'   \item{`Label Notes`}{Notes related to the category label/Cost Center}
 #'}
-#' @details DETAILS
 "maco_category_xwalk"
 
 #' Maryland Association of Counties Capital Budget Category Project Name Patterns
@@ -173,8 +172,7 @@
 #'
 #' @format A data frame with 16 rows and 2 variables:
 #' \describe{
-#'   \item{`pattern`}{Pattern to detec in Project Name values}
-#'   \item{`MACo Label`}{Label for MACo category}
+#'   \item{pattern}{Pattern to detec in Project Name values}
+#'   \item{MACo Label}{Label for MACo category}
 #'}
-#' @details DETAILS
 "maco_category_patterns"
