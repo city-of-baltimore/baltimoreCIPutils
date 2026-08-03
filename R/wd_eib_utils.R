@@ -69,16 +69,8 @@ pull_dict_fields <- function(dict, sheet_name, usage = TRUE) {
   fields |>
     # Trim leading/trailing space
     stringr::str_trim() |>
-    # FIXME: Address the following error on check
-    #
-    # Portable packages must use only ASCII characters in their R code
-    # and
-    # NAMESPACE directives, except perhaps in comments. Use \uxxxx escapes for
-    # other characters. Function ‘tools::showNonASCIIfile’ can help in finding
-    # non-ASCII characters in files.
-
     # Remove zero-width space characters
-    stringr::str_remove_all("​") |>
+    stringr::str_remove_all("\\u200b") |>
     # Restor vector names (Column values)
     rlang::set_names(names(fields))
 }
