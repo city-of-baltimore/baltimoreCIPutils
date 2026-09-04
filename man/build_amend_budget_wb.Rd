@@ -16,6 +16,39 @@ build_amend_budget_wb(
   entry_sheet_name = "Amendment Entry Data"
 )
 }
+\arguments{
+\item{data}{A data frame with a "Project" column and an \code{amount_col} column
+(typically project budget data joined with Fund, Cost Center, Revenue
+Category, and Grant worktag columns).}
+
+\item{eib_dict}{EIB dictionary data frame with "Sheet", "Usage", "Fields",
+"Column", and "Default Value" columns used to look up field lists and
+default values for \code{amendment_sheet_name} and \code{entry_sheet_name}.}
+
+\item{eib_wb}{A \code{wbWorkbook}, typically created by loading the Budget
+Amendment EIB Excel template with \code{\link[openxlsx2:wb_load]{openxlsx2::wb_load()}}, to add the
+amendment and entry sheet data to.}
+
+\item{...}{Additional arguments. Currently unused.}
+
+\item{description}{Optional value used to fill the "Description*" column of
+the "Import Budget Amendment" sheet.}
+
+\item{memo}{Optional value used to fill the "Memo" column of the
+"Amendment Entry Data" sheet.}
+
+\item{amount_col}{Column name in \code{data} with amount values used to derive
+the "Budget Debit Amount" and "Budget Credit Amount" columns. Rows where
+this column is \code{NA} or \code{0} are dropped.}
+
+\item{amendment_sheet_name}{Sheet name to use for the "Import Budget
+Amendment" sheet in both \code{eib_dict} and \code{eib_wb}.}
+
+\item{entry_sheet_name}{Sheet name to use for the "Amendment Entry Data"
+sheet in both \code{eib_dict} and \code{eib_wb}.}
+}
 \description{
-Build an import budget amendment EIB
+\code{\link[=build_amend_budget_wb]{build_amend_budget_wb()}} builds the "Import Budget Amendment" and
+"Amendment Entry Data" sheets of a Budget Amendment EIB from project budget
+data, then adds them to \code{eib_wb}.
 }

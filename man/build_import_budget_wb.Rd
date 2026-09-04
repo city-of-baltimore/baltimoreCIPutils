@@ -2,7 +2,7 @@
 % Please edit documentation in R/wd_import_amendment.R
 \name{build_import_budget_wb}
 \alias{build_import_budget_wb}
-\title{Build a Put Budget Template EIB}
+\title{Build an import budget EIB}
 \usage{
 build_import_budget_wb(
   data,
@@ -16,6 +16,41 @@ build_import_budget_wb(
   lines_sheet_name = "Budget Lines Data"
 )
 }
+\arguments{
+\item{data}{A data frame with a "Project" column and an \code{amount_col}
+column (typically project budget data joined with Fund, Cost Center,
+Revenue Category, and Grant worktag columns). A "Budget Name*" column is
+created from "Budget Name" if missing, and similarly for "Fiscal Time
+Interval" and "Year" from "Fiscal Time Interval*" and "Fiscal Year*".}
+
+\item{eib_dict}{EIB dictionary data frame with "Sheet", "Usage", "Fields",
+"Column", and "Default Value" columns used to look up field lists and
+default values for \code{budget_sheet_name} and \code{lines_sheet_name}.}
+
+\item{eib_wb}{A \code{wbWorkbook}, typically created by loading the Import
+Budget EIB Excel template with \code{\link[openxlsx2:wb_load]{openxlsx2::wb_load()}}, to add the budget
+and lines sheet data to.}
+
+\item{memo}{Optional value used to fill the "Memo" column of the
+"Budget Lines Data" sheet.}
+
+\item{description}{Optional value used to fill the "Budget Memo" column of
+the "Import Budget High Volume" sheet.}
+
+\item{year}{Reserved for setting a fiscal year value. Currently unused.}
+
+\item{amount_col}{Column name in \code{data} with amount values used to derive
+the "Budget Debit Amount" and "Budget Credit Amount" columns. Rows where
+this column is \code{NA} or \code{0} are dropped.}
+
+\item{budget_sheet_name}{Sheet name to use for the "Import Budget High
+Volume" sheet in both \code{eib_dict} and \code{eib_wb}.}
+
+\item{lines_sheet_name}{Sheet name to use for the "Budget Lines Data"
+sheet in both \code{eib_dict} and \code{eib_wb}.}
+}
 \description{
-Build a Put Budget Template EIB
+\code{\link[=build_import_budget_wb]{build_import_budget_wb()}} builds the "Import Budget High Volume" and
+"Budget Lines Data" sheets of an Import Budget EIB from project budget
+data, then adds them to \code{eib_wb}.
 }

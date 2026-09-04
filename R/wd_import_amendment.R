@@ -312,6 +312,31 @@ build_amendment_entry_sheet <- function(
 
 #' Build an import budget amendment EIB
 #'
+#' [build_amend_budget_wb()] builds the "Import Budget Amendment" and
+#' "Amendment Entry Data" sheets of a Budget Amendment EIB from project budget
+#' data, then adds them to `eib_wb`.
+#'
+#' @param data A data frame with a "Project" column and an `amount_col` column
+#'   (typically project budget data joined with Fund, Cost Center, Revenue
+#'   Category, and Grant worktag columns).
+#' @param eib_dict EIB dictionary data frame with "Sheet", "Usage", "Fields",
+#'   "Column", and "Default Value" columns used to look up field lists and
+#'   default values for `amendment_sheet_name` and `entry_sheet_name`.
+#' @param eib_wb A `wbWorkbook`, typically created by loading the Budget
+#'   Amendment EIB Excel template with [openxlsx2::wb_load()], to add the
+#'   amendment and entry sheet data to.
+#' @param ... Additional arguments. Currently unused.
+#' @param description Optional value used to fill the "Description*" column of
+#'   the "Import Budget Amendment" sheet.
+#' @param memo Optional value used to fill the "Memo" column of the
+#'   "Amendment Entry Data" sheet.
+#' @param amount_col Column name in `data` with amount values used to derive
+#'   the "Budget Debit Amount" and "Budget Credit Amount" columns. Rows where
+#'   this column is `NA` or `0` are dropped.
+#' @param amendment_sheet_name Sheet name to use for the "Import Budget
+#'   Amendment" sheet in both `eib_dict` and `eib_wb`.
+#' @param entry_sheet_name Sheet name to use for the "Amendment Entry Data"
+#'   sheet in both `eib_dict` and `eib_wb`.
 #' @export
 build_amend_budget_wb <- function(
   data,
@@ -369,6 +394,21 @@ build_amend_budget_wb <- function(
 }
 
 #' Build a Put Budget Template EIB
+#'
+#' [build_put_budget_template_wb()] builds the "Budget Template" sheet of a
+#' Put Budget Template EIB from budget plan data, then adds it to `eib_wb`.
+#'
+#' @param data A data frame with a "Plan Name" column (or a "Budget Name"
+#'   column, used to create "Plan Name" if it is missing) identifying distinct
+#'   budget plans to include in the Put Budget Template.
+#' @param eib_dict EIB dictionary data frame with "Sheet", "Usage", "Fields",
+#'   "Column", and "Default Value" columns used to look up the field list and
+#'   default values for `sheet_name`.
+#' @param eib_wb A `wbWorkbook`, typically created by loading the Put Budget
+#'   Template EIB Excel template with [openxlsx2::wb_load()], to add the
+#'   budget template sheet data to.
+#' @param sheet_name Sheet name to use for the "Budget Template" sheet in both
+#'   `eib_dict` and `eib_wb`.
 #' @export
 build_put_budget_template_wb <- function(
   data,
@@ -413,7 +453,35 @@ build_put_budget_template_wb <- function(
   eib_wb_out
 }
 
-#' Build a Put Budget Template EIB
+#' Build an import budget EIB
+#'
+#' [build_import_budget_wb()] builds the "Import Budget High Volume" and
+#' "Budget Lines Data" sheets of an Import Budget EIB from project budget
+#' data, then adds them to `eib_wb`.
+#'
+#' @param data A data frame with a "Project" column and an `amount_col`
+#'   column (typically project budget data joined with Fund, Cost Center,
+#'   Revenue Category, and Grant worktag columns). A "Budget Name*" column is
+#'   created from "Budget Name" if missing, and similarly for "Fiscal Time
+#'   Interval" and "Year" from "Fiscal Time Interval*" and "Fiscal Year*".
+#' @param eib_dict EIB dictionary data frame with "Sheet", "Usage", "Fields",
+#'   "Column", and "Default Value" columns used to look up field lists and
+#'   default values for `budget_sheet_name` and `lines_sheet_name`.
+#' @param eib_wb A `wbWorkbook`, typically created by loading the Import
+#'   Budget EIB Excel template with [openxlsx2::wb_load()], to add the budget
+#'   and lines sheet data to.
+#' @param memo Optional value used to fill the "Memo" column of the
+#'   "Budget Lines Data" sheet.
+#' @param description Optional value used to fill the "Budget Memo" column of
+#'   the "Import Budget High Volume" sheet.
+#' @param year Reserved for setting a fiscal year value. Currently unused.
+#' @param amount_col Column name in `data` with amount values used to derive
+#'   the "Budget Debit Amount" and "Budget Credit Amount" columns. Rows where
+#'   this column is `NA` or `0` are dropped.
+#' @param budget_sheet_name Sheet name to use for the "Import Budget High
+#'   Volume" sheet in both `eib_dict` and `eib_wb`.
+#' @param lines_sheet_name Sheet name to use for the "Budget Lines Data"
+#'   sheet in both `eib_dict` and `eib_wb`.
 #' @export
 build_import_budget_wb <- function(
   data,

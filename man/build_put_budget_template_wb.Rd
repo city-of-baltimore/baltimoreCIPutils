@@ -11,6 +11,23 @@ build_put_budget_template_wb(
   sheet_name = "Budget Template"
 )
 }
+\arguments{
+\item{data}{A data frame with a "Plan Name" column (or a "Budget Name"
+column, used to create "Plan Name" if it is missing) identifying distinct
+budget plans to include in the Put Budget Template.}
+
+\item{eib_dict}{EIB dictionary data frame with "Sheet", "Usage", "Fields",
+"Column", and "Default Value" columns used to look up the field list and
+default values for \code{sheet_name}.}
+
+\item{eib_wb}{A \code{wbWorkbook}, typically created by loading the Put Budget
+Template EIB Excel template with \code{\link[openxlsx2:wb_load]{openxlsx2::wb_load()}}, to add the
+budget template sheet data to.}
+
+\item{sheet_name}{Sheet name to use for the "Budget Template" sheet in both
+\code{eib_dict} and \code{eib_wb}.}
+}
 \description{
-Build a Put Budget Template EIB
+\code{\link[=build_put_budget_template_wb]{build_put_budget_template_wb()}} builds the "Budget Template" sheet of a
+Put Budget Template EIB from budget plan data, then adds it to \code{eib_wb}.
 }

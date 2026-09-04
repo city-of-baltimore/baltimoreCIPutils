@@ -27,9 +27,16 @@ fmt_adapt_6yr_program(
 formatting. Passed to cols argument of \code{\link[=set_excel_fmt_class]{set_excel_fmt_class()}} if
 \code{accounting_fmt} is \code{TRUE}. Defaults to \code{\link[=curr_fy_span]{curr_fy_span()}}.}
 
+\item{drop_cols}{Columns to drop from input data frame. By default these
+are all duplicative of retained columns or fully empty.}
+
 \item{fund_cols, cost_center_cols}{Fund and Cost Center column name pairs.
 Must be provided with the code column first and the name column second. One
 but not both may be set to \code{NULL}.}
+
+\item{revenue_category_cols, grant_cols}{Revenue Category and Grant column
+name pairs. Must be provided with the code column first and the name
+column second. Passed to \code{\link[=fmt_wd_code_name]{fmt_wd_code_name()}}.}
 
 \item{phase_col}{Name of column with phase name.}
 
@@ -40,10 +47,6 @@ column.}
 
 \item{accounting_fmt}{If \code{TRUE} apply accounting formatting to columns
 specified by \code{timespan_cols}.}
-
-\item{project_code_col}{Column name with project reference ID.}
-
-\item{project_name_col}{Column name with project worktag including reference ID and name.}
 }
 \description{
 \code{\link[=fmt_adapt_6yr_program]{fmt_adapt_6yr_program()}} formats data from the Six-Year Sheet exported from

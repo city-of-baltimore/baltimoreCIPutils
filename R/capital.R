@@ -78,12 +78,15 @@ fmt_adapt_proj_details <- function(
 #' Adaptive Planning.
 #'
 #' @param data Data frame based on Six-Year CIP sheet from Adaptive Planning.
-#' @param project_code_col Column name with project reference ID.
-#' @param project_name_col Column name with project worktag including reference ID and name.
 #' @inheritParams fmt_wd_proj_worktags
 #' @param timespan_cols Time span columns to format using default "accounting"
 #'   formatting. Passed to cols argument of [set_excel_fmt_class()] if
 #'   `accounting_fmt` is `TRUE`. Defaults to [curr_fy_span()].
+#' @param drop_cols Columns to drop from input data frame. By default these
+#'   are all duplicative of retained columns or fully empty.
+#' @param revenue_category_cols,grant_cols Revenue Category and Grant column
+#'   name pairs. Must be provided with the code column first and the name
+#'   column second. Passed to [fmt_wd_code_name()].
 #' @param phase_col Name of column with phase name.
 #' @param phase_levels Ordered character vector of phases.
 #' @param na_phase_level Value to use as replacement for NA values in phase name

@@ -22,12 +22,18 @@ fmt_wd_proj_name(
 )
 }
 \arguments{
+\item{data}{A data frame from a Workday or Adaptive Planning report with
+columns matching the code/name column pairs named below.}
+
 \item{fund_cols, cost_center_cols}{Fund and Cost Center column name pairs.
 Must be provided with the code column first and the name column second. One
 but not both may be set to \code{NULL}.}
 
 \item{fund_pattern, cost_center_pattern}{Strings with patterns passed to
 \code{\link[stringr:str_extract]{stringr::str_extract()}} via \code{\link[=fmt_wd_code_name]{fmt_wd_code_name()}}.}
+
+\item{project_code_col, project_name_col}{Project Code and Project Name
+column names.}
 }
 \description{
 Format Capital data from Adaptive Planning by dropping select columns and

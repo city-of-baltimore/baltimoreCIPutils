@@ -47,6 +47,8 @@ NULL
 #' [fmt_wd_proj_worktags()] drops duplicative columns then formats the Fund
 #' and Cost Center columns.
 #'
+#' @param data A data frame from a Workday or Adaptive Planning report with
+#'   columns matching the code/name column pairs named below.
 #' @param fund_cols,cost_center_cols Fund and Cost Center column name pairs.
 #'   Must be provided with the code column first and the name column second. One
 #'   but not both may be set to `NULL`.
@@ -102,6 +104,8 @@ fmt_wd_proj_worktags <- function(
 #' strips the Project Code from the Project Name, removes any leading or
 #' trailing CIP numbers, and removes the six-digit legacy Capital account
 #' number.
+#' @param project_code_col,project_name_col Project Code and Project Name
+#'   column names.
 #' @rdname fmt_wd_proj
 #' @export
 #' @importFrom dplyr filter mutate
