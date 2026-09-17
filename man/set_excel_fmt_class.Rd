@@ -5,7 +5,13 @@
 \title{Prepare a data frame with Excel style class values for formatting by
 openxlsx2}
 \usage{
-set_excel_fmt_class(data, cols, fmt_class = "currency", multiple = TRUE)
+set_excel_fmt_class(
+  data,
+  cols,
+  fmt_class = "currency",
+  multiple = TRUE,
+  call = caller_env()
+)
 }
 \arguments{
 \item{data}{Input data frame with columns named in \code{cols}.}
@@ -17,6 +23,8 @@ set_excel_fmt_class(data, cols, fmt_class = "currency", multiple = TRUE)
 \url{https://janmarvin.github.io/openxlsx2/articles/openxlsx2_style_manual.html#numfmts2}}
 
 \item{multiple}{Whether \code{arg} may contain zero or several values.}
+
+\item{call}{Passed to \code{\link[rlang:arg_match]{rlang::arg_match()}} for error attribution.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}

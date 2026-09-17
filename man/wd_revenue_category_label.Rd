@@ -7,7 +7,8 @@
 wd_revenue_category_label(
   data,
   by = "Revenue Category Code",
-  cols = c("Revenue Category Label", "Revenue Category Label Short")
+  cols = c("Revenue Category Label", "Revenue Category Label Short"),
+  call = caller_env()
 )
 }
 \arguments{
@@ -19,6 +20,9 @@ wd_revenue_category_label(
 \item{cols}{Additional columns to keep from
 \code{baltimoreCIPutils::wd_revenue_category_xwalk} (together with column
 specified in \code{by}).}
+
+\item{call}{Passed to \code{check_character()} and \code{check_new_col_names()} for
+error attribution.}
 }
 \description{
 \code{\link[=wd_revenue_category_label]{wd_revenue_category_label()}} uses the prepared crosswalk

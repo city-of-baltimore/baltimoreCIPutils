@@ -12,7 +12,8 @@ reduce_wb_data_fields(
   ...,
   start_row = 6,
   na = "",
-  col_names = FALSE
+  col_names = FALSE,
+  call = caller_env()
 )
 }
 \arguments{
@@ -35,6 +36,9 @@ looks if \code{options("openxlsx2.na")} is set. Otherwise \code{\link[openxlsx2:
 uses the special \verb{#N/A} value within the workbook.}
 
 \item{col_names}{If \code{TRUE}, column names of \code{x} are written.}
+
+\item{call}{Passed to \code{check_has_name()} and \code{check_inherits_all()} for
+error attribution.}
 }
 \value{
 A \code{wbWorkbook}

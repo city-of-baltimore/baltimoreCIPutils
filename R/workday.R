@@ -10,6 +10,7 @@
 #' @param code_pattern Passed to pattern argument for [stringr::str_extract()].
 #' @param new_code_col,new_name_col New name for code and name columns (default
 #'   to same as existing code and name columns).
+#' @param call Passed to `check_has_name()` for error attribution.
 #' @keywords internal
 #' @export
 #' @importFrom dplyr mutate
@@ -20,8 +21,11 @@ fmt_wd_code_name <- function(
   name_col,
   code_pattern = NULL,
   new_code_col = code_col,
-  new_name_col = name_col
+  new_name_col = name_col,
+  call = caller_env()
 ) {
+  check_has_name(data, c(code_col, name_col), call = call)
+
   data |>
     dplyr::mutate(
       # Coerce code and name columns to character vectors (only required if
@@ -54,6 +58,8 @@ NULL
 #'   but not both may be set to `NULL`.
 #' @param fund_pattern,cost_center_pattern Strings with patterns passed to
 #'   [stringr::str_extract()] via [fmt_wd_code_name()].
+#' @param call Passed to `check_character()` and `check_has_name()` for error
+#'   attribution.
 #' @rdname fmt_wd_proj
 #' @export
 fmt_wd_proj_worktags <- function(
@@ -67,21 +73,21 @@ fmt_wd_proj_worktags <- function(
     "Cost Center Code",
     "Cost Center Name"
   ),
-  cost_center_pattern = baltimoreCIPutils::cap_patterns[["cost_center"]]
+  cost_center_pattern = baltimoreCIPutils::cap_patterns[["cost_center"]],
+  call = caller_env()
 ) {
-  stopifnot(
-    # fund_cols or cost_center_cols must be supplied
-    is.character(c(fund_cols, cost_center_cols)),
-    # data must have supplied names
-    all(has_name(data, c(fund_cols, cost_center_cols)))
-  )
+  # fund_cols or cost_center_cols must be supplied
+  check_character(c(fund_cols, cost_center_cols), call = call)
+  # data must have supplied names
+  check_has_name(data, c(fund_cols, cost_center_cols), call = call)
 
   if (!is.null(fund_cols)) {
     data <- data |>
       fmt_wd_code_name(
         fund_cols[[1]],
         fund_cols[[2]],
-        code_pattern = fund_pattern
+        code_pattern = fund_pattern,
+        call = call
       )
   }
 
@@ -90,10 +96,12 @@ fmt_wd_proj_worktags <- function(
       fmt_wd_code_name(
         cost_center_cols[[1]],
         cost_center_cols[[2]],
-        code_pattern = cost_center_pattern
+        code_pattern = cost_center_pattern,
+        call = call
       ) |>
       wd_proj_join_cost_center_labels(
-        cost_center_col = cost_center_cols[[1]]
+        cost_center_col = cost_center_cols[[1]],
+        call = call
       )
   }
 
@@ -106,6 +114,8 @@ fmt_wd_proj_worktags <- function(
 #' number.
 #' @param project_code_col,project_name_col Project Code and Project Name
 #'   column names.
+#' @param call Passed to `check_has_name()` and `check_new_col_names()` for
+#'   error attribution.
 #' @rdname fmt_wd_proj
 #' @export
 #' @importFrom dplyr filter mutate
@@ -113,9 +123,13 @@ fmt_wd_proj_worktags <- function(
 fmt_wd_proj_name <- function(
   data,
   project_code_col = "Project Code",
-  project_name_col = "Project Name"
+  project_name_col = "Project Name",
+  call = caller_env()
 ) {
   new_project_name_col <- paste0(project_name_col, " Short")
+
+  check_has_name(data, c(project_code_col, project_name_col), call = call)
+  check_new_col_names(data, new_project_name_col, call = call)
 
   data |>
     dplyr::filter(!is.na(.data[[project_code_col]])) |>
@@ -123,7 +137,8 @@ fmt_wd_proj_name <- function(
       project_code_col,
       project_name_col,
       code_pattern = "^PRJ[:digit:]+",
-      new_name_col = new_project_name_col
+      new_name_col = new_project_name_col,
+      call = call
     ) |>
     dplyr::mutate(
       # Strip leading legacy account number

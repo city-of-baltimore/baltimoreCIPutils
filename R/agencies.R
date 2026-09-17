@@ -18,10 +18,8 @@ join_cap_agency_labels <- function(
   ...,
   combine_dgs_agencies = TRUE
 ) {
-  stopifnot(
-    rlang::has_name(data, c("AgencyID", "CostCenterID")),
-    !any(rlang::has_name(data, c("AgencyName", "AgencyLabel", "AgencyWorktag")))
-  )
+  check_has_name(data, c("AgencyID", "CostCenterID"))
+  check_new_col_names(data, c("AgencyName", "AgencyLabel", "AgencyWorktag"))
 
   # fmt:skip
   cap_agencies <- tibble::tribble(

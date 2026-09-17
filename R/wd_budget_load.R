@@ -46,8 +46,7 @@ read_proj_plans <- function(file, ..., start_row = 7) {
 #' @param .data Input data frame created by `read_proj_plans()`.
 #' @export
 fmt_proj_plans <- function(.data) {
-  check_installed("chk")
-  chk::check_names(
+  check_has_name(
     .data,
     c("Project ID", "Plan", "Plan Date From", "Plan Status")
   )

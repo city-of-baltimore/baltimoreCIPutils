@@ -12,6 +12,9 @@ fmt_wd_proj_dates <- function(
   start_date_col = "Project Start Date",
   end_date_col = "Project End Date"
 ) {
+  check_has_name(data, c(start_date_col, end_date_col))
+  check_new_col_names(data, c("Project Start FY", "Project End FY"))
+
   data |>
     dplyr::mutate(
       `Project Start FY` = fiscal_year(.data[[start_date_col]]),

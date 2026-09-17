@@ -11,6 +11,7 @@
 #' @inheritDotParams lubridate::as_date
 #' @returns An integer (if type = "year"), character, or date (if type is
 #'   "date_first" or "date_last").
+#' @param call Passed to [rlang::arg_match()] for error attribution.
 #' @examples
 #' fiscal_year("2021-01-01")
 #'
@@ -35,9 +36,10 @@ fiscal_year <- function(
     "date_last"
   ),
   before = "FY",
-  ...
+  ...,
+  call = caller_env()
 ) {
-  type <- rlang::arg_match(type)
+  type <- rlang::arg_match(type, error_call = call)
 
   if (!all(inherits(x, "Date"))) {
     x <- lubridate::as_date(x, ...)

@@ -3,8 +3,7 @@
 #' @param data Input data frame with Fund ID, Cost Center ID, and Grant ID columns.
 #' @noRd
 fmt_submit_project_worktags_data <- function(.data) {
-  check_installed("chk")
-  chk::check_names(
+  check_has_name(
     .data,
     c(
       "Fund ID",
@@ -88,9 +87,7 @@ build_submit_project_wb <- function(
   proj_group_ids,
   eib_wb = NULL
 ) {
-  check_data_frame(eib_dict)
-  check_installed("chk")
-  chk::check_names(
+  check_data_cols(
     eib_dict,
     c(
       "Source Type",
@@ -134,11 +131,7 @@ build_submit_project_wb <- function(
   #   )
 
   # Check type and names for proj_app_info
-  rlang::check_data_frame(proj_app_info)
-  chk::check_names(
-    proj_app_info,
-    proj_app_cols
-  )
+  check_data_cols(proj_app_info, proj_app_cols)
 
   proj_app_info <- proj_app_info |>
     dplyr::mutate(
@@ -178,8 +171,7 @@ build_submit_project_wb <- function(
       )
     )
 
-  rlang::check_data_frame(proj_list)
-  chk::check_names(
+  check_data_cols(
     proj_list,
     c(
       "Project ID",
@@ -199,8 +191,7 @@ build_submit_project_wb <- function(
       by = "Project ID"
     )
 
-  check_data_frame(proj_resource_plan_ids)
-  chk::check_names(
+  check_data_cols(
     proj_resource_plan_ids,
     c(
       "Business Object Instance",
@@ -208,8 +199,7 @@ build_submit_project_wb <- function(
     )
   )
 
-  check_data_frame(proj_group_ids)
-  chk::check_names(
+  check_data_cols(
     proj_group_ids,
     c(
       "Business Object Instance",
@@ -217,8 +207,7 @@ build_submit_project_wb <- function(
     )
   )
 
-  check_data_frame(proj_hierarchy_ids)
-  chk::check_names(
+  check_data_cols(
     proj_hierarchy_ids,
     c(
       "Business Object Instance",

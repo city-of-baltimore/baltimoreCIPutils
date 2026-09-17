@@ -37,12 +37,12 @@ cbind_defaults <- function(
 #' @param usage If `TRUE`, exclude rows from `dict` data frame with `NA` values
 #' by filtering a column named "Usage". Typically, the "Usage" column should be
 #' "Y" or blank.
+#' @param call Passed to [cli::cli_abort()] for error attribution.
 #' @rdname wd_eib_utils
 #' @export
-pull_dict_fields <- function(dict, sheet_name, usage = TRUE) {
-  check_installed("chk")
-  chk::check_names(dict, c("Sheet", "Usage", "Fields", "Column"))
-  chk::chk_string(sheet_name)
+pull_dict_fields <- function(dict, sheet_name, usage = TRUE, call = caller_env()) {
+  check_has_name(dict, c("Sheet", "Usage", "Fields", "Column"), call = call)
+  check_string(sheet_name, call = call)
 
   if (isTRUE(usage)) {
     dict <- dict |>
@@ -62,7 +62,8 @@ pull_dict_fields <- function(dict, sheet_name, usage = TRUE) {
       c(
         "{.arg dict} is not specifying any fields.",
         "i" = 'Check the "Usage" column of your `xlsx` dictionary file.'
-      )
+      ),
+      call = call
     )
   }
 
@@ -76,12 +77,14 @@ pull_dict_fields <- function(dict, sheet_name, usage = TRUE) {
 }
 
 #' Helper to get default values as data frame from dictionary data frame
+#' @param call Passed to `check_has_name()` and `check_string()` for error
+#'   attribution.
 #' @rdname wd_eib_utils
 #' @export
-get_dict_defaults <- function(dict, sheet_name) {
-  check_installed(c("tidyr", "chk"))
-  chk::check_names(dict, c("Sheet", "Default Value", "Fields"))
-  chk::chk_string(sheet_name)
+get_dict_defaults <- function(dict, sheet_name, call = caller_env()) {
+  check_installed("tidyr")
+  check_has_name(dict, c("Sheet", "Default Value", "Fields"), call = call)
+  check_string(sheet_name, call = call)
 
   dict |>
     dplyr::filter(
@@ -107,6 +110,8 @@ get_dict_defaults <- function(dict, sheet_name) {
 #' @param .init A `wbWorkbook` to add data to.
 #' @param ... Additional arguments passed to [openxlsx2::wb_add_data()].
 #' @inheritParams openxlsx2::wb_add_data
+#' @param call Passed to `check_has_name()` and `check_inherits_all()` for
+#'   error attribution.
 #' @returns A `wbWorkbook`
 #' @export
 reduce_wb_data_fields <- function(
@@ -117,12 +122,14 @@ reduce_wb_data_fields <- function(
   ...,
   start_row = 6,
   na = "",
-  col_names = FALSE
+  col_names = FALSE,
+  call = caller_env()
 ) {
-  check_installed("chk")
-  chk::chk_named(fields)
-  chk::check_names(data, fields)
-  chk::chk_s3_class(.init, "wbWorkbook")
+  if (!rlang::is_named(fields)) {
+    cli_abort("{.arg fields} must be named.", call = call)
+  }
+  check_has_name(data, fields, call = call)
+  check_inherits_all(.init, "wbWorkbook", call = call)
   # TODO: Check that sheet is avilalbe for .init workbook
 
   purrr::reduce(

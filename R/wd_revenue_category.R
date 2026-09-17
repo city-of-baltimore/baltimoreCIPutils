@@ -10,6 +10,8 @@
 #' @param cols Additional columns to keep from
 #'   `baltimoreCIPutils::wd_revenue_category_xwalk` (together with column
 #'   specified in `by`).
+#' @param call Passed to `check_character()` and `check_new_col_names()` for
+#'   error attribution.
 #' @export
 wd_revenue_category_label <- function(
   data,
@@ -17,12 +19,12 @@ wd_revenue_category_label <- function(
   cols = c(
     "Revenue Category Label",
     "Revenue Category Label Short"
-  )
+  ),
+  call = caller_env()
 ) {
-  stopifnot(
-    is.character(cols),
-    is.character(by)
-  )
+  check_character(cols, call = call)
+  check_character(by, call = call)
+  check_new_col_names(data, cols, call = call)
 
   wd_revenue_category_rs <- baltimoreCIPutils::wd_revenue_category_xwalk |>
     dplyr::select(

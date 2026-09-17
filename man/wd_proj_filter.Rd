@@ -4,7 +4,7 @@
 \alias{wd_proj_filter}
 \title{Filter Workday Projects by Cost Center or Hierarchy}
 \usage{
-wd_proj_filter(data, cost_center = NULL, hierarchy = NULL)
+wd_proj_filter(data, cost_center = NULL, hierarchy = NULL, call = caller_env())
 }
 \arguments{
 \item{data}{A data frame to filter. Expected to have columns named
@@ -13,6 +13,8 @@ wd_proj_filter(data, cost_center = NULL, hierarchy = NULL)
 
 \item{hierarchy, cost_center}{Optional, PHierarchy1 Code. PHierarchy2 Code, or
 Cost Center Code values to filter by. Default: \code{NULL}}
+
+\item{call}{Passed to \code{check_character()} for error attribution.}
 }
 \description{
 \code{\link[=wd_proj_filter]{wd_proj_filter()}} is a convenience function for filtering project data by

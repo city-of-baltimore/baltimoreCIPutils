@@ -38,6 +38,8 @@ fmt_adapt_proj_details <- function(
     "PProjectOwner Code"
   )
 ) {
+  check_has_name(data, c(date_cols, "Year of Impact", "Related Plan"))
+
   data |>
     dplyr::select(
       !any_of(drop_cols)
@@ -136,6 +138,18 @@ fmt_adapt_6yr_program <- function(
   na_phase_level = "Unspecified",
   accounting_fmt = FALSE
 ) {
+  check_has_name(
+    data,
+    c(
+      fund_cols,
+      cost_center_cols,
+      revenue_category_cols,
+      grant_cols,
+      "RAccount Code",
+      "RAccount Name"
+    )
+  )
+
   # timespan <- timespan %||% seq(current_year, current_year + 5)
   # out_years <- setdiff(timespan, current_year)
 
@@ -202,8 +216,9 @@ fmt_adapt_6yr_program <- function(
 #' @param data Input data frame from Adaptive Project Project Details sheet
 #' with columns: "PHierarchy1 Code", "PHierarchy1 Name", "PHierarchy2 Code", and
 #'  "PHierarchy2 Name".
+#' @param call Passed to `check_has_name()` for error attribution.
 #' @keywords enrichment
-fmt_wd_proj_hierarchy <- function(data) {
+fmt_wd_proj_hierarchy <- function(data, call = caller_env()) {
   phierarhcy1_cols <- c(
     "PHierarchy1 Code",
     "PHierarchy1 Name"
@@ -214,22 +229,22 @@ fmt_wd_proj_hierarchy <- function(data) {
     "PHierarchy2 Name"
   )
 
-  stopifnot(
-    all(has_name(data, c(phierarhcy1_cols, phierarhcy2_cols)))
-  )
+  check_has_name(data, c(phierarhcy1_cols, phierarhcy2_cols), call = call)
 
   data |>
     fmt_wd_code_name(
       phierarhcy1_cols[[1]],
       phierarhcy1_cols[[2]],
-      code_pattern = "^PJH[:digit:]+"
+      code_pattern = "^PJH[:digit:]+",
+      call = call
     ) |>
     fmt_wd_code_name(
       phierarhcy2_cols[[1]],
       phierarhcy2_cols[[2]],
-      code_pattern = "^(PJH|CIP|PJHCIP)[:digit:]+"
+      code_pattern = "^(PJH|CIP|PJHCIP)[:digit:]+",
+      call = call
     ) |>
-    wd_proj_join_hierarchy_labels()
+    wd_proj_join_hierarchy_labels(call = call)
 }
 
 
@@ -246,20 +261,21 @@ fmt_wd_proj_hierarchy <- function(data) {
 #'   `hierarchy2_col` arguments.
 #' @param hierarchy1_col,hierarchy2_col Column names to join values from
 #'   `baltimoreCIPutils::wd_proj_hierarchy_xwalk`
+#' @param call Passed to `check_has_name()` and `check_new_col_names()` for
+#'   error attribution.
 #' @returns A data frame with added columns "PHierarchy1 Label" and "PHierarchy2
 #'   Label"
 #' @export
 wd_proj_join_hierarchy_labels <- function(
   data,
   hierarchy1_col = "PHierarchy1 Code",
-  hierarchy2_col = "PHierarchy2 Code"
+  hierarchy2_col = "PHierarchy2 Code",
+  call = caller_env()
 ) {
-  stopifnot(
-    has_name(data, hierarchy1_col) || is.null(hierarchy1_col),
-    has_name(data, hierarchy2_col) || is.null(hierarchy2_col)
-  )
-
   if (!is.null(hierarchy1_col)) {
+    check_has_name(data, hierarchy1_col, call = call)
+    check_new_col_names(data, "PHierarchy1 Label", call = call)
+
     hierarchy_1_xwalk <- baltimoreCIPutils::wd_proj_hierarchy_xwalk |>
       dplyr::filter(!is.na(.data[["PHierarchy1 Code"]])) |>
       dplyr::select(
@@ -276,6 +292,9 @@ wd_proj_join_hierarchy_labels <- function(
   }
 
   if (!is.null(hierarchy2_col)) {
+    check_has_name(data, hierarchy2_col, call = call)
+    check_new_col_names(data, "PHierarchy2 Label", call = call)
+
     hierarchy_2_xwalk <- baltimoreCIPutils::wd_proj_hierarchy_xwalk |>
       dplyr::filter(!is.na(.data[["PHierarchy2 Code"]])) |>
       dplyr::select(
@@ -305,8 +324,12 @@ wd_proj_join_hierarchy_labels <- function(
 #' @export
 wd_proj_join_cost_center_labels <- function(
   data,
-  cost_center_col = "Cost Center Code"
+  cost_center_col = "Cost Center Code",
+  call = caller_env()
 ) {
+  check_has_name(data, cost_center_col, call = call)
+  check_new_col_names(data, "Cost Center Agency Label", call = call)
+
   cost_center_xwalk <- baltimoreCIPutils::wd_proj_hierarchy_xwalk |>
     dplyr::filter(!is.na(.data[["Cost Center Code"]])) |>
     dplyr::select(

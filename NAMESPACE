@@ -15,6 +15,8 @@ export(fmt_adapt_proj_details)
 export(fmt_fct_recode)
 export(fmt_fy_span_currency)
 export(fmt_proj_plans)
+export(fmt_report_data)
+export(fmt_report_program_data)
 export(fmt_request_items)
 export(fmt_request_worktags)
 export(fmt_wd_code_name)
@@ -63,50 +65,63 @@ export(wd_read_report)
 export(wd_revenue_category_label)
 export(wd_revenue_category_update)
 import(rlang)
-importFrom(cli,cli_alert_warning)
-importFrom(cli,cli_inform)
-importFrom(dplyr,add_count)
-importFrom(dplyr,arrange)
-importFrom(dplyr,bind_rows)
-importFrom(dplyr,case_match)
-importFrom(dplyr,case_when)
-importFrom(dplyr,cumany)
-importFrom(dplyr,desc)
-importFrom(dplyr,filter)
-importFrom(dplyr,if_else)
-importFrom(dplyr,left_join)
-importFrom(dplyr,mutate)
-importFrom(dplyr,pick)
-importFrom(dplyr,select)
+importFrom(cli,
+  cli_abort,
+  cli_alert_warning,
+  cli_inform
+)
+importFrom(dplyr,
+  add_count,
+  arrange,
+  bind_rows,
+  case_match,
+  case_when,
+  cumany,
+  desc,
+  filter,
+  if_else,
+  left_join,
+  mutate,
+  pick,
+  select
+)
 importFrom(epoxy,epoxy)
-importFrom(fs,file_info)
-importFrom(fs,path_file)
+importFrom(fs,
+  file_info,
+  path_file
+)
 importFrom(lifecycle,deprecated)
-importFrom(openxlsx2,create_cell_style)
-importFrom(openxlsx2,current_sheet)
-importFrom(openxlsx2,read_xlsx)
-importFrom(openxlsx2,wb_add_data_table)
-importFrom(openxlsx2,wb_add_data_validation)
-importFrom(openxlsx2,wb_add_worksheet)
-importFrom(openxlsx2,wb_color)
-importFrom(openxlsx2,wb_data)
-importFrom(openxlsx2,wb_dims)
-importFrom(openxlsx2,wb_freeze_pane)
-importFrom(openxlsx2,wb_get_sheet_names)
-importFrom(openxlsx2,wb_load)
-importFrom(openxlsx2,wb_protect_worksheet)
-importFrom(openxlsx2,wb_set_active_sheet)
-importFrom(openxlsx2,wb_set_cell_style)
-importFrom(openxlsx2,wb_set_col_widths)
-importFrom(openxlsx2,wb_to_df)
-importFrom(openxlsx2,wb_workbook)
-importFrom(stringr,str_detect)
-importFrom(stringr,str_extract)
-importFrom(stringr,str_extract_all)
-importFrom(stringr,str_remove)
-importFrom(stringr,str_sub)
-importFrom(stringr,str_trim)
-importFrom(tidyselect,all_of)
-importFrom(tidyselect,any_of)
-importFrom(tidyselect,starts_with)
+importFrom(openxlsx2,
+  create_cell_style,
+  current_sheet,
+  read_xlsx,
+  wb_add_data_table,
+  wb_add_data_validation,
+  wb_add_worksheet,
+  wb_color,
+  wb_data,
+  wb_dims,
+  wb_freeze_pane,
+  wb_get_sheet_names,
+  wb_load,
+  wb_protect_worksheet,
+  wb_set_active_sheet,
+  wb_set_cell_style,
+  wb_set_col_widths,
+  wb_to_df,
+  wb_workbook
+)
+importFrom(stringr,
+  str_detect,
+  str_extract,
+  str_extract_all,
+  str_remove,
+  str_sub,
+  str_trim
+)
+importFrom(tidyselect,
+  all_of,
+  any_of,
+  starts_with
+)
 importFrom(vctrs,vec_as_names)

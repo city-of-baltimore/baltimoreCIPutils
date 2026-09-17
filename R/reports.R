@@ -76,6 +76,7 @@ add_group_key <- function(data, key_cols, key_name = ".group_key") {
 #'   `Phase` and the `Year1`..`Year6` amounts.
 #' @returns `program_data` with parent rows of split budget requests removed.
 #' @seealso [add_group_key()]
+#' @param call Passed to [cli::cli_abort()] for error attribution.
 #' @keywords internal
 remove_split_parent_rows <- function(
   program_data,
@@ -91,7 +92,8 @@ remove_split_parent_rows <- function(
     "FiscalYear",
     "ProgramVersion",
     "AgencyID"
-  )
+  ),
+  call = caller_env()
 ) {
   program_data <- program_data |>
     add_group_key(key_cols)
@@ -105,10 +107,13 @@ remove_split_parent_rows <- function(
     dplyr::filter(n_parent > 1, n_child > 0)
 
   if (nrow(ambiguous) > 0) {
-    cli::cli_abort(c(
-      "Found {nrow(ambiguous)} split group{?s} with more than one non-child row.",
-      "i" = "Can't tell which non-child row is the true parent to drop -- resolve the duplicate(s) upstream."
-    ))
+    cli::cli_abort(
+      c(
+        "Found {nrow(ambiguous)} split group{?s} with more than one non-child row.",
+        "i" = "Can't tell which non-child row is the true parent to drop -- resolve the duplicate(s) upstream."
+      ),
+      call = call
+    )
   }
 
   program_data |>
@@ -140,6 +145,38 @@ fmt_report_program_data <- function(
   program_data,
   project_data
 ) {
+  check_data_cols(
+    program_data,
+    c(
+      "ProjectID",
+      "SplitChildRow",
+      "CostCenterID",
+      "FundID",
+      "GrantID",
+      "RevenueCategoryID",
+      "Account",
+      "RequestType",
+      "FiscalYear",
+      "ProgramVersion",
+      "AgencyID",
+      "AgencyName",
+      "Project",
+      "Fund",
+      "CostCenter",
+      "Grant",
+      "RevenueCategory",
+      "Phase",
+      "Year1",
+      "Year2",
+      "Year3",
+      "Year4",
+      "Year5",
+      "Year6"
+    )
+  )
+
+  check_data_cols(project_data, c("ProjectID", "ProjectName"))
+
   program_data <- program_data |>
     # Join ProjectName from project_data
     dplyr::left_join(
@@ -300,8 +337,11 @@ clean_project_location_name <- function(project_data) {
 #' @param program_data Program data with `ProjectID` and `RequestType`
 #'   columns, used to classify each project's current-year request type.
 #' @returns `project_data` with an added `ReportStatus` column.
+#' @param call Passed to `check_new_col_names()` for error attribution.
 #' @keywords internal
-add_report_status <- function(project_data, program_data) {
+add_report_status <- function(project_data, program_data, call = caller_env()) {
+  check_new_col_names(project_data, "ReportStatus", call = call)
+
   curr_yr_program <- program_data |>
     dplyr::filter(
       RequestType %in% c("Base Budget", "Special Project")
@@ -386,8 +426,11 @@ fmt_currency_columns <- function(
 #'   `OperatingBudgetImpactAmount` column.
 #' @returns `project_data` with an added `OperatingBudgetImpactDesc` column.
 #' @seealso [fmt_currency_columns()]
+#' @param call Passed to `check_new_col_names()` for error attribution.
 #' @keywords internal
-add_operating_budget_impact_desc <- function(project_data) {
+add_operating_budget_impact_desc <- function(project_data, call = caller_env()) {
+  check_new_col_names(project_data, "OperatingBudgetImpactDesc", call = call)
+
   project_data |>
     dplyr::mutate(
       OperatingBudgetImpactDesc = dplyr::case_when(
@@ -419,17 +462,26 @@ add_operating_budget_impact_desc <- function(project_data) {
 #'   [fmt_active_estimate_data()]'s `active_submission_status` argument.
 #' @returns `project_data` joined with `DesignCost`, `ConstructionCost`, and
 #'   `OtherCost` for each project.
+#' @param call Passed to `check_new_col_names()` for error attribution.
 #' @keywords internal
 join_estimate_costs <- function(
   project_data,
   estimate_data,
-  active_submission_status = c("Submitted", "Draft")
+  active_submission_status = c("Submitted", "Draft"),
+  call = caller_env()
 ) {
+  check_new_col_names(
+    project_data,
+    c("DesignCost", "ConstructionCost", "OtherCost"),
+    call = call
+  )
+
   project_data |>
     dplyr::left_join(
       estimate_data |>
         fmt_active_estimate_data(
-          active_submission_status = active_submission_status
+          active_submission_status = active_submission_status,
+          call = call
         ) |>
         dplyr::select(
           ProjectID,
@@ -476,6 +528,41 @@ fmt_report_data <- function(
   output_format = "latex",
   active_submission_status = c("Submitted", "Draft")
 ) {
+  check_data_cols(
+    project_data,
+    c(
+      "ProjectID",
+      "ProjectProgramType",
+      "ProjectProgramPurpose",
+      "ProjectCategory",
+      "LocationName",
+      "OperatingBudgetImpact",
+      "OperatingBudgetImpactAmount",
+      "OperatingBudgetImpactYear",
+      "TargetProgramFundingLevel"
+    )
+  )
+
+  check_data_cols(
+    program_data,
+    c("ProjectID", "RequestType", "SplitChildRow", paste0("Year", 1:6))
+  )
+
+  check_data_cols(
+    estimate_data,
+    c(
+      "ProjectID",
+      "SubmissionStatus",
+      "PlanningCost",
+      "DesignCost",
+      "ConstructionCost",
+      "ContingencyCost",
+      "ManagementCost"
+    )
+  )
+
+  check_new_col_names(project_data, c("Year1ProgramAmount", "TotalProgramAmount"))
+
   project_data |>
     # Join Year1ProgramAmount and TotalProgramAmount columns
     # Assumes that program_data is only a single version
@@ -532,11 +619,13 @@ fmt_report_data <- function(
 #' @returns `estimate_data` filtered to active (non-archived, non-new)
 #'   estimates, with a `TotalCost` column added, subset to the first `n`
 #'   estimates per `ProjectID`.
+#' @param call Passed to [rlang::arg_match()] for error attribution.
 #' @keywords internal
 fmt_active_estimate_data <- function(
   estimate_data,
   n = 1,
-  active_submission_status = c("Submitted", "Draft")
+  active_submission_status = c("Submitted", "Draft"),
+  call = caller_env()
 ) {
   # Check exclude_status input against submission_levels
   submission_levels <- c("Submitted", "Draft", "New", "Archived")
@@ -544,7 +633,8 @@ fmt_active_estimate_data <- function(
   active_submission_status <- rlang::arg_match(
     active_submission_status,
     submission_levels,
-    multiple = TRUE
+    multiple = TRUE,
+    error_call = call
   )
 
   active_estimate_data <- estimate_data |>
@@ -617,19 +707,6 @@ sum_6yr_program_totals <- function(
   start_year_sum_col = "Budget Request Amount",
   total_sum_col = "Total Request Amount"
 ) {
-  stopifnot(
-    all(
-      rlang::has_name(
-        program_data,
-        c(
-          "ProjectID",
-          "SplitChildRow",
-          start_year_col,
-          outer_year_cols
-        )
-      )
-    )
-  )
   program_data |>
     # SplitChildRow values must be removed
     dplyr::filter(

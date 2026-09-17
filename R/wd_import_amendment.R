@@ -7,7 +7,8 @@ fmt_budget_revenue_entries <- function(
   default_col = "Budget Credit Amount",
   amount_col = "Amount",
   debit_flag_value = NULL,
-  debit_flag_col = NULL
+  debit_flag_col = NULL,
+  call = caller_env()
 ) {
   data <- data |>
     dplyr::filter(
@@ -51,7 +52,8 @@ fmt_budget_revenue_entries <- function(
     col_values <- c("Budget Debit Amount", "Budget Credit Amount")
     default_col <- rlang::arg_match(
       default_col,
-      col_values
+      col_values,
+      error_call = call
     )
 
     non_default_col <- col_values[default_col != col_values]

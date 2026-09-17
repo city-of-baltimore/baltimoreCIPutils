@@ -11,7 +11,8 @@ fmt_wd_code_name(
   name_col,
   code_pattern = NULL,
   new_code_col = code_col,
-  new_name_col = name_col
+  new_name_col = name_col,
+  call = caller_env()
 )
 }
 \arguments{
@@ -21,6 +22,8 @@ fmt_wd_code_name(
 
 \item{new_code_col, new_name_col}{New name for code and name columns (default
 to same as existing code and name columns).}
+
+\item{call}{Passed to \code{check_has_name()} for error attribution.}
 }
 \description{
 \code{\link[=fmt_wd_code_name]{fmt_wd_code_name()}} is a helper for handling a common pattern where the code

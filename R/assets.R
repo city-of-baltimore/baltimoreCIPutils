@@ -19,6 +19,9 @@ wd_proj_join_asset_id <- function(
   .key = asset_id_col,
   multiple = "nested"
 ) {
+  check_has_name(data, project_code_col)
+  check_new_col_names(data, asset_id_col)
+
   asset_xwalk_cols <- set_names(
     c("Project Code", asset_id_col),
     c(project_code_col, asset_id_col)

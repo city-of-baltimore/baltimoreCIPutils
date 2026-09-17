@@ -12,13 +12,15 @@ fmt_wd_proj_worktags(
   fund_cols = c("FGSFund Code", "FGSFund Name"),
   fund_pattern = "^[:digit:]+",
   cost_center_cols = c("Cost Center Code", "Cost Center Name"),
-  cost_center_pattern = baltimoreCIPutils::cap_patterns[["cost_center"]]
+  cost_center_pattern = baltimoreCIPutils::cap_patterns[["cost_center"]],
+  call = caller_env()
 )
 
 fmt_wd_proj_name(
   data,
   project_code_col = "Project Code",
-  project_name_col = "Project Name"
+  project_name_col = "Project Name",
+  call = caller_env()
 )
 }
 \arguments{
@@ -31,6 +33,9 @@ but not both may be set to \code{NULL}.}
 
 \item{fund_pattern, cost_center_pattern}{Strings with patterns passed to
 \code{\link[stringr:str_extract]{stringr::str_extract()}} via \code{\link[=fmt_wd_code_name]{fmt_wd_code_name()}}.}
+
+\item{call}{Passed to \code{check_has_name()} and \code{check_new_col_names()} for
+error attribution.}
 
 \item{project_code_col, project_name_col}{Project Code and Project Name
 column names.}

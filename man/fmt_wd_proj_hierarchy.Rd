@@ -4,12 +4,14 @@
 \alias{fmt_wd_proj_hierarchy}
 \title{Format Workday Project Hierarchy columns}
 \usage{
-fmt_wd_proj_hierarchy(data)
+fmt_wd_proj_hierarchy(data, call = caller_env())
 }
 \arguments{
 \item{data}{Input data frame from Adaptive Project Project Details sheet
 with columns: "PHierarchy1 Code", "PHierarchy1 Name", "PHierarchy2 Code", and
 "PHierarchy2 Name".}
+
+\item{call}{Passed to \code{check_has_name()} for error attribution.}
 }
 \description{
 \code{\link[=fmt_wd_proj_hierarchy]{fmt_wd_proj_hierarchy()}} formats the PHierarchy1 Code and Name and

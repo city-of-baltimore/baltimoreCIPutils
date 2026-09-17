@@ -14,9 +14,9 @@ cbind_defaults(
   size = NULL
 )
 
-pull_dict_fields(dict, sheet_name, usage = TRUE)
+pull_dict_fields(dict, sheet_name, usage = TRUE, call = caller_env())
 
-get_dict_defaults(dict, sheet_name)
+get_dict_defaults(dict, sheet_name, call = caller_env())
 }
 \arguments{
 \item{data}{A data frame to combine with values from \code{defaults}.}
@@ -38,6 +38,9 @@ same size (i.e. number of rows).}
 \item{usage}{If \code{TRUE}, exclude rows from \code{dict} data frame with \code{NA} values
 by filtering a column named "Usage". Typically, the "Usage" column should be
 "Y" or blank.}
+
+\item{call}{Passed to \code{check_has_name()} and \code{check_string()} for error
+attribution.}
 }
 \description{
 Helper functions to support the creation of EIB files

@@ -8,9 +8,13 @@
 #'   "Cost Center Code" (if `cost_center` is supplied).
 #' @param hierarchy,cost_center Optional, PHierarchy1 Code. PHierarchy2 Code, or
 #'   Cost Center Code values to filter by. Default: `NULL`
+#' @param call Passed to `check_character()` for error attribution.
 #' @keywords internal
 #' @export
-wd_proj_filter <- function(data, cost_center = NULL, hierarchy = NULL) {
+wd_proj_filter <- function(data, cost_center = NULL, hierarchy = NULL, call = caller_env()) {
+  check_character(hierarchy, allow_null = TRUE, call = call)
+  check_character(cost_center, allow_null = TRUE, call = call)
+
   stopifnot(
     is.null(hierarchy) || all(stringr::str_detect(hierarchy, "^PJH")),
     is.null(cost_center) ||
@@ -228,6 +232,11 @@ wb_wd_proj_status <- function(
   na.strings = getOption("openxlsx2.na.strings", ""),
   ...
 ) {
+  # Validate hierarchy/cost_center up front, before the expensive read/format
+  # pipeline below
+  check_character(hierarchy, allow_null = TRUE)
+  check_character(cost_center, allow_null = TRUE)
+
   # Load project data ----
   wd_proj_data <- openxlsx2::read_xlsx(project_wb) |>
     fmt_wd_proj_worktags() |>
@@ -499,11 +508,13 @@ wb_wd_proj_status <- function(
 #'   "hyperlink", "percentage", "scientific", "formula").
 #' <https://janmarvin.github.io/openxlsx2/articles/openxlsx2_style_manual.html#numfmts2>
 #' @inheritParams rlang::arg_match
+#' @param call Passed to [rlang::arg_match()] for error attribution.
 set_excel_fmt_class <- function(
   data,
   cols,
   fmt_class = "currency",
-  multiple = TRUE
+  multiple = TRUE,
+  call = caller_env()
 ) {
   fmt_class <- arg_match(
     fmt_class,
@@ -515,7 +526,8 @@ set_excel_fmt_class <- function(
       "scientific",
       "formula"
     ),
-    multiple = multiple
+    multiple = multiple,
+    error_call = call
   )
 
   fmt_class <- vctrs::vec_recycle(fmt_class, size = length(cols))

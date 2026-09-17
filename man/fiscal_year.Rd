@@ -8,7 +8,8 @@ fiscal_year(
   x,
   type = c("year", "year_prefix", "year_prefix_abb", "date_first", "date_last"),
   before = "FY",
-  ...
+  ...,
+  call = caller_env()
 )
 }
 \arguments{
@@ -32,6 +33,8 @@ this instance, \code{x} is assumed to reflect the number of days since \code{ori
 performed by \code{parse_date_time(x, orders = formats, exact = TRUE)}. Thus, multiple
 formats are supported and are tried in turn.}
   }}
+
+\item{call}{Passed to \code{\link[rlang:arg_match]{rlang::arg_match()}} for error attribution.}
 }
 \value{
 An integer (if type = "year"), character, or date (if type is

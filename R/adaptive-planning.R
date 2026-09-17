@@ -211,6 +211,11 @@ fmt_request_items <- function(
   cost_centers = NULL,
   remove_na = FALSE
 ) {
+  check_new_col_names(
+    program_data,
+    c("First Fiscal Year", "Request Version", "Request Version Date")
+  )
+
   adapt_sheet_info <- attr(
     program_data,
     "adapt_sheet_info"
@@ -319,9 +324,7 @@ fmt_request_items <- function(
 fmt_request_worktags <- function(
   program_data
 ) {
-  check_installed("chk")
-
-  chk::check_names(
+  check_has_name(
     program_data,
     c(
       "FGSFund Code",

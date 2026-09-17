@@ -9,10 +9,15 @@
 wd_proj_join_hierarchy_labels(
   data,
   hierarchy1_col = "PHierarchy1 Code",
-  hierarchy2_col = "PHierarchy2 Code"
+  hierarchy2_col = "PHierarchy2 Code",
+  call = caller_env()
 )
 
-wd_proj_join_cost_center_labels(data, cost_center_col = "Cost Center Code")
+wd_proj_join_cost_center_labels(
+  data,
+  cost_center_col = "Cost Center Code",
+  call = caller_env()
+)
 }
 \arguments{
 \item{data}{A data frame with columns matching \code{hierarchy1_col} and
@@ -20,6 +25,9 @@ wd_proj_join_cost_center_labels(data, cost_center_col = "Cost Center Code")
 
 \item{hierarchy1_col, hierarchy2_col}{Column names to join values from
 \code{baltimoreCIPutils::wd_proj_hierarchy_xwalk}}
+
+\item{call}{Passed to \code{check_has_name()} and \code{check_new_col_names()} for
+error attribution.}
 
 \item{cost_center_col}{Cost Center Code column to join on.}
 }
