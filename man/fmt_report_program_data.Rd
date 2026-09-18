@@ -4,7 +4,12 @@
 \alias{fmt_report_program_data}
 \title{Format Capital Program data for the project details report}
 \usage{
-fmt_report_program_data(program_data, project_data)
+fmt_report_program_data(
+  program_data,
+  project_data,
+  key_cols = c("ProjectID", "CostCenterID", "FundID", "GrantID", "RevenueCategoryID",
+    "Account", "RequestType", "ChangeType", "FiscalYear", "ProgramVersion", "AgencyID")
+)
 }
 \arguments{
 \item{program_data}{Program data from the Six-Year CIP sheet, including
@@ -13,6 +18,10 @@ and the \code{Year1}..\code{Year6} amount columns.}
 
 \item{project_data}{Project data including \code{ProjectID} and \code{ProjectName},
 joined onto \code{program_data} to add project names.}
+
+\item{key_cols}{Character vector of column names that, together, identify
+a single split budget request: a parent row and its \code{SplitChildRow == TRUE} children share every one of these values, differing only in
+\code{Phase} and the \code{Year1}..\code{Year6} amounts.}
 }
 \value{
 \code{program_data} formatted for the project details report, with

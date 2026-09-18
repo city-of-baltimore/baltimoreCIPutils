@@ -138,12 +138,26 @@ remove_split_parent_rows <- function(
 #'   and the `Year1`..`Year6` amount columns.
 #' @param project_data Project data including `ProjectID` and `ProjectName`,
 #'   joined onto `program_data` to add project names.
+#' @inheritParams remove_split_parent_rows
 #' @returns `program_data` formatted for the project details report, with
 #'   split parent rows removed and `Phase`/`RequestType` recoded as factors.
 #' @export
 fmt_report_program_data <- function(
   program_data,
-  project_data
+  project_data,
+  key_cols = c(
+    "ProjectID",
+    "CostCenterID",
+    "FundID",
+    "GrantID",
+    "RevenueCategoryID",
+    "Account",
+    "RequestType",
+    "ChangeType",
+    "FiscalYear",
+    "ProgramVersion",
+    "AgencyID"
+  )
 ) {
   check_data_cols(
     program_data,
@@ -215,12 +229,12 @@ fmt_report_program_data <- function(
       .before = tidyselect::everything()
     ) |>
     # Remove parent rows
-    remove_split_parent_rows() |>
+    remove_split_parent_rows(key_cols = key_cols) |>
     # Add `Revenue Category Code` column for compatibility w/
     # wd_revenue_category_label
     # TODO: Adjust baltimoreCIPutils::wd_revenue_category_label to support new column naming conventions
     dplyr::mutate(`Revenue Category Code` = RevenueCategoryID) |>
-    baltimoreCIPutils::wd_revenue_category_label() |>
+    wd_revenue_category_label() |>
     dplyr::mutate(
       Phase = dplyr::case_when(
         # Planning/Pre-Design introduced in FY2027 and should be removed
@@ -428,7 +442,10 @@ fmt_currency_columns <- function(
 #' @seealso [fmt_currency_columns()]
 #' @param call Passed to `check_new_col_names()` for error attribution.
 #' @keywords internal
-add_operating_budget_impact_desc <- function(project_data, call = caller_env()) {
+add_operating_budget_impact_desc <- function(
+  project_data,
+  call = caller_env()
+) {
   check_new_col_names(project_data, "OperatingBudgetImpactDesc", call = call)
 
   project_data |>
@@ -561,7 +578,10 @@ fmt_report_data <- function(
     )
   )
 
-  check_new_col_names(project_data, c("Year1ProgramAmount", "TotalProgramAmount"))
+  check_new_col_names(
+    project_data,
+    c("Year1ProgramAmount", "TotalProgramAmount")
+  )
 
   project_data |>
     # Join Year1ProgramAmount and TotalProgramAmount columns
