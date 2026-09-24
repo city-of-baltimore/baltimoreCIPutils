@@ -126,3 +126,63 @@ replace_lead_row_value <- function(.data, col, replacement = '"') {
     )
   )
 }
+
+#' Filter program data by program version
+#'
+#' `filter_program_data()` is a convenience function for Capital Improvement
+#' Program (CIP) reporting that filters program data to one or more values of
+#' the `ProgramVersion` column. `program_version` is matched against the values
+#' present in `program_data`, so a misspelled or missing version results in an
+#' informative error rather than an empty data frame.
+#'
+#' @param program_data A data frame of program data with a `ProgramVersion`
+#'   column, such as program data from the Six-Year CIP sheet.
+#' @param program_version A string (or, if `multiple = TRUE`, a character
+#'   vector) of program versions to keep. Must match values in the
+#'   `ProgramVersion` column of `program_data`.
+#' @param multiple If `TRUE`, allow `program_version` to match more than one
+#'   version. Passed to [rlang::arg_match()]. Defaults to `FALSE`.
+#' @param ... Additional filter expressions passed to [dplyr::filter()] and
+#'   combined with the `ProgramVersion` filter.
+#' @returns A filtered data frame with the same columns as `program_data`.
+#' @examples
+#' program_data <- data.frame(
+#'   ProgramVersion = c("Planning", "Planning", "Adopted"),
+#'   ProjectID = c("100-001", "100-002", "100-001"),
+#'   Amount = c(100, 250, 150)
+#' )
+#'
+#' filter_program_data(program_data, "Planning")
+#'
+#' filter_program_data(
+#'   program_data,
+#'   c("Planning", "Adopted"),
+#'   multiple = TRUE,
+#'   Amount > 100
+#' )
+#' @export
+filter_program_data <- function(
+  program_data,
+  program_version,
+  multiple = FALSE,
+  ...
+) {
+  check_data_cols(program_data, cols = "ProgramVersion")
+  check_bool(multiple)
+
+  if (!multiple) {
+    check_string(program_version)
+  }
+
+  program_version <- rlang::arg_match(
+    program_version,
+    values = unique(program_data[["ProgramVersion"]]),
+    multiple = multiple
+  )
+
+  dplyr::filter(
+    program_data,
+    ProgramVersion %in% program_version,
+    ...
+  )
+}

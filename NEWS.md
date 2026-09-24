@@ -2,3 +2,5 @@
 
 * NEWS set up to track changes 2026-02-03.
 * Package created 2024-10-02.
+* `filter_program_data()` filters program data to one or more values of the
+  `ProgramVersion` column.
