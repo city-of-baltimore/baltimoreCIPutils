@@ -64,3 +64,34 @@ test_that("rename_fy_cols and rename_yr_cols are inverses", {
     names(fy_data)
   )
 })
+
+test_that("rename functions use the baltimoreCIP.curr_year option", {
+  rlang::local_options(baltimoreCIP.curr_year = 2028)
+
+  expect_named(
+    rename_yr_cols(data.frame("Year1" = 1, check.names = FALSE)),
+    "FY2028"
+  )
+
+  expect_named(
+    rename_fy_cols(data.frame("FY2028" = 1, check.names = FALSE)),
+    "Year1"
+  )
+
+  expect_equal(as_relative_year(2029), "Year2")
+})
+
+test_that("rename functions error if start_year is missing", {
+  rlang::local_options(baltimoreCIP.curr_year = NULL)
+
+  fy_data <- data.frame("FY2027" = 1, check.names = FALSE)
+
+  expect_error(rename_fy_cols(fy_data), "baltimoreCIP.curr_year")
+  expect_error(
+    rename_yr_cols(data.frame("Year1" = 1, check.names = FALSE)),
+    "baltimoreCIP.curr_year"
+  )
+  expect_error(as_relative_year(2027), "baltimoreCIP.curr_year")
+
+  expect_named(rename_fy_cols(fy_data, start_year = 2027), "Year1")
+})

@@ -91,9 +91,18 @@ fiscal_year <- function(
 #'
 #' fy_span_label(2025, type = "year_prefix", n = 6)
 #'
+#' curr_fy_span(2027)
+#'
+#' prior_fy_span(2026)
+#'
+#' # Use options to set the default start year
+#' op <- options(baltimoreCIP.curr_year = 2027, baltimoreCIP.prior_year = 2026)
+#'
 #' curr_fy_span()
 #'
 #' prior_fy_span()
+#'
+#' options(op)
 #'
 #' @export
 fy_span <- function(year, before = "FY", n = 1, type = "year_prefix") {
@@ -145,32 +154,68 @@ fy_span_label <- function(
   )
 }
 
-#' `curr_yr_span()` defaults to using the start year set by the
-#' `"baltimoreCIP.curr_yr"` option.
+#' [curr_fy_span()] defaults to using the start year set by the
+#' `"baltimoreCIP.curr_year"` option. An error is returned if `year` is not
+#' supplied and the option is not set.
 #'
 #' @name curr_fy_span
 #' @rdname fy_span
 #' @export
 curr_fy_span <- function(
-  year = getOption("baltimoreCIP.curr_year", 2026),
+  year = getOption("baltimoreCIP.curr_year"),
   before = "FY",
   n = 6,
   type = "year_prefix"
 ) {
+  check_option_year(year, option = "baltimoreCIP.curr_year")
   fy_span(year, before, n, type)
 }
 
-#' `prior_yr_span()` defaults to using the start year set by the
-#' `"baltimoreCIP.prior_yr"` option.
+#' [prior_fy_span()] defaults to using the start year set by the
+#' `"baltimoreCIP.prior_year"` option. An error is returned if `year` is not
+#' supplied and the option is not set.
 #'
 #' @name prior_fy_span
 #' @rdname fy_span
 #' @export
 prior_fy_span <- function(
-  year = getOption("baltimoreCIP.prior_year", 2025),
+  year = getOption("baltimoreCIP.prior_year"),
   before = "FY",
   n = 6,
   type = "year_prefix"
 ) {
+  check_option_year(year, option = "baltimoreCIP.prior_year")
   fy_span(year, before, n, type)
+}
+
+#' Check that a year is supplied directly or with an option
+#'
+#' `check_option_year()` errors if `year` is `NULL`, which happens when a
+#' function argument defaults to an option (e.g., `"baltimoreCIP.curr_year"`)
+#' that is not set.
+#'
+#' @param year A year value or `NULL`.
+#' @param option Name of the option used as the default value for `year`.
+#' @param arg Argument name used in the error message.
+#' @param call Execution environment used in the error message.
+#' @returns `year`, invisibly.
+#' @keywords internal
+#' @noRd
+check_option_year <- function(
+  year,
+  option = "baltimoreCIP.curr_year",
+  arg = caller_arg(year),
+  call = caller_env()
+) {
+  if (!is.null(year)) {
+    return(invisible(year))
+  }
+
+  cli_abort(
+    c(
+      "{.arg {arg}} must be supplied if the {.code {option}} option is not set.",
+      "i" = "Supply {.arg {arg}} or set the option, e.g., {.code options({option} = 2027)}."
+    ),
+    call = call
+  )
 }

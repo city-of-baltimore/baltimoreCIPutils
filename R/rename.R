@@ -10,23 +10,27 @@
 #'   data.frame(
 #'     "FY2027" = 1,
 #'     "FY2028" = 2
-#'   )
+#'   ),
+#'   start_year = 2027
 #' )
 #'
 #' rename_yr_cols(
 #'   data.frame(
 #'     "Year1" = 1,
 #'     "Year2" = 2
-#'   )
+#'   ),
+#'   start_year = 2027
 #' )
 #' @inheritParams as_relative_year
 #' @export
 rename_fy_cols <- function(
   .data,
-  start_year = 2027,
+  start_year = getOption("baltimoreCIP.curr_year"),
   existing_before = "FY",
   before = "Year"
 ) {
+  check_option_year(start_year, option = "baltimoreCIP.curr_year")
+
   # Update FY columns to match request table convention
   dplyr::rename_with(
     .data = .data,
@@ -46,10 +50,12 @@ rename_fy_cols <- function(
 #' @export
 rename_yr_cols <- function(
   .data,
-  start_year = 2027,
+  start_year = getOption("baltimoreCIP.curr_year"),
   existing_before = "Year",
   before = "FY"
 ) {
+  check_option_year(start_year, option = "baltimoreCIP.curr_year")
+
   # Update FY columns to match request table convention
   dplyr::rename_with(
     .data = .data,
@@ -66,7 +72,8 @@ rename_yr_cols <- function(
 #' Convert vector of years as integer or text
 #'
 #' @param x A vector of integer or character values.
-#' @param start_year Year to use as "Year 1"
+#' @param start_year Year to use as "Year 1". Defaults to the
+#'   `"baltimoreCIP.curr_year"` option. Required if the option is not set.
 #' @param existing_before Prefix text for input years. Required if `x`` is a
 #' character vector.
 #' @param before Prefix to use for output.
@@ -78,10 +85,12 @@ rename_yr_cols <- function(
 #' @export
 as_relative_year <- function(
   x,
-  start_year = 2027,
+  start_year = getOption("baltimoreCIP.curr_year"),
   existing_before = "FY",
   before = "Year"
 ) {
+  check_option_year(start_year, option = "baltimoreCIP.curr_year")
+
   if (is.character(x)) {
     x <- stringr::str_remove(x, existing_before)
   }

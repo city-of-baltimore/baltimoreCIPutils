@@ -7,14 +7,14 @@
 \usage{
 rename_fy_cols(
   .data,
-  start_year = 2027,
+  start_year = getOption("baltimoreCIP.curr_year"),
   existing_before = "FY",
   before = "Year"
 )
 
 rename_yr_cols(
   .data,
-  start_year = 2027,
+  start_year = getOption("baltimoreCIP.curr_year"),
   existing_before = "Year",
   before = "FY"
 )
@@ -22,7 +22,8 @@ rename_yr_cols(
 \arguments{
 \item{.data}{Input data frame with "Year" or "FY" columns to rename.}
 
-\item{start_year}{Year to use as "Year 1"}
+\item{start_year}{Year to use as "Year 1". Defaults to the
+\code{"baltimoreCIP.curr_year"} option. Required if the option is not set.}
 
 \item{existing_before}{Prefix text for input years. Required if `x`` is a
 character vector.}
@@ -38,13 +39,15 @@ rename_fy_cols(
   data.frame(
     "FY2027" = 1,
     "FY2028" = 2
-  )
+  ),
+  start_year = 2027
 )
 
 rename_yr_cols(
   data.frame(
     "Year1" = 1,
     "Year2" = 2
-  )
+  ),
+  start_year = 2027
 )
 }

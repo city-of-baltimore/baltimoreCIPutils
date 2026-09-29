@@ -5,17 +5,24 @@
 #'
 #' @inheritParams gt::fmt_currency
 #' @inheritDotParams gt::fmt_currency
+#' @param year Start year for the default `columns` selection. Defaults to the
+#'   `"baltimoreCIP.curr_year"` option. Required if `columns` is not supplied
+#'   and the option is not set.
 #' @keywords gt internal
 #' @export
 fmt_fy_span_currency <- function(
   data,
   columns = tidyselect::all_of(curr_fy_span(year)),
   ...,
-  year = getOption("baltimoreCIP.curr_year", 2026),
+  year = getOption("baltimoreCIP.curr_year"),
   decimals = 0,
   suffixing = "K"
 ) {
   check_installed("gt")
+
+  if (missing(columns)) {
+    check_option_year(year, option = "baltimoreCIP.curr_year")
+  }
 
   gt::fmt_currency(
     data = data,

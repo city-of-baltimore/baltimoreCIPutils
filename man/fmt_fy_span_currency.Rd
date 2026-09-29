@@ -8,7 +8,7 @@ fmt_fy_span_currency(
   data,
   columns = tidyselect::all_of(curr_fy_span(year)),
   ...,
-  year = getOption("baltimoreCIP.curr_year", 2026),
+  year = getOption("baltimoreCIP.curr_year"),
   decimals = 0,
   suffixing = "K"
 )
@@ -187,6 +187,10 @@ be also set in the initial \code{\link[gt:gt]{gt()}} function call (where it wou
 automatically by any function with a \code{locale} argument) but a \code{locale}
 value provided here will override that global locale.}
   }}
+
+\item{year}{Start year for the default \code{columns} selection. Defaults to the
+\code{"baltimoreCIP.curr_year"} option. Required if \code{columns} is not supplied
+and the option is not set.}
 
 \item{decimals}{\emph{Number of decimal places}
 

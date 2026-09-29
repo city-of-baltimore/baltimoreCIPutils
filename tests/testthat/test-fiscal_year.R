@@ -97,9 +97,11 @@ test_that("fy_span_label works", {
 })
 
 test_that("curr_fy_span works", {
+  rlang::local_options(baltimoreCIP.curr_year = 2028)
+
   expect_equal(
     curr_fy_span(),
-    fy_span(getOption("baltimoreCIP.curr_year", 2026), before = "FY", n = 6, type = "year_prefix")
+    c("FY2028", "FY2029", "FY2030", "FY2031", "FY2032", "FY2033")
   )
 
   expect_equal(
@@ -108,14 +110,30 @@ test_that("curr_fy_span works", {
   )
 })
 
+test_that("curr_fy_span errors if year is missing", {
+  rlang::local_options(baltimoreCIP.curr_year = NULL)
+
+  expect_error(curr_fy_span(), "baltimoreCIP.curr_year")
+
+  expect_equal(curr_fy_span(2020, n = 1), "FY2020")
+})
+
 test_that("prior_fy_span works", {
+  rlang::local_options(baltimoreCIP.prior_year = 2027)
+
   expect_equal(
     prior_fy_span(),
-    fy_span(getOption("baltimoreCIP.prior_year", 2025), before = "FY", n = 6, type = "year_prefix")
+    c("FY2027", "FY2028", "FY2029", "FY2030", "FY2031", "FY2032")
   )
 
   expect_equal(
     prior_fy_span(2019, n = 3),
     c("FY2019", "FY2020", "FY2021")
   )
+})
+
+test_that("prior_fy_span errors if year is missing", {
+  rlang::local_options(baltimoreCIP.prior_year = NULL)
+
+  expect_error(prior_fy_span(), "baltimoreCIP.prior_year")
 })

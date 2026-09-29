@@ -4,12 +4,18 @@
 \alias{as_relative_year}
 \title{Convert vector of years as integer or text}
 \usage{
-as_relative_year(x, start_year = 2027, existing_before = "FY", before = "Year")
+as_relative_year(
+  x,
+  start_year = getOption("baltimoreCIP.curr_year"),
+  existing_before = "FY",
+  before = "Year"
+)
 }
 \arguments{
 \item{x}{A vector of integer or character values.}
 
-\item{start_year}{Year to use as "Year 1"}
+\item{start_year}{Year to use as "Year 1". Defaults to the
+\code{"baltimoreCIP.curr_year"} option. Required if the option is not set.}
 
 \item{existing_before}{Prefix text for input years. Required if `x`` is a
 character vector.}

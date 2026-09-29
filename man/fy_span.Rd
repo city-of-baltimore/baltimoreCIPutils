@@ -19,14 +19,14 @@ fy_span_label(
 )
 
 curr_fy_span(
-  year = getOption("baltimoreCIP.curr_year", 2026),
+  year = getOption("baltimoreCIP.curr_year"),
   before = "FY",
   n = 6,
   type = "year_prefix"
 )
 
 prior_fy_span(
-  year = getOption("baltimoreCIP.prior_year", 2025),
+  year = getOption("baltimoreCIP.prior_year"),
   before = "FY",
   n = 6,
   type = "year_prefix"
@@ -66,8 +66,17 @@ fy_span_label(2025, n = 6)
 
 fy_span_label(2025, type = "year_prefix", n = 6)
 
+curr_fy_span(2027)
+
+prior_fy_span(2026)
+
+# Use options to set the default start year
+op <- options(baltimoreCIP.curr_year = 2027, baltimoreCIP.prior_year = 2026)
+
 curr_fy_span()
 
 prior_fy_span()
+
+options(op)
 
 }
