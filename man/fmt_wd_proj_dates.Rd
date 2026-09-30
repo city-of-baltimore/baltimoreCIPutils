@@ -7,7 +7,8 @@
 fmt_wd_proj_dates(
   data,
   start_date_col = "Project Start Date",
-  end_date_col = "Project End Date"
+  end_date_col = "Project End Date",
+  fiscal_start = getOption("baltimoreCIP.fiscal_start", 7)
 )
 }
 \arguments{
@@ -15,6 +16,11 @@ fmt_wd_proj_dates(
 column names matching \code{start_date_col} and \code{end_date_col} values.}
 
 \item{start_date_col, end_date_col}{Project start and end date column names.}
+
+\item{fiscal_start}{Month the fiscal year starts, as a whole number from 1
+(January, equivalent to the calendar year) to 12 (December). Defaults to
+the \code{"baltimoreCIP.fiscal_start"} option or 7 (July) if the option is not
+set.}
 }
 \description{
 \code{\link[=fmt_wd_proj_dates]{fmt_wd_proj_dates()}} is used to derive new "Project Start FY" and "Project

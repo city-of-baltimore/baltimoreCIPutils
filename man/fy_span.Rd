@@ -7,7 +7,14 @@
 \alias{prior_fy_span}
 \title{Create a fiscal year vector of specified length from a start year}
 \usage{
-fy_span(year, before = "FY", n = 1, type = "year_prefix", call = caller_env())
+fy_span(
+  year,
+  before = "FY",
+  n = 1,
+  type = "year_prefix",
+  fiscal_start = getOption("baltimoreCIP.fiscal_start", 7),
+  call = caller_env()
+)
 
 fy_span_label(
   year,
@@ -23,6 +30,7 @@ curr_fy_span(
   before = "FY",
   n = 6,
   type = "year_prefix",
+  fiscal_start = getOption("baltimoreCIP.fiscal_start", 7),
   call = caller_env()
 )
 
@@ -31,6 +39,7 @@ prior_fy_span(
   before = "FY",
   n = 6,
   type = "year_prefix",
+  fiscal_start = getOption("baltimoreCIP.fiscal_start", 7),
   call = caller_env()
 )
 }
@@ -46,6 +55,11 @@ for \code{\link[=fy_span]{fy_span()}} or 6 for \code{\link[=curr_fy_span]{curr_f
 
 \item{type}{One of "year", "year_prefix", "year_prefix_abb", "date_first", or
 "date_last". Defaults to "year".}
+
+\item{fiscal_start}{Month the fiscal year starts, as a whole number from 1
+(January, equivalent to the calendar year) to 12 (December). Defaults to
+the \code{"baltimoreCIP.fiscal_start"} option or 7 (July) if the option is not
+set.}
 
 \item{call}{Execution environment used in error messages.}
 

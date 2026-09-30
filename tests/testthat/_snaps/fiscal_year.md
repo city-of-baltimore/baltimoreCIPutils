@@ -26,3 +26,39 @@
       Error:
       ! `"x"` must be a single year, not "x".
 
+# fiscal_year errors on invalid fiscal_start
+
+    Code
+      fiscal_year("2019-01-01", fiscal_start = 0)
+    Condition
+      Error:
+      ! `fiscal_start` must be a whole number between 1 and 12, not the number 0.
+    Code
+      fiscal_year("2019-01-01", fiscal_start = 13)
+    Condition
+      Error:
+      ! `fiscal_start` must be a whole number between 1 and 12, not the number 13.
+    Code
+      fiscal_year("2019-01-01", fiscal_start = 7.5)
+    Condition
+      Error:
+      ! `fiscal_start` must be a whole number, not the number 7.5.
+    Code
+      fiscal_year("2019-01-01", fiscal_start = "July")
+    Condition
+      Error:
+      ! `fiscal_start` must be a whole number, not the string "July".
+
+# fiscal_quarter errors on invalid input
+
+    Code
+      fiscal_quarter("2019-01-01", type = "foo")
+    Condition
+      Error:
+      ! `type` must be one of "year_prefix", "year_prefix_abb", "year", "quarter_prefix", "quarter", "year.quarter", "date_first", or "date_last", not "foo".
+    Code
+      fiscal_quarter("2019-01-01", fiscal_start = 0)
+    Condition
+      Error:
+      ! `fiscal_start` must be a whole number between 1 and 12, not the number 0.
+

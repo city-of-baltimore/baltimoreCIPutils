@@ -6,18 +6,26 @@
 #' @param data Data frame (typically originated as a report from Workday) with
 #'   column names matching `start_date_col` and `end_date_col` values.
 #' @param start_date_col,end_date_col Project start and end date column names.
+#' @inheritParams fiscal_year
 #' @export
 fmt_wd_proj_dates <- function(
   data,
   start_date_col = "Project Start Date",
-  end_date_col = "Project End Date"
+  end_date_col = "Project End Date",
+  fiscal_start = getOption("baltimoreCIP.fiscal_start", 7)
 ) {
   check_has_name(data, c(start_date_col, end_date_col))
   check_new_col_names(data, c("Project Start FY", "Project End FY"))
 
   data |>
     dplyr::mutate(
-      `Project Start FY` = fiscal_year(.data[[start_date_col]]),
-      `Project End FY` = fiscal_year(.data[[end_date_col]])
+      `Project Start FY` = fiscal_year(
+        .data[[start_date_col]],
+        fiscal_start = fiscal_start
+      ),
+      `Project End FY` = fiscal_year(
+        .data[[end_date_col]],
+        fiscal_start = fiscal_start
+      )
     )
 }

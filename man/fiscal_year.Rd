@@ -8,6 +8,7 @@ fiscal_year(
   x,
   type = c("year", "year_prefix", "year_prefix_abb", "date_first", "date_last"),
   before = "FY",
+  fiscal_start = getOption("baltimoreCIP.fiscal_start", 7),
   ...,
   call = caller_env()
 )
@@ -20,6 +21,11 @@ fiscal_year(
 
 \item{before}{Text to use as prefix if type is "year_prefix"
 or "year_prefix_abb". Ignored for other types. Defaults to "FY".}
+
+\item{fiscal_start}{Month the fiscal year starts, as a whole number from 1
+(January, equivalent to the calendar year) to 12 (December). Defaults to
+the \code{"baltimoreCIP.fiscal_start"} option or 7 (July) if the option is not
+set.}
 
 \item{...}{
   Arguments passed on to \code{\link[lubridate:as_date]{lubridate::as_date}}
@@ -42,7 +48,9 @@ An integer (if type = "year"), character, or date (if type is
 }
 \description{
 \code{\link[=fiscal_year]{fiscal_year()}} uses \code{\link[lubridate:as_date]{lubridate::as_date()}} to return a fiscal year value
-based on any input vector coercible to dates.
+based on any input vector coercible to dates. Fiscal years are named for the
+calendar year in which they end, e.g. with the default \code{fiscal_start = 7},
+July 1, 2020 through June 30, 2021 is fiscal year 2021.
 }
 \examples{
 fiscal_year("2021-01-01")
@@ -56,5 +64,10 @@ fiscal_year("2021-01-01", "year_prefix_abb")
 fiscal_year("2021-01-01", "date_first")
 
 fiscal_year("2021-01-01", "date_last")
+
+# Use a fiscal year starting October 1
+fiscal_year("2021-10-01", fiscal_start = 10)
+
+fiscal_year("2021-10-01", "date_last", fiscal_start = 10)
 
 }

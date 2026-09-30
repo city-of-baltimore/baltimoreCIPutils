@@ -35,3 +35,16 @@ test_that("fmt_wd_proj_dates works with custom column names", {
     c("start", "end", "Project Start FY", "Project End FY")
   )
 })
+
+test_that("fmt_wd_proj_dates supports fiscal_start", {
+  data <- data.frame(
+    "Project Start Date" = c("2021-01-01", "2021-10-01"),
+    "Project End Date" = c("2022-09-30", "2022-12-31"),
+    check.names = FALSE
+  )
+
+  result <- fmt_wd_proj_dates(data, fiscal_start = 10)
+
+  expect_equal(result[["Project Start FY"]], c(2021, 2022))
+  expect_equal(result[["Project End FY"]], c(2022, 2023))
+})

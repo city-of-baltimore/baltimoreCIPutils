@@ -205,3 +205,170 @@ test_that("check_option_year passes digits and n to check_year", {
   expect_error(check_option_year(24), class = "rlang_error")
   expect_error(check_option_year(NULL), "baltimoreCIP.curr_year")
 })
+
+test_that("fiscal_year supports fiscal_start", {
+  dates <- c("2019-01-01", "2019-09-30", "2019-10-01", "2019-12-31")
+
+  expect_equal(fiscal_year(dates, fiscal_start = 10), c(2019, 2019, 2020, 2020))
+  expect_equal(fiscal_year(dates, fiscal_start = 1), c(2019, 2019, 2019, 2019))
+  expect_equal(fiscal_year(dates, fiscal_start = 7), c(2019, 2020, 2020, 2020))
+
+  expect_equal(
+    fiscal_year(dates, "date_first", fiscal_start = 10),
+    as.Date(c("2018-10-01", "2018-10-01", "2019-10-01", "2019-10-01"))
+  )
+  expect_equal(
+    fiscal_year(dates, "date_last", fiscal_start = 10),
+    as.Date(c("2019-09-30", "2019-09-30", "2020-09-30", "2020-09-30"))
+  )
+  expect_equal(
+    fiscal_year("2020-06-15", "date_first", fiscal_start = 1),
+    as.Date("2020-01-01")
+  )
+  expect_equal(
+    fiscal_year("2020-06-15", "date_last", fiscal_start = 1),
+    as.Date("2020-12-31")
+  )
+  expect_equal(
+    fiscal_year(c("2021-01-01", NA), "date_last", fiscal_start = 10),
+    as.Date(c("2021-09-30", NA))
+  )
+})
+
+test_that("fiscal_year matches lubridate::quarter for any fiscal_start", {
+  dates <- seq(as.Date("2019-01-01"), as.Date("2020-12-31"), by = "month")
+
+  for (fiscal_start in 1:12) {
+    expect_equal(
+      fiscal_year(dates, fiscal_start = fiscal_start),
+      floor(
+        lubridate::quarter(dates, "year.quarter", fiscal_start = fiscal_start)
+      )
+    )
+  }
+})
+
+test_that("fiscal_year uses the baltimoreCIP.fiscal_start option", {
+  rlang::local_options(baltimoreCIP.fiscal_start = 10)
+
+  expect_equal(fiscal_year("2019-10-01"), 2020)
+  expect_equal(fiscal_quarter("2019-10-01"), "FY2020 Q1")
+  expect_equal(
+    fy_span(2020, type = "date_first"),
+    as.Date("2019-10-01")
+  )
+})
+
+test_that("fiscal_year errors on invalid fiscal_start", {
+  expect_snapshot(error = TRUE, {
+    fiscal_year("2019-01-01", fiscal_start = 0)
+    fiscal_year("2019-01-01", fiscal_start = 13)
+    fiscal_year("2019-01-01", fiscal_start = 7.5)
+    fiscal_year("2019-01-01", fiscal_start = "July")
+  })
+})
+
+test_that("fy_span passes fiscal_start to fiscal_year", {
+  expect_equal(
+    fy_span(2027, n = 2, type = "date_first", fiscal_start = 10),
+    as.Date(c("2026-10-01", "2027-10-01"))
+  )
+  expect_equal(
+    curr_fy_span(2027, n = 1, type = "date_last", fiscal_start = 1),
+    as.Date("2027-12-31")
+  )
+  expect_equal(
+    prior_fy_span(2026, n = 1, type = "date_first", fiscal_start = 7),
+    as.Date("2025-07-01")
+  )
+  expect_equal(fy_span(2027, fiscal_start = 10), "FY2027")
+})
+
+test_that("fiscal_quarter returns year and quarter strings", {
+  dates <- as.Date(c(
+    "2018-07-01",
+    "2018-12-31",
+    "2019-01-01",
+    "2019-06-30",
+    NA
+  ))
+
+  expect_equal(
+    fiscal_quarter(dates),
+    c("FY2019 Q1", "FY2019 Q2", "FY2019 Q3", "FY2019 Q4", NA)
+  )
+  expect_equal(
+    fiscal_quarter(dates, type = "year_prefix_abb", sep = "-"),
+    c("FY19-Q1", "FY19-Q2", "FY19-Q3", "FY19-Q4", NA)
+  )
+  expect_equal(
+    fiscal_quarter(dates, type = "year", before_quarter = "Quarter "),
+    c(
+      "2019 Quarter 1",
+      "2019 Quarter 2",
+      "2019 Quarter 3",
+      "2019 Quarter 4",
+      NA
+    )
+  )
+  expect_equal(
+    fiscal_quarter(dates, type = "quarter_prefix"),
+    c("Q1", "Q2", "Q3", "Q4", NA)
+  )
+})
+
+test_that("fiscal_quarter returns numeric and date types", {
+  dates <- as.Date(c(
+    "2018-07-01",
+    "2018-12-31",
+    "2019-01-01",
+    "2019-06-30",
+    NA
+  ))
+
+  expect_equal(fiscal_quarter(dates, type = "quarter"), c(1, 2, 3, 4, NA))
+  expect_equal(
+    fiscal_quarter(dates, type = "year.quarter"),
+    c(2019.1, 2019.2, 2019.3, 2019.4, NA)
+  )
+  expect_equal(
+    fiscal_quarter(dates, type = "date_first"),
+    as.Date(c("2018-07-01", "2018-10-01", "2019-01-01", "2019-04-01", NA))
+  )
+  expect_equal(
+    fiscal_quarter(dates, type = "date_last"),
+    as.Date(c("2018-09-30", "2018-12-31", "2019-03-31", "2019-06-30", NA))
+  )
+})
+
+test_that("fiscal_quarter coerces character input", {
+  expect_equal(fiscal_quarter("2019-01-01"), "FY2019 Q3")
+  expect_equal(
+    fiscal_quarter("01/15/2019", format = "%m/%d/%Y"),
+    "FY2019 Q3"
+  )
+  expect_equal(
+    fiscal_quarter(as.POSIXct("2018-09-30 23:00", tz = "UTC")),
+    "FY2019 Q1"
+  )
+})
+
+test_that("fiscal_quarter supports fiscal_start", {
+  dates <- as.Date(c("2019-09-30", "2019-10-01", "2020-01-01"))
+
+  expect_equal(
+    fiscal_quarter(dates, fiscal_start = 10),
+    c("FY2019 Q4", "FY2020 Q1", "FY2020 Q2")
+  )
+  expect_equal(
+    fiscal_quarter(dates, type = "quarter", fiscal_start = 1),
+    c(3, 4, 1)
+  )
+})
+
+test_that("fiscal_quarter errors on invalid input", {
+  expect_snapshot(error = TRUE, {
+    fiscal_quarter("2019-01-01", type = "foo")
+    fiscal_quarter("2019-01-01", fiscal_start = 0)
+  })
+})
