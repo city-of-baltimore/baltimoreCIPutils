@@ -186,3 +186,33 @@ filter_program_data <- function(
     ...
   )
 }
+
+#' Convert a quosure to a tidyselect-safe selection
+#'
+#' Wraps character vectors in [tidyselect::all_of()] so selections can be
+#' supplied as character vectors (including external variables) without
+#' triggering the tidyselect deprecation warning, while still supporting bare
+#' column names and tidyselect helpers.
+#'
+#' @param quo A quosure created with [rlang::enquo()].
+#' @param data Data frame the selection will be applied to.
+#' @noRd
+as_select_quo <- function(quo, data) {
+  if (quo_is_null(quo) || quo_is_missing(quo)) {
+    return(quo)
+  }
+
+  # A bare symbol matching a column is always a column reference
+  if (quo_is_symbol(quo) && as_string(quo_get_expr(quo)) %in% names(data)) {
+    return(quo)
+  }
+
+  # Character vectors (from literals, variables, or calls like curr_fy_span())
+  # are wrapped in all_of() to avoid the tidyselect deprecation warning
+  val <- tryCatch(eval_tidy(quo), error = function(e) NULL)
+  if (is.character(val)) {
+    return(quo(tidyselect::all_of(!!val)))
+  }
+
+  quo
+}

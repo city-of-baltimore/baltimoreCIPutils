@@ -129,9 +129,15 @@ adapt_read_sheet <- function(
 #' [summarise_timespan()] uses [dplyr::across()] and [dplyr::summarise()]
 #' to combine fiscal year amount columns grouped by some other variables.
 #'
-#' @param data Input data frame.
-#' @param timespan_cols Required. Defaults to [curr_fy_span()]. Passed to `.cols`
-#'   argument of [dplyr::across()]
+#' @param .data Input data frame.
+#' @param timespan_cols <[`tidy-select`][dplyr::dplyr_tidy_select]> Required.
+#'   Defaults to [curr_fy_span()]. Passed to `.cols` argument of
+#'   [dplyr::across()]. Supports tidyselect expressions or a character vector
+#'   of column names.
+#' @param .by <[`tidy-select`][dplyr::dplyr_tidy_select]> Optional selection
+#'   of columns to group by for just this operation. Supports tidyselect
+#'   expressions or a character vector of column names. See
+#'   [dplyr::summarise()] for details.
 #' @inheritParams dplyr::across
 #' @inheritParams dplyr::summarise
 #' @export
@@ -146,15 +152,18 @@ summarise_timespan <- function(
   .unpack = FALSE,
   .groups = NULL
 ) {
+  timespan_cols <- as_select_quo(enquo(timespan_cols), .data)
+  .by <- as_select_quo(enquo(.by), .data)
+
   dplyr::summarise(
     .data,
     dplyr::across(
-      .cols = timespan_cols,
+      .cols = !!timespan_cols,
       .fns = .fns,
       .names = .names,
       .unpack = .unpack
     ),
-    .by = .by,
+    .by = !!.by,
     .groups = .groups
   )
 }

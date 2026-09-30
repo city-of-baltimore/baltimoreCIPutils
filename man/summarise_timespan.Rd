@@ -17,12 +17,12 @@ summarise_timespan(
 )
 }
 \arguments{
-\item{.data}{A data frame, data frame extension (e.g. a tibble), or a
-lazy data frame (e.g. from dbplyr or dtplyr). See \emph{Methods}, below, for
-more details.}
+\item{.data}{Input data frame.}
 
-\item{timespan_cols}{Required. Defaults to \code{\link[=curr_fy_span]{curr_fy_span()}}. Passed to \code{.cols}
-argument of \code{\link[dplyr:across]{dplyr::across()}}}
+\item{timespan_cols}{<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}> Required.
+Defaults to \code{\link[=curr_fy_span]{curr_fy_span()}}. Passed to \code{.cols} argument of
+\code{\link[dplyr:across]{dplyr::across()}}. Supports tidyselect expressions or a character vector
+of column names.}
 
 \item{.fns}{Functions to apply to each of the selected columns.
 Possible values are:
@@ -38,9 +38,10 @@ and the column name using the glue specification in \code{.names}.
 Within these functions you can use \code{\link[dplyr:cur_column]{cur_column()}} and \code{\link[dplyr:cur_group]{cur_group()}}
 to access the current column and grouping keys respectively.}
 
-\item{.by}{<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}> Optionally, a selection of columns to
-group by for just this operation, functioning as an alternative to \code{\link[dplyr:group_by]{group_by()}}. For
-details and examples, see \link[dplyr:dplyr_by]{?dplyr_by}.}
+\item{.by}{<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}> Optional selection
+of columns to group by for just this operation. Supports tidyselect
+expressions or a character vector of column names. See
+\code{\link[dplyr:summarise]{dplyr::summarise()}} for details.}
 
 \item{.names}{A glue specification that describes how to name the output
 columns. This can use \code{{.col}} to stand for the selected column name, and
@@ -78,8 +79,6 @@ data frame, and \code{"keep"} for a rowwise data frame. In addition, a message
 informs you of how the result will be grouped unless the result is
 ungrouped, the option \code{"dplyr.summarise.inform"} is set to \code{FALSE}, or when
 \code{summarise()} is called from a function in a package.}
-
-\item{data}{Input data frame.}
 }
 \description{
 \code{\link[=summarise_timespan]{summarise_timespan()}} uses \code{\link[dplyr:across]{dplyr::across()}} and \code{\link[dplyr:summarise]{dplyr::summarise()}}
