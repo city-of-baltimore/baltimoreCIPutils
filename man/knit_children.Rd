@@ -4,7 +4,14 @@
 \alias{knit_children}
 \title{Knit a child document once for each row of a data frame}
 \usage{
-knit_children(.l, input, .params = rlang::list2(), quiet = TRUE)
+knit_children(
+  .l,
+  ...,
+  .input,
+  .params = rlang::list2(),
+  .quiet = TRUE,
+  .envir = parent.frame()
+)
 }
 \arguments{
 \item{.l}{A data frame (or list of equal-length vectors) passed to
@@ -12,22 +19,30 @@ knit_children(.l, input, .params = rlang::list2(), quiet = TRUE)
 available in the child environment as an object with the same name, e.g.,
 a \code{project_id} column is available as \code{project_id}.}
 
-\item{input}{Path to the child document, passed to the \code{input} argument of
+\item{...}{Ignored. Kept so existing calls that pass a column name before
+\code{.input} (e.g., \code{knit_children(data, project_id, .input = ...)}) continue
+to work. Every column in \code{.l} is always available to the child document,
+whether or not it is named here, and these arguments are never evaluated.}
+
+\item{.input}{Path to the child document, passed to the \code{input} argument of
 \code{\link[knitr:knit_child]{knitr::knit_child()}}. Required. The file must exist.}
 
 \item{.params}{A named list of additional objects to make available to every
 child document, e.g., a database connection or report parameters. If a
 name matches a column in \code{.l}, the value from \code{.params} is used.}
 
-\item{quiet}{Passed to the \code{quiet} argument of \code{\link[knitr:knit_child]{knitr::knit_child()}}.
+\item{.quiet}{Passed to the \code{quiet} argument of \code{\link[knitr:knit_child]{knitr::knit_child()}}.
 Defaults to \code{TRUE}.}
+
+\item{.envir}{Parent environment for the child environments. Defaults to
+the environment \code{knit_children()} is called from.}
 }
 \value{
 \code{NULL}, invisibly. Called for the side effect of printing the
 knitted output of each child document, separated by line breaks.
 }
 \description{
-\code{knit_children()} knits the child document \code{input} once for each row of
+\code{knit_children()} knits the child document \code{.input} once for each row of
 \code{.l} with \code{\link[knitr:knit_child]{knitr::knit_child()}} and prints the combined output with \code{\link[=cat]{cat()}}.
 Each child is knitted in a new environment containing the values from that
 row, named with the column names of \code{.l}, and the objects in \code{.params}.
@@ -40,11 +55,15 @@ a project report child once per project.
 Call \code{knit_children()} from a code chunk with the \code{output: asis} option so
 the knitted Markdown is included in the parent document as-is.
 
-The child environments inherit from the environment where \code{knit_children()}
-is defined, not the environment it is called from. Objects created in the
-calling chunk are only available to the children if they are included in
-\code{.l} or \code{.params}. Global objects (e.g., objects created in the setup chunk
-of the parent document) are still available.
+Each child environment is a new environment with \code{.envir} as its parent, so
+child documents can use any object available where \code{knit_children()} is
+called, e.g., objects created in the setup chunk of the parent document or,
+for a nested call, objects created by the calling child document. Values
+from \code{.l} and \code{.params} take precedence over objects with the same name in
+\code{.envir}.
+
+Unexported functions from this package are not available to child documents
+unless called with \verb{baltimoreCIPutils:::}.
 }
 \examples{
 child <- tempfile(fileext = ".Rmd")
@@ -52,7 +71,7 @@ writeLines("- Project `r project_id` (`r program_version`)", child)
 
 knit_children(
   data.frame(project_id = c("PRJ001", "PRJ002")),
-  input = child,
+  .input = child,
   .params = list(program_version = "FY2027 CAP Requests")
 )
 }

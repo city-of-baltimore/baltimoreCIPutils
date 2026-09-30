@@ -1,3 +1,103 @@
+#' Knit a child document once for each row of a data frame
+#'
+#' `knit_children()` knits the child document `.input` once for each row of
+#' `.l` with [knitr::knit_child()] and prints the combined output with [cat()].
+#' Each child is knitted in a new environment containing the values from that
+#' row, named with the column names of `.l`, and the objects in `.params`.
+#'
+#' The reports use this to build nested sections in a Quarto report, e.g.
+#' knitting an agency report child once per agency, and each agency report knits
+#' a project report child once per project.
+#'
+#' Call `knit_children()` from a code chunk with the `output: asis` option so
+#' the knitted Markdown is included in the parent document as-is.
+#'
+#' @param .l A data frame (or list of equal-length vectors) passed to
+#'   [purrr::pmap()]. Each row produces one knitted child, and each column is
+#'   available in the child environment as an object with the same name, e.g.,
+#'   a `project_id` column is available as `project_id`.
+#' @param ... Ignored. Kept so existing calls that pass a column name before
+#'   `.input` (e.g., `knit_children(data, project_id, .input = ...)`) continue
+#'   to work. Every column in `.l` is always available to the child document,
+#'   whether or not it is named here, and these arguments are never evaluated.
+#' @param .input Path to the child document, passed to the `input` argument of
+#'   [knitr::knit_child()]. Required. The file must exist.
+#' @param .params A named list of additional objects to make available to every
+#'   child document, e.g., a database connection or report parameters. If a
+#'   name matches a column in `.l`, the value from `.params` is used.
+#' @param .quiet Passed to the `quiet` argument of [knitr::knit_child()].
+#'   Defaults to `TRUE`.
+#' @param .envir Parent environment for the child environments. Defaults to
+#'   the environment `knit_children()` is called from.
+#' @returns `NULL`, invisibly. Called for the side effect of printing the
+#'   knitted output of each child document, separated by line breaks.
+#' @details
+#' Each child environment is a new environment with `.envir` as its parent, so
+#' child documents can use any object available where `knit_children()` is
+#' called, e.g., objects created in the setup chunk of the parent document or,
+#' for a nested call, objects created by the calling child document. Values
+#' from `.l` and `.params` take precedence over objects with the same name in
+#' `.envir`.
+#'
+#' Unexported functions from this package are not available to child documents
+#' unless called with `baltimoreCIPutils:::`.
+#' @examples
+#' child <- tempfile(fileext = ".Rmd")
+#' writeLines("- Project `r project_id` (`r program_version`)", child)
+#'
+#' knit_children(
+#'   data.frame(project_id = c("PRJ001", "PRJ002")),
+#'   .input = child,
+#'   .params = list(program_version = "FY2027 CAP Requests")
+#' )
+#' @export
+knit_children <- function(
+  .l,
+  ...,
+  .input,
+  .params = rlang::list2(),
+  .quiet = TRUE,
+  .envir = parent.frame()
+) {
+  check_list(.l, allow_empty = TRUE)
+
+  if (!is_empty(.l) && !is_named(.l)) {
+    cli_abort("All elements of {.arg .l} must be named.")
+  }
+
+  check_string(.input, allow_empty = FALSE)
+
+  if (!file.exists(.input)) {
+    cli_abort("{.arg .input} must be an existing file, not {.file {.input}}.")
+  }
+
+  check_list(.params, allow_empty = TRUE)
+
+  if (!is_empty(.params) && !is_named(.params)) {
+    cli_abort("All elements of {.arg .params} must be named.")
+  }
+
+  check_bool(.quiet)
+  check_environment(.envir)
+
+  res <- purrr::pmap(
+    .l,
+    \(...) {
+      knitr::knit_child(
+        input = .input,
+        envir = rlang::env(
+          .envir,
+          ...,
+          !!!.params
+        ),
+        quiet = .quiet
+      )
+    }
+  )
+
+  cat(unlist(res), sep = "\n")
+}
+
 #' List input files based on specified YAML index
 #'
 #' `list_input_files()` reads a YAML file index that provides a list of file
