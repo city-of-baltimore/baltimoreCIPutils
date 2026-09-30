@@ -57,7 +57,9 @@ test_that("fmt_wd_proj_risk works", {
 
   result <- fmt_wd_proj_risk(data)
 
-  expect_true(is.ordered(result[["Risk Level"]]) || is.factor(result[["Risk Level"]]))
+  expect_true(
+    is.ordered(result[["Risk Level"]]) || is.factor(result[["Risk Level"]])
+  )
   expect_equal(
     as.character(result[["Risk Level"]]),
     c("High", "Medium", "Low")

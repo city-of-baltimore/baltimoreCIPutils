@@ -11,7 +11,12 @@
 #' @param call Passed to `check_character()` for error attribution.
 #' @keywords internal
 #' @export
-wd_proj_filter <- function(data, cost_center = NULL, hierarchy = NULL, call = caller_env()) {
+wd_proj_filter <- function(
+  data,
+  cost_center = NULL,
+  hierarchy = NULL,
+  call = caller_env()
+) {
   check_character(hierarchy, allow_null = TRUE, call = call)
   check_character(cost_center, allow_null = TRUE, call = call)
 

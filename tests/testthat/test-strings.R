@@ -29,7 +29,9 @@ test_that("str_extract_all_project_codes works", {
 
 test_that("str_extract_cip_num works", {
   expect_equal(
-    str_extract_cip_num("PRJ002550 943004 504-004 ADA Infrastructure Upgrades-111"),
+    str_extract_cip_num(
+      "PRJ002550 943004 504-004 ADA Infrastructure Upgrades-111"
+    ),
     "504-004"
   )
 

@@ -55,7 +55,11 @@ test_that("vec_as_str_list_value works", {
 test_that("set_excel_fmt_class works", {
   data <- data.frame(x = 1, y = 2)
 
-  result <- set_excel_fmt_class(data, cols = c("x", "y"), fmt_class = "currency")
+  result <- set_excel_fmt_class(
+    data,
+    cols = c("x", "y"),
+    fmt_class = "currency"
+  )
 
   expect_true("currency" %in% class(result[["x"]]))
   expect_true("currency" %in% class(result[["y"]]))

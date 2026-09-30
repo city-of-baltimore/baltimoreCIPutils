@@ -40,7 +40,12 @@ cbind_defaults <- function(
 #' @param call Passed to [cli::cli_abort()] for error attribution.
 #' @rdname wd_eib_utils
 #' @export
-pull_dict_fields <- function(dict, sheet_name, usage = TRUE, call = caller_env()) {
+pull_dict_fields <- function(
+  dict,
+  sheet_name,
+  usage = TRUE,
+  call = caller_env()
+) {
   check_has_name(dict, c("Sheet", "Usage", "Fields", "Column"), call = call)
   check_string(sheet_name, call = call)
 
