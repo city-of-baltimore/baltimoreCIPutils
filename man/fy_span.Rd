@@ -7,7 +7,7 @@
 \alias{prior_fy_span}
 \title{Create a fiscal year vector of specified length from a start year}
 \usage{
-fy_span(year, before = "FY", n = 1, type = "year_prefix")
+fy_span(year, before = "FY", n = 1, type = "year_prefix", call = caller_env())
 
 fy_span_label(
   year,
@@ -22,14 +22,16 @@ curr_fy_span(
   year = getOption("baltimoreCIP.curr_year"),
   before = "FY",
   n = 6,
-  type = "year_prefix"
+  type = "year_prefix",
+  call = caller_env()
 )
 
 prior_fy_span(
   year = getOption("baltimoreCIP.prior_year"),
   before = "FY",
   n = 6,
-  type = "year_prefix"
+  type = "year_prefix",
+  call = caller_env()
 )
 }
 \arguments{
@@ -44,6 +46,8 @@ for \code{\link[=fy_span]{fy_span()}} or 6 for \code{\link[=curr_fy_span]{curr_f
 
 \item{type}{One of "year", "year_prefix", "year_prefix_abb", "date_first", or
 "date_last". Defaults to "year".}
+
+\item{call}{Execution environment used in error messages.}
 
 \item{sep}{Separator between first and last element in label.}
 

@@ -81,6 +81,7 @@ fiscal_year <- function(
 #' @inheritParams fiscal_year
 #' @param n Number of years in span. Defaults to `NULL` (equivalent to `n = 1`)
 #'   for [fy_span()] or 6 for [curr_fy_span()] and [prior_fy_span()].
+#' @param call Execution environment used in error messages.
 #' @examples
 #'
 #' fy_span(2023, type = "year_prefix_abb")
@@ -105,12 +106,14 @@ fiscal_year <- function(
 #' options(op)
 #'
 #' @export
-fy_span <- function(year, before = "FY", n = 1, type = "year_prefix") {
-  stopifnot(
-    has_length(year, 1),
-    nchar(year) == 4,
-    !is.na(as.integer(year))
-  )
+fy_span <- function(
+  year,
+  before = "FY",
+  n = 1,
+  type = "year_prefix",
+  call = caller_env()
+) {
+  check_year(year, call = call)
 
   year <- as.integer(year)
 
@@ -165,10 +168,11 @@ curr_fy_span <- function(
   year = getOption("baltimoreCIP.curr_year"),
   before = "FY",
   n = 6,
-  type = "year_prefix"
+  type = "year_prefix",
+  call = caller_env()
 ) {
-  check_option_year(year, option = "baltimoreCIP.curr_year")
-  fy_span(year, before, n, type)
+  check_option_year(year, option = "baltimoreCIP.curr_year", call = call)
+  fy_span(year, before, n, type, call = call)
 }
 
 #' [prior_fy_span()] defaults to using the start year set by the
@@ -182,32 +186,44 @@ prior_fy_span <- function(
   year = getOption("baltimoreCIP.prior_year"),
   before = "FY",
   n = 6,
-  type = "year_prefix"
+  type = "year_prefix",
+  call = caller_env()
 ) {
-  check_option_year(year, option = "baltimoreCIP.prior_year")
-  fy_span(year, before, n, type)
+  check_option_year(year, option = "baltimoreCIP.prior_year", call = call)
+  fy_span(year, before, n, type, call = call)
 }
 
 #' Check that a year is supplied directly or with an option
 #'
 #' `check_option_year()` errors if `year` is `NULL`, which happens when a
 #' function argument defaults to an option (e.g., `"baltimoreCIP.curr_year"`)
-#' that is not set.
+#' that is not set. Otherwise, `year` is validated with `check_year()` using
+#' `digits` and `n`.
 #'
 #' @param year A year value or `NULL`.
 #' @param option Name of the option used as the default value for `year`.
 #' @param arg Argument name used in the error message.
 #' @param call Execution environment used in the error message.
 #' @returns `year`, invisibly.
+#' @inheritParams check_year
 #' @keywords internal
 #' @noRd
 check_option_year <- function(
   year,
   option = "baltimoreCIP.curr_year",
+  n = 1,
+  digits = 4,
   arg = caller_arg(year),
   call = caller_env()
 ) {
   if (!is.null(year)) {
+    check_year(
+      year,
+      digits = digits,
+      n = n,
+      arg = arg,
+      call = call
+    )
     return(invisible(year))
   }
 
@@ -218,4 +234,62 @@ check_option_year <- function(
     ),
     call = call
   )
+}
+
+#' Check that a value appears to be a year
+#'
+#' `check_year()` errors if `year` is not a vector of length `n` with
+#' non-missing values that have `digits` characters and can be coerced to
+#' integers.
+#'
+#' @param year A year value.
+#' @param digits Number of characters each value of `year` must have. Set to
+#'   `NULL` to allow any number of digits. Defaults to 4.
+#' @param n Required length of `year`. Set to `NULL` to allow any non-zero
+#'   length. Defaults to 1.
+#' @param arg Argument name used in the error message.
+#' @param call Execution environment used in the error message.
+#' @returns `year`, invisibly.
+#' @keywords internal
+#' @noRd
+check_year <- function(
+  year,
+  digits = 4,
+  n = 1,
+  arg = caller_arg(year),
+  call = caller_env()
+) {
+  if (
+    has_length(year, n) &&
+      !anyNA(year) &&
+      (is.null(digits) || all(nchar(year) == digits)) &&
+      !anyNA(suppressWarnings(as.integer(year)))
+  ) {
+    return(invisible(year))
+  }
+
+  expected <- "{.arg {arg}} must be"
+
+  if (is.null(n)) {
+    expected <- paste(expected, "a vector of")
+  } else if (n == 1) {
+    expected <- paste(expected, "a single")
+  } else {
+    expected <- paste(expected, "a length {n} vector of")
+  }
+
+  if (!is.null(digits)) {
+    expected <- paste(expected, "{digits}-digit")
+  }
+
+  # TODO: Use cli built-in pluralization instead
+  expected <- paste(expected, if (identical(n, 1)) "year" else "years")
+
+  if (has_length(year, 1)) {
+    message <- paste0(expected, ", not {.val {year}}.")
+  } else {
+    message <- paste0(expected, ", not {.obj_type_friendly {year}}.")
+  }
+
+  cli_abort(message, call = call)
 }

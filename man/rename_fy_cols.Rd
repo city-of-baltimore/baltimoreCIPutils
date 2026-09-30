@@ -2,6 +2,7 @@
 % Please edit documentation in R/rename.R
 \name{rename_fy_cols}
 \alias{rename_fy_cols}
+\alias{rename_with_fy_abb}
 \alias{rename_yr_cols}
 \title{Rename "FY" or "Year" columns from an input data frame}
 \usage{
@@ -11,6 +12,8 @@ rename_fy_cols(
   existing_before = "FY",
   before = "Year"
 )
+
+rename_with_fy_abb(.data, existing_before = "^FY20", before = "FY")
 
 rename_yr_cols(
   .data,
@@ -25,14 +28,20 @@ rename_yr_cols(
 \item{start_year}{Year to use as "Year 1". Defaults to the
 \code{"baltimoreCIP.curr_year"} option. Required if the option is not set.}
 
-\item{existing_before}{Prefix text for input years. Required if `x`` is a
-character vector.}
+\item{existing_before}{Prefix text for existing column names. For
+\code{\link[=rename_with_fy_abb]{rename_with_fy_abb()}}, a regular expression passed to
+\code{\link[tidyselect:matches]{tidyselect::matches()}} and \code{\link[stringr:str_replace]{stringr::str_replace()}} that matches the text
+to replace. Defaults to \code{"^FY20"}.}
 
 \item{before}{Prefix to use for output.}
 }
 \description{
 Use \code{\link[dplyr:rename_with]{dplyr::rename_with()}} to rename an input data frame with columns
 prefixed by "FY" (absolute year columns) or "Year" (relative year columns).
+}
+\details{
+\code{\link[=rename_with_fy_abb]{rename_with_fy_abb()}} abbreviates four-digit fiscal year column names,
+e.g. "FY2027" to "FY27".
 }
 \examples{
 rename_fy_cols(
@@ -50,4 +59,13 @@ rename_yr_cols(
   ),
   start_year = 2027
 )
+
+rename_with_fy_abb(
+  data.frame(
+    "FY1999" = 1,
+    "FY2000" = 2
+  ),
+  existing_before = "^FY(19|20)"
+)
+
 }

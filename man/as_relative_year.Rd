@@ -17,7 +17,7 @@ as_relative_year(
 \item{start_year}{Year to use as "Year 1". Defaults to the
 \code{"baltimoreCIP.curr_year"} option. Required if the option is not set.}
 
-\item{existing_before}{Prefix text for input years. Required if `x`` is a
+\item{existing_before}{Prefix text for input years. Required if \code{x} is a
 character vector.}
 
 \item{before}{Prefix to use for output.}

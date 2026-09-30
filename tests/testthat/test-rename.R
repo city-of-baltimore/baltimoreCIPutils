@@ -95,3 +95,41 @@ test_that("rename functions error if start_year is missing", {
 
   expect_named(rename_fy_cols(fy_data, start_year = 2027), "Year1")
 })
+
+test_that("rename_with_fy_abb abbreviates four-digit fiscal year columns", {
+  fy_data <- data.frame(
+    "FY2027" = 1,
+    "FY2028" = 2,
+    "Project" = "A",
+    check.names = FALSE
+  )
+
+  result <- rename_with_fy_abb(fy_data)
+
+  expect_named(result, c("FY27", "FY28", "Project"))
+  expect_equal(unname(unlist(result[1, ])), unname(unlist(fy_data[1, ])))
+})
+
+test_that("rename_with_fy_abb uses existing_before and before", {
+  expect_named(
+    rename_with_fy_abb(
+      data.frame("FY1998" = 1, "FY2001" = 2, check.names = FALSE),
+      existing_before = "^FY19"
+    ),
+    c("FY98", "FY2001")
+  )
+
+  expect_named(
+    rename_with_fy_abb(
+      data.frame("FY2027" = 1, check.names = FALSE),
+      before = "Year "
+    ),
+    "Year 27"
+  )
+})
+
+test_that("rename_with_fy_abb leaves unmatched columns unchanged", {
+  data <- data.frame("Year1" = 1, "Total FY2027" = 2, check.names = FALSE)
+
+  expect_identical(rename_with_fy_abb(data), data)
+})
