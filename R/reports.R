@@ -513,7 +513,7 @@ join_estimate_costs <- function(
 #' Format project details for inclusion in the details report
 #'
 #' Joins `project_data` with 6-year program totals (from
-#' [sum_6yr_program_totals()]) and active cost estimate totals (from
+#' [summarise_program_totals()]) and active cost estimate totals (from
 #' [join_estimate_costs()]), drops projects with a zero total program
 #' amount, recodes several category, purpose, and type labels for the
 #' report (see [recode_project_details()]), and formats location, report
@@ -526,7 +526,7 @@ join_estimate_costs <- function(
 #'   `LocationName`, `OperatingBudgetImpact`, `OperatingBudgetImpactAmount`,
 #'   `OperatingBudgetImpactYear`, and `TargetProgramFundingLevel`.
 #' @param program_data Program data from the Six-Year CIP sheet, passed to
-#'   [sum_6yr_program_totals()] and [add_report_status()]; must include
+#'   [summarise_program_totals()] and [add_report_status()]; must include
 #'   `ProjectID` and `RequestType`.
 #' @param estimate_data Cost estimate data, passed to
 #'   [join_estimate_costs()].
@@ -588,10 +588,9 @@ fmt_report_data <- function(
     # Assumes that program_data is only a single version
     # FIXME: Add a check to confirm that program_data only includes a single version
     dplyr::left_join(
-      sum_6yr_program_totals(
+      summarise_program_totals(
         program_data,
-        start_year_sum_col = "Year1ProgramAmount",
-        total_sum_col = "TotalProgramAmount"
+        amount_names = c("Year1ProgramAmount", "TotalProgramAmount")
       ),
       by = dplyr::join_by(ProjectID)
     ) |>
@@ -704,60 +703,5 @@ fmt_active_estimate_data <- function(
     dplyr::slice_head(
       n = n,
       by = ProjectID
-    )
-}
-
-
-#' Summarise program data
-#'
-#' @param program_data Program data from the Six-Year CIP sheet formatted for
-#' upload to the 'Capital Request' SharePoint list.
-#' @param start_year_col,outer_year_cols Names of budget year and outer year
-#' columns.
-#' @param amounts_start_with Pattern passed to `tidyselect::starts_with` used to
-#' select both budget and outer year columns.
-#' @param start_year_sum_col,total_sum_col Defaults to "Budget Request Amount" and "Total Request Amount"
-#' @returns A data frame with columns "ProjectID" and matching `start_year_sum_col` and `total_sum_col`.
-#' @keywords internal
-sum_6yr_program_totals <- function(
-  program_data,
-  start_year_col = "Year1",
-  outer_year_cols = paste0("Year", 2:6),
-  amounts_start_with = "Year",
-  start_year_sum_col = "Budget Request Amount",
-  total_sum_col = "Total Request Amount"
-) {
-  program_data |>
-    # SplitChildRow values must be removed
-    dplyr::filter(
-      !SplitChildRow
-    ) |>
-    dplyr::summarise(
-      dplyr::across(
-        # FIXME: Replace to drop `amounts_start_with` parameter
-        # tidyselect::all_of(c(start_year_col, outer_year_cols))
-        tidyselect::starts_with(amounts_start_with),
-        \(x) {
-          sum(x, na.rm = TRUE)
-        }
-      ),
-      .by = ProjectID
-    ) |>
-    dplyr::mutate(
-      "{start_year_sum_col}" := .data[[start_year_col]],
-      "{total_sum_col}" := rowSums(
-        dplyr::pick(
-          tidyselect::all_of(c(
-            start_year_col,
-            outer_year_cols
-          ))
-        )
-      )
-    ) |>
-    dplyr::select(
-      ProjectID,
-      tidyselect::all_of(
-        c(start_year_sum_col, total_sum_col)
-      )
     )
 }

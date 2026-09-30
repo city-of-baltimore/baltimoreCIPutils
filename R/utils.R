@@ -296,8 +296,10 @@ filter_program_data <- function(
 #'
 #' @param quo A quosure created with [rlang::enquo()].
 #' @param data Data frame the selection will be applied to.
+#' @param strict If `FALSE`, wrap character vectors in [tidyselect::any_of()]
+#'   instead of [tidyselect::all_of()] so missing columns are ignored.
 #' @noRd
-as_select_quo <- function(quo, data) {
+as_select_quo <- function(quo, data, strict = TRUE) {
   if (quo_is_null(quo) || quo_is_missing(quo)) {
     return(quo)
   }
@@ -309,8 +311,17 @@ as_select_quo <- function(quo, data) {
 
   # Character vectors (from literals, variables, or calls like curr_fy_span())
   # are wrapped in all_of() to avoid the tidyselect deprecation warning
-  val <- tryCatch(eval_tidy(quo), error = function(e) NULL)
+  # Selection helpers (e.g. all_of()) error or warn outside a selecting
+  # function; treat either as a signal to pass the quosure through unchanged
+  val <- tryCatch(
+    eval_tidy(quo),
+    error = function(e) NULL,
+    warning = function(w) NULL
+  )
   if (is.character(val)) {
+    if (!strict) {
+      return(quo(tidyselect::any_of(!!val)))
+    }
     return(quo(tidyselect::all_of(!!val)))
   }
 

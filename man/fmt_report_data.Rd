@@ -19,7 +19,7 @@ fmt_report_data(
 \code{OperatingBudgetImpactYear}, and \code{TargetProgramFundingLevel}.}
 
 \item{program_data}{Program data from the Six-Year CIP sheet, passed to
-\code{\link[=sum_6yr_program_totals]{sum_6yr_program_totals()}} and \code{\link[=add_report_status]{add_report_status()}}; must include
+\code{\link[=summarise_program_totals]{summarise_program_totals()}} and \code{\link[=add_report_status]{add_report_status()}}; must include
 \code{ProjectID} and \code{RequestType}.}
 
 \item{estimate_data}{Cost estimate data, passed to
@@ -38,7 +38,7 @@ currency and label columns formatted for the report.
 }
 \description{
 Joins \code{project_data} with 6-year program totals (from
-\code{\link[=sum_6yr_program_totals]{sum_6yr_program_totals()}}) and active cost estimate totals (from
+\code{\link[=summarise_program_totals]{summarise_program_totals()}}) and active cost estimate totals (from
 \code{\link[=join_estimate_costs]{join_estimate_costs()}}), drops projects with a zero total program
 amount, recodes several category, purpose, and type labels for the
 report (see \code{\link[=recode_project_details]{recode_project_details()}}), and formats location, report
