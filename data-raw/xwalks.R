@@ -57,7 +57,14 @@ load_wd_proj_asset_xwalk <- function(
     ) |>
     dplyr::filter(
       !is.na(asset_id)
-    )
+    ) |>
+    dplyr::mutate(
+      dplyr::across(
+        tidyselect::where(is.character),
+        stringr::str_squish
+      )
+    ) |>
+    dplyr::arrange(`Project Code`)
 }
 
 wd_proj_asset_xwalk <- load_wd_proj_asset_xwalk()
