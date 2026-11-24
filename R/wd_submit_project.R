@@ -73,7 +73,9 @@ fmt_submit_project_worktags_data <- function(.data) {
 #' @param eib_dict EIB dictionary with Source Type and Workday Report Name
 #' columns.
 #' @param proj_app_info Data frame with project information from the SharePoint
-#' list.
+#' list. Only non-missing values replace the Workday value in `proj_list`, so
+#' a project can be limited to the fields that should be updated by setting the
+#' other fields to `NA`. A missing app value never blanks a Workday value.
 #' @param eib_wb Workbook object created by loading Excel template file for
 #' Submit Project EIB.
 #' @keywords internal
@@ -135,10 +137,12 @@ build_submit_project_wb <- function(
 
   proj_app_info <- proj_app_info |>
     dplyr::mutate(
-      Project = paste0(
-        ProjectID,
-        " ",
-        ProjectName
+      # Leave `Project` blank (not "PRJ000001 NA") when there is no name so it
+      # is not used to update the Workday value
+      Project = dplyr::if_else(
+        is.na(ProjectName),
+        NA_character_,
+        paste0(ProjectID, " ", ProjectName)
       ),
       # Remove leading and trailing new lines
       dplyr::across(
@@ -184,10 +188,16 @@ build_submit_project_wb <- function(
     )
   )
 
-  # Update proj_list based on `proj_app_info`
+  # Update proj_list based on the non-missing values in `proj_app_info`:
+  # fill missing app values with the Workday value so they are left unchanged
   proj_list <- proj_list |>
     dplyr::rows_update(
-      proj_app_info,
+      proj_app_info |>
+        dplyr::rows_patch(
+          dplyr::select(proj_list, tidyselect::all_of(names(proj_app_info))),
+          by = "Project ID",
+          unmatched = "ignore"
+        ),
       by = "Project ID"
     )
 
