@@ -175,21 +175,48 @@ build_submit_project_wb <- function(
       )
     )
 
+  # Also check the columns that `proj_app_info` updates
   check_data_cols(
     proj_list,
-    c(
+    unique(c(
       "Project ID",
       "Inactive",
       "Billable",
       "Capital Project",
       "Project Status",
       "Priority",
-      "Importance Rating"
+      "Importance Rating",
+      names(proj_app_info)
+    ))
+  )
+
+  # Drop inactive projects before updating so they are not updated
+  i_inactive <- proj_list[["Inactive"]] %in% "Yes"
+
+  if (any(i_inactive)) {
+    cli::cli_alert_info(
+      "Dropping {sum(i_inactive)} inactive projects from the input `proj_list`"
     )
+  }
+
+  # Projects missing from `proj_list` are an error; inactive ones are skipped
+  missing_proj <- setdiff(proj_app_info[["Project ID"]], proj_list[["Project ID"]])
+  if (length(missing_proj) > 0) {
+    cli::cli_abort(
+      "{length(missing_proj)} project{?s} in {.arg proj_app_info} not in {.arg proj_list}: {.val {missing_proj}}."
+    )
+  }
+
+  proj_list <- proj_list[!i_inactive, ]
+  proj_app_info <- dplyr::semi_join(
+    proj_app_info,
+    proj_list,
+    by = "Project ID"
   )
 
   # Update proj_list based on the non-missing values in `proj_app_info`:
-  # fill missing app values with the Workday value so they are left unchanged
+  # fill missing app values with the Workday value so they are left unchanged.
+  # The newline cleanup above only applies to the app values.
   proj_list <- proj_list |>
     dplyr::rows_update(
       proj_app_info |>
@@ -224,16 +251,6 @@ build_submit_project_wb <- function(
       "Reference ID Value"
     )
   )
-
-  i_inactive <- proj_list[['Inactive']] %in% "Yes"
-
-  if (any(i_inactive)) {
-    cli::cli_alert_info(
-      "Dropping {sum(i_inactive)} inactive projects from the input `proj_list`"
-    )
-
-    proj_list <- proj_list[!i_inactive, ]
-  }
 
   # TODO: Add check for contractor ID values in Project Owner column
 
