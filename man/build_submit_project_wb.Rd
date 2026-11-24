@@ -11,7 +11,7 @@ build_submit_project_wb(
   proj_resource_plan_ids,
   proj_hierarchy_ids,
   proj_group_ids,
-  eib_wb = NULL
+  eib_wb
 )
 }
 \arguments{
@@ -22,7 +22,13 @@ Projects" Workday Report.}
 columns.}
 
 \item{proj_app_info}{Data frame with project information from the SharePoint
-list.}
+list. Only non-missing values replace the Workday value in \code{proj_list}, so
+a project can be limited to the fields that should be updated by setting the
+other fields to \code{NA}. A missing app value never blanks a Workday value.}
+
+\item{proj_resource_plan_ids, proj_hierarchy_ids, proj_group_ids}{Data frames
+from the Workday "View Reference ID" report with Business Object Instance
+and Reference ID Value columns.}
 
 \item{eib_wb}{Workbook object created by loading Excel template file for
 Submit Project EIB.}

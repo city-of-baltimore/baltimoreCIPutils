@@ -66,41 +66,26 @@ fmt_submit_project_worktags_data <- function(.data) {
     )
 }
 
-#' Build the Submit Project EIB
+#' Format the Submit Project EIB sheet data
 #'
-#' @param proj_list Data frame with project information from "DOP CIP = List
-#' Projects" Workday Report.
-#' @param eib_dict EIB dictionary with Source Type and Workday Report Name
-#' columns.
-#' @param proj_app_info Data frame with project information from the SharePoint
-#' list. Only non-missing values replace the Workday value in `proj_list`, so
-#' a project can be limited to the fields that should be updated by setting the
-#' other fields to `NA`. A missing app value never blanks a Workday value.
-#' @param eib_wb Workbook object created by loading Excel template file for
-#' Submit Project EIB.
-#' @keywords internal
-#' @export
-build_submit_project_wb <- function(
+#' Updates `proj_list` with the non-missing values in `proj_app_info`, drops
+#' inactive projects, and formats the rows of the "Submit Project" sheet
+#' (including the worktag rows). Separate from [build_submit_project_wb()] so
+#' the data can be checked without an EIB template.
+#'
+#' @inheritParams build_submit_project_wb
+#' @param sheet_name Name of the Submit Project sheet in `eib_dict`.
+#' @returns A data frame with one row per project worktag.
+#' @noRd
+fmt_submit_project_sheet_data <- function(
   proj_list,
   eib_dict,
   proj_app_info,
   proj_resource_plan_ids,
   proj_hierarchy_ids,
   proj_group_ids,
-  eib_wb = NULL
+  sheet_name = "Submit Project"
 ) {
-  check_data_cols(
-    eib_dict,
-    c(
-      "Source Type",
-      "Workday Report Name"
-    )
-  )
-
-  submit_proj_sheet_name <- "Submit Project"
-
-  submit_proj_fields <- pull_dict_fields(eib_dict, submit_proj_sheet_name)
-
   wd_eib_dict <- eib_dict |>
     dplyr::filter(
       `Source Type` == "Workday",
@@ -121,16 +106,6 @@ build_submit_project_wb <- function(
     "SuccessMeasures",
     "ProjectOverview"
   )
-
-  # NOTE: sharepointr is not Suggested by {baltimoreCIPutils} so should not be
-  # used here
-  # proj_app_info <- proj_app_info %||%
-  #   sharepointr::get_sp_list_items(
-  #     # TODO: Set Capital Project list name based on version in list input config
-  #     list_name = "CapitalProject_20250917",
-  #     site_url = "https://bmore.sharepoint.com/sites/DOP-CIP/SitePages/CollabHome.aspx",
-  #     select = proj_app_cols
-  #   )
 
   # Check type and names for proj_app_info
   check_data_cols(proj_app_info, proj_app_cols)
@@ -338,15 +313,6 @@ build_submit_project_wb <- function(
             Project,
             paste0("^", `Project ID`)
           ),
-          # NOTE: This is no longer used because inactive Projects are excluded
-          # `Project Name*` = dplyr::if_else(
-          #   Inactive == "N",
-          #   `Project Name*`,
-          #   stringr::str_remove(
-          #     `Project Name*`,
-          #     "(Inactive)$"
-          #   )
-          # ),
           `Project Name*` = stringr::str_trim(
             `Project Name*`
           ),
@@ -359,7 +325,7 @@ build_submit_project_wb <- function(
     ) |>
     # Bind default values from dictionary
     cbind_defaults(
-      get_dict_defaults(eib_dict, submit_proj_sheet_name)
+      get_dict_defaults(eib_dict, sheet_name)
     ) |>
     # Set Spreadsheet Key
     dplyr::arrange(`Workday Project ID`) |>
@@ -425,6 +391,57 @@ build_submit_project_wb <- function(
       `Spreadsheet Key*` = as.character(`Spreadsheet Key*`),
       `Row ID*` = as.character(`Row ID*`)
     )
+
+  submit_proj_sheet
+}
+
+#' Build the Submit Project EIB
+#'
+#' @param proj_list Data frame with project information from "DOP CIP = List
+#' Projects" Workday Report.
+#' @param eib_dict EIB dictionary with Source Type and Workday Report Name
+#' columns.
+#' @param proj_app_info Data frame with project information from the SharePoint
+#' list. Only non-missing values replace the Workday value in `proj_list`, so
+#' a project can be limited to the fields that should be updated by setting the
+#' other fields to `NA`. A missing app value never blanks a Workday value.
+#' @param proj_resource_plan_ids,proj_hierarchy_ids,proj_group_ids Data frames
+#' from the Workday "View Reference ID" report with Business Object Instance
+#' and Reference ID Value columns.
+#' @param eib_wb Workbook object created by loading Excel template file for
+#' Submit Project EIB.
+#' @keywords internal
+#' @export
+build_submit_project_wb <- function(
+  proj_list,
+  eib_dict,
+  proj_app_info,
+  proj_resource_plan_ids,
+  proj_hierarchy_ids,
+  proj_group_ids,
+  eib_wb
+) {
+  check_data_cols(
+    eib_dict,
+    c(
+      "Source Type",
+      "Workday Report Name"
+    )
+  )
+
+  submit_proj_sheet_name <- "Submit Project"
+
+  submit_proj_fields <- pull_dict_fields(eib_dict, submit_proj_sheet_name)
+
+  submit_proj_sheet <- fmt_submit_project_sheet_data(
+    proj_list = proj_list,
+    eib_dict = eib_dict,
+    proj_app_info = proj_app_info,
+    proj_resource_plan_ids = proj_resource_plan_ids,
+    proj_hierarchy_ids = proj_hierarchy_ids,
+    proj_group_ids = proj_group_ids,
+    sheet_name = submit_proj_sheet_name
+  )
 
   reduce_wb_data_fields(
     data = submit_proj_sheet,
