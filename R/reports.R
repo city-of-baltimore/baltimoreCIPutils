@@ -384,7 +384,7 @@ add_report_status <- function(project_data, program_data, call = caller_env()) {
 #' Formats `cols` as currency text with [gt::vec_fmt_currency()], keeping
 #' `NA` values as `NA` rather than a formatted string. Generic and not tied
 #' to any particular report field, so unrelated currency columns (e.g.
-#' `OperatingBudgetImpactAmount` and `TargetProgramFundingLevel`) can share
+#' `OperatingBudgetImpactAmount` and `OptimalProgramFundingLevel`) can share
 #' the same formatting without being coupled to each other.
 #'
 #' @param data A data frame.
@@ -524,7 +524,7 @@ join_estimate_costs <- function(
 #' @param project_data Project data with columns including `ProjectID`,
 #'   `ProjectProgramType`, `ProjectProgramPurpose`, `ProjectCategory`,
 #'   `LocationName`, `OperatingBudgetImpact`, `OperatingBudgetImpactAmount`,
-#'   `OperatingBudgetImpactYear`, and `TargetProgramFundingLevel`.
+#'   `OperatingBudgetImpactYear`, and `OptimalProgramFundingLevel`.
 #' @param program_data Program data from the Six-Year CIP sheet, passed to
 #'   [summarise_program_totals()] and [add_report_status()]; must include
 #'   `ProjectID` and `RequestType`.
@@ -556,7 +556,7 @@ fmt_report_data <- function(
       "OperatingBudgetImpact",
       "OperatingBudgetImpactAmount",
       "OperatingBudgetImpactYear",
-      "TargetProgramFundingLevel"
+      "OptimalProgramFundingLevel"
     )
   )
 
@@ -609,7 +609,7 @@ fmt_report_data <- function(
     # FIXME: Remove ReportStatus if not used
     add_report_status(program_data) |>
     fmt_currency_columns(
-      cols = c(OperatingBudgetImpactAmount, TargetProgramFundingLevel),
+      cols = c(OperatingBudgetImpactAmount, OptimalProgramFundingLevel),
       output_format = output_format
     ) |>
     add_operating_budget_impact_desc() |>

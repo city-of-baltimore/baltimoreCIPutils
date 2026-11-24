@@ -16,7 +16,7 @@ fmt_report_data(
 \item{project_data}{Project data with columns including \code{ProjectID},
 \code{ProjectProgramType}, \code{ProjectProgramPurpose}, \code{ProjectCategory},
 \code{LocationName}, \code{OperatingBudgetImpact}, \code{OperatingBudgetImpactAmount},
-\code{OperatingBudgetImpactYear}, and \code{TargetProgramFundingLevel}.}
+\code{OperatingBudgetImpactYear}, and \code{OptimalProgramFundingLevel}.}
 
 \item{program_data}{Program data from the Six-Year CIP sheet, passed to
 \code{\link[=summarise_program_totals]{summarise_program_totals()}} and \code{\link[=add_report_status]{add_report_status()}}; must include

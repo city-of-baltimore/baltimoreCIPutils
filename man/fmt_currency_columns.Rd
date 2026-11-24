@@ -32,7 +32,7 @@ argument.}
 Formats \code{cols} as currency text with \code{\link[gt:vec_fmt_currency]{gt::vec_fmt_currency()}}, keeping
 \code{NA} values as \code{NA} rather than a formatted string. Generic and not tied
 to any particular report field, so unrelated currency columns (e.g.
-\code{OperatingBudgetImpactAmount} and \code{TargetProgramFundingLevel}) can share
+\code{OperatingBudgetImpactAmount} and \code{OptimalProgramFundingLevel}) can share
 the same formatting without being coupled to each other.
 }
 \keyword{internal}
