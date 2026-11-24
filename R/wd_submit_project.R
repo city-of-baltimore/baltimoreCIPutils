@@ -66,6 +66,38 @@ fmt_submit_project_worktags_data <- function(.data) {
     )
 }
 
+#' Convert a Priority or Importance Rating label to its Workday ID
+#'
+#' Labels such as "1-High" or "1 - High" (spacing is ignored) are converted to
+#' the ID Workday expects ("High"). Missing values stay missing.
+#'
+#' @param x Character vector of labels.
+#' @param allowed Named character vector of IDs named by the allowed label
+#'   (without spaces).
+#' @param arg Column name used in the error message.
+#' @noRd
+fmt_submit_project_rating <- function(x, allowed, arg, call = caller_env()) {
+  out <- dplyr::recode_values(
+    stringr::str_remove_all(x, "[:space:]"),
+    from = names(allowed),
+    to = unname(allowed)
+  )
+
+  invalid <- unique(x[is.na(out) & !is.na(x)])
+
+  if (length(invalid) > 0) {
+    cli::cli_abort(
+      c(
+        "{.field {arg}} has {length(invalid)} value{?s} that {?is/are} not allowed: {.val {invalid}}.",
+        "i" = "Allowed values: {.val {names(allowed)}}."
+      ),
+      call = call
+    )
+  }
+
+  out
+}
+
 #' Format the Submit Project EIB sheet data
 #'
 #' Updates `proj_list` with the non-missing values in `proj_app_info`, drops
@@ -246,17 +278,17 @@ fmt_submit_project_sheet_data <- function(
         "[:space:]",
         "_"
       ),
-      # Remove all digits, punctuation, and spaces from Priority and `Importance Rating` columns
-      dplyr::across(
-        c(Priority, `Importance Rating`),
-        \(x) {
-          stringr::str_remove_all(
-            x,
-            "[:digit:]|[:punct:]|[:space:]"
-          )
-        }
+      # Convert Priority and Importance Rating labels to Workday IDs
+      Priority = fmt_submit_project_rating(
+        Priority,
+        c("1-High" = "High", "2-Medium" = "Medium", "3-Low" = "Low"),
+        arg = "Priority"
       ),
-      # TODO: For Priority - trim the leading numbers and punctuation
+      `Importance Rating` = fmt_submit_project_rating(
+        `Importance Rating`,
+        c("1-Critical" = "Critical", "2-Major" = "Major", "3-Minor" = "Minor"),
+        arg = "Importance Rating"
+      ),
       # Extract Fund ID from start of Balancing Worktag
       `Balancing Worktag` = stringr::str_extract(
         `Balancing Worktag`,

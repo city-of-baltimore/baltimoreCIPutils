@@ -75,3 +75,16 @@ test_that("fmt_wd_proj_worktags errors on missing columns", {
 
   expect_error(fmt_wd_proj_worktags(data))
 })
+
+test_that("fmt_submit_project_rating() converts labels to Workday IDs", {
+  allowed <- c("1-High" = "High", "2-Medium" = "Medium", "3-Low" = "Low")
+
+  expect_equal(
+    fmt_submit_project_rating(c("1-High", "2 - Medium", NA), allowed, "Priority"),
+    c("High", "Medium", NA)
+  )
+  expect_error(
+    fmt_submit_project_rating(c("1-High", "4-Urgent"), allowed, "Priority"),
+    "4-Urgent"
+  )
+})
